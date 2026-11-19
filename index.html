@@ -174,6 +174,23 @@
   .modal h3 { margin: 10px 0 6px; font-size: 18px; }
   .modal p { margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.45; }
   .modal p b { color: var(--text); }
+  /* справка */
+  .hdr-right { display: flex; align-items: center; gap: 10px; }
+  #btnInfo {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--tile-border); background: var(--panel);
+    color: var(--text); font-weight: 800; font-size: 16px; cursor: pointer; transition: all .15s;
+  }
+  #btnInfo.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(139,123,255,.8); }
+  body.info-mode #board .el .ico, body.info-mode .cell:not(.locked) .ico { border-color: var(--accent); }
+  .modal .card.info { max-height: 82vh; overflow-y: auto; }
+  .modal .card.info p { text-align: left; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; background: var(--tile);
+          border: 1px solid var(--tile-border); font-size: 12px; color: var(--text); margin-bottom: 10px; }
+  .desc { display: block; color: var(--text); font-size: 14.5px; margin-bottom: 14px; }
+  .how { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .rec { padding: 7px 10px; background: var(--tile); border-radius: 10px; margin-bottom: 6px; font-size: 13.5px; color: var(--text); }
+  .rec i { color: var(--muted); font-style: normal; margin: 0 4px; }
+  .q { color: var(--muted); letter-spacing: 1px; }
   .modal .row { display: flex; gap: 10px; }
   .modal .row button {
     flex: 1; border: 1px solid var(--tile-border); background: var(--tile); color: var(--text);
@@ -205,10 +222,10 @@
 <div id="app">
   <header>
     <span class="title"><span id="logo"></span> Алхимия Вселенной</span>
-    <span id="counter">0 / 0</span>
+    <div class="hdr-right"><span id="counter">0 / 0</span><button id="btnInfo" aria-label="Справка">?</button></div>
   </header>
   <div id="progress"><div></div></div>
-  <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы</div></div>
+  <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы.<br>«?» вверху — справка об элементе</div></div>
   <footer>
     <button id="btnList"><span class="i" data-ui="ui_list"></span>Список</button>
     <button id="btnHint"><span class="i" data-ui="ui_hint"></span><span id="hintLabel">Подсказка</span></button>
@@ -262,6 +279,7 @@
 <script src="icons-tech.js"></script>
 <script src="icons-cosmos.js"></script>
 <script src="icons-ui.js"></script>
+<script src="info.js"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -335,7 +353,8 @@ const label = (id) => `${mini(id)} ${byId[id].name}`;
 
 /* модальное окно: modal({icon, title, text, buttons:[{text, primary, onClick}]}) */
 const modalEl = document.getElementById('modal');
-function modal({ icon, title, text, buttons }) {
+function modal({ icon, title, text, buttons, cls }) {
+  document.querySelector('#modal .card').className = 'card' + (cls ? ' ' + cls : '');
   document.getElementById('mIcon').innerHTML = icon || '';
   document.getElementById('mTitle').textContent = title || '';
   document.getElementById('mText').innerHTML = text || '';
@@ -431,6 +450,7 @@ function endDrag(e) {
 /* двойной тап по элементу — копия */
 let lastTap = { el: null, t: 0 };
 function handleTap(el) {
+  if (infoMode) { showInfo(el.dataset.id); return; }
   const now = Date.now();
   if (lastTap.el === el && now - lastTap.t < 350) {
     spawn(el.dataset.id, parseFloat(el.style.left) + 30, parseFloat(el.style.top) + 30, true);
@@ -537,6 +557,7 @@ function renderList() {
 }
 grid.addEventListener('click', e => {
   const c = e.target.closest('.cell'); if (!c || c.classList.contains('locked')) return;
+  if (infoMode) { showInfo(c.dataset.id); return; }
   const r = board.getBoundingClientRect();
   spawn(c.dataset.id, r.width / 2 - 38 + (Math.random() - .5) * 80, r.height / 2 - 42 + (Math.random() - .5) * 80, true);
   closeList(); haptic('light');
@@ -602,6 +623,30 @@ function giveHint() {
   modal({
     icon: iconHtml(x, byId[x].icon, 'modal-ico'), title: 'Подсказка',
     text: `Возьми <b>${label(x)}</b> и найди ему пару среди открытых элементов.<br>Получится новый элемент из эпохи «${eraById[byId[h.res].era].name}».`,
+    buttons: [{ text: 'Понятно', primary: true }],
+  });
+  haptic('light');
+}
+
+/* ============ СПРАВКА «?» ============ */
+let infoMode = false;
+const infoBtn = document.getElementById('btnInfo');
+function setInfoMode(on) {
+  infoMode = on; infoBtn.classList.toggle('on', on); document.body.classList.toggle('info-mode', on);
+  if (on) toast('Режим справки: нажми на элемент на поле или в списке');
+}
+infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); };
+function showInfo(id) {
+  setInfoMode(false);
+  const d = byId[id];
+  // ингредиенты, которые ещё не открыты, не раскрываем
+  const part = (x) => discovered.has(x) ? `${mini(x)} ${byId[x].name}` : '<span class="q">???</span>';
+  const how = (producers[id] || []).map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('')
+    || '<div class="rec">Стартовый элемент — есть с самого начала</div>';
+  modal({
+    icon: iconHtml(id, d.icon, 'modal-ico'), title: d.name, cls: 'info',
+    text: `<span class="chip">${eraIcon(d.era)} ${eraById[d.era].name}</span><span class="desc">${INFO[id] || ''}</span>` +
+          `<b class="how">Как получить</b>${how}`,
     buttons: [{ text: 'Понятно', primary: true }],
   });
   haptic('light');
