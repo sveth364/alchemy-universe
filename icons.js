@@ -231,13 +231,23 @@ const ICONS = {
     <circle cx="20" cy="32" r="2.6" fill="#ff5fa2"/><circle cx="43" cy="27" r="2.6" fill="#ffd166"/><circle cx="33" cy="35" r="2.2" fill="#6ee7ff"/>
     <ellipse cx="27" cy="14" rx="5" ry="2.6" fill="#fff" opacity=".55" transform="rotate(-25 27 14)"/>
     ${spark(55, 10, 4)}` },
+
+  // логотип игры — алхимическая колба со вселенной внутри (как на аватарке бота)
+  logo: { color: '#c77dff', svg: `
+    ${linG('__l', ['#ff8fd1', '#9d7bff', '#4cc9ff'])}
+    <path d="M26 6h12v14c9 3 15 11 15 20a21 21 0 0 1-42 0c0-9 6-17 15-20z" fill="#bfa8ff" fill-opacity=".18" stroke="#e6dcff" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M14.5 38c6-4 12 3 18-1s11 0 16 2c0 10-7 18-16.5 18S14 50 14.5 38z" fill="url(#__l)"/>
+    <path d="M24 6h16" stroke="#ffcf5a" stroke-width="3" stroke-linecap="round"/>
+    <path d="M26 14l12 6M38 14l-12 6" stroke="#ffcf5a" stroke-width="1.6" opacity=".9"/>
+    ${spark(26, 46, 2.6)}${spark(38, 50, 2)}${spark(33, 42, 1.6, '#fff59d')}${spark(52, 10, 3.5)}
+    ${shine(22, 32, 3.5, 2, .55)}` },
 };
 
 let __iconSeq = 0;
 /* html иконки: SVG, если нарисована, иначе эмодзи */
-function iconHtml(id, emoji) {
+function iconHtml(id, emoji, cls = '') {
   const ic = ICONS[id];
   if (!ic) return emoji;
   const p = 'i' + (++__iconSeq) + '_';
-  return `<svg class="svg-ico" viewBox="0 0 64 64" style="color:${ic.color}" xmlns="http://www.w3.org/2000/svg">${ic.svg.replace(/__/g, p)}</svg>`;
+  return `<svg class="svg-ico ${cls}" viewBox="0 0 64 64" style="color:${ic.color}" xmlns="http://www.w3.org/2000/svg">${ic.svg.replace(/__/g, p)}</svg>`;
 }

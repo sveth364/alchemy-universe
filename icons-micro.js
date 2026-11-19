@@ -30,7 +30,7 @@ Object.assign(ICONS, {
     ${linG('__l', ['#6ee7ff', '#c77dff'], 1, 0)}
     <g fill="none" stroke="url(#__l)" stroke-width="1.9" stroke-linecap="round">
       <path d="M5 16Q32 30 59 16"/><path d="M5 28Q32 50 59 28"/><path d="M5 42Q32 66 59 42"/>
-      <path d="M14 8Q22 34 16 58"/><path d="M32 6V30"/><path d="M50 8Q42 34 48 58"/>
+      <path d="M14 8Q22 34 16 58"/><path d="M32 6Q33.5 18 32 30"/><path d="M50 8Q42 34 48 58"/>
     </g>
     ${ball('__p', 32, 40, 8, ['#fff3c4', '#ffb347', '#e0560b'], '#ffe0b0')}
     ${spark(54, 54, 3.5)}${spark(10, 52, 2.5, '#9ff')}` },

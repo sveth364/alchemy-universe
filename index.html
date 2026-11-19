@@ -69,9 +69,8 @@
   @keyframes shake { 0%,100% { translate: 0; } 25% { translate: -6px; } 75% { translate: 6px; } }
 
   footer {
-    display: flex; gap: 8px; padding: 10px 12px;
+    display: flex; background: linear-gradient(rgba(7,10,24,0), #070a18); gap: 8px; padding: 10px 12px;
     padding-bottom: max(12px, env(safe-area-inset-bottom));
-    background: linear-gradient(transparent, rgba(0,0,0,.35));
   }
   footer button {
     flex: 1; min-width: 0; height: 54px; border-radius: 16px; border: 1px solid var(--tile-border);
@@ -140,6 +139,9 @@
   .svg-ico { width: 46px; height: 46px; display: block; filter: drop-shadow(0 0 4px currentColor); }
   .cell .svg-ico { width: 42px; height: 42px; }
   .cell.locked .svg-ico { filter: none; }
+  .svg-ico.mini, .cell .svg-ico.mini { width: 16px; height: 16px; display: inline-block; vertical-align: -4px; filter: none; }
+  .svg-ico.modal-ico { width: 52px; height: 52px; margin: 0 auto; }
+  .svg-ico.logo { width: 22px; height: 22px; display: inline-block; vertical-align: -5px; }
   .cell.locked { cursor: default; }
   .cell.locked .ico { background: transparent; border-style: dashed; }
   .cell.locked .ico span { filter: brightness(0) invert(1); opacity: .16; }
@@ -194,7 +196,7 @@
 <body>
 <div id="app">
   <header>
-    <span class="title">✨ Алхимия Вселенной</span>
+    <span class="title"><span id="logo"></span> Алхимия Вселенной</span>
     <span id="counter">0 / 0</span>
   </header>
   <div id="progress"><div></div></div>
@@ -243,6 +245,8 @@
 <script src="icons.js"></script>
 <script src="icons-micro.js"></script>
 <script src="icons-stars.js"></script>
+<script src="icons-planet.js"></script>
+<script src="icons-weather.js"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -264,7 +268,9 @@ const inTelegram = !!(tg && tg.initData);
 const cloudOk = inTelegram && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9') && !!tg.CloudStorage;
 if (tg) {
   try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes();
-        tg.setHeaderColor && tg.setHeaderColor('#0b1026'); tg.setBackgroundColor && tg.setBackgroundColor('#0b1026'); } catch (e) {}
+        tg.setHeaderColor && tg.setHeaderColor('#0b1026'); tg.setBackgroundColor && tg.setBackgroundColor('#0b1026');
+        // нижняя плашка Telegram с именем бота — красим в цвет панели, чтобы она слилась с игрой
+        tg.setBottomBarColor && tg.isVersionAtLeast && tg.isVersionAtLeast('7.10') && tg.setBottomBarColor('#070a18'); } catch (e) {}
 }
 const haptic = (type) => { try { tg && tg.HapticFeedback && (type === 'error' || type === 'success'
   ? tg.HapticFeedback.notificationOccurred(type) : tg.HapticFeedback.impactOccurred(type)); } catch (e) {} };
@@ -309,12 +315,13 @@ function updateCounter() {
   document.querySelector('#progress > div').style.width = (discovered.size / total * 100) + '%';
 }
 const eraOpen = (era) => ELEMENTS.some(e => e[3] === era && discovered.has(e[0]));
-const label = (id) => `${byId[id].icon} ${byId[id].name}`;
+const mini = (id) => iconHtml(id, byId[id].icon, 'mini');
+const label = (id) => `${mini(id)} ${byId[id].name}`;
 
 /* модальное окно: modal({icon, title, text, buttons:[{text, primary, onClick}]}) */
 const modalEl = document.getElementById('modal');
 function modal({ icon, title, text, buttons }) {
-  document.getElementById('mIcon').textContent = icon || '';
+  document.getElementById('mIcon').innerHTML = icon || '';
   document.getElementById('mTitle').textContent = title || '';
   document.getElementById('mText').innerHTML = text || '';
   const row = document.getElementById('mButtons'); row.innerHTML = '';
@@ -470,7 +477,7 @@ let eraFilter = 'all';
 function knownRecipe(id) {
   const list = producers[id] || [];
   const r = list.find(([a, b]) => discovered.has(a) && discovered.has(b)) || list[0];
-  return r ? `${byId[r[0]].icon} + ${byId[r[1]].icon}` : '';
+  return r ? `${mini(r[0])} + ${mini(r[1])}` : '';
 }
 function cellHtml(id) {
   const d = byId[id], open = discovered.has(id);
@@ -578,7 +585,7 @@ function giveHint() {
   const [x] = Math.random() < .5 ? [h.a, h.b] : [h.b, h.a];
   lastHint = Date.now(); save(); updateHintBtn();
   modal({
-    icon: byId[x].icon, title: 'Подсказка',
+    icon: iconHtml(x, byId[x].icon, 'modal-ico'), title: 'Подсказка',
     text: `Возьми <b>${label(x)}</b> и найди ему пару среди открытых элементов.<br>Получится новый элемент из эпохи «${eraById[byId[h.res].era].name}».`,
     buttons: [{ text: 'Понятно', primary: true }],
   });
@@ -600,6 +607,7 @@ function showWin() {
 document.getElementById('btnWin').onclick = () => document.getElementById('win').classList.remove('open');
 
 /* ============ СТАРТ ============ */
+document.getElementById('logo').innerHTML = iconHtml('logo', '✨', 'logo');
 load(); updateCounter(); updateHintBtn();
 requestAnimationFrame(placeStarters);
 </script>
