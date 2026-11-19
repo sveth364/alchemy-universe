@@ -10,6 +10,49 @@
 const spark = (x, y, r, c = '#fff') =>
   `<path d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${c}"/>`;
 
+/* ---------- общие детали, из которых собираются иконки ---------- */
+const stops = (arr) => arr.map((c, i) => `<stop offset="${(i / (arr.length - 1)).toFixed(2)}" stop-color="${c}"/>`).join('');
+// радиальный / линейный градиент (id всегда начинайте с «__»)
+const radG = (id, arr, cx = .38, cy = .32, r = .75) => `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">${stops(arr)}</radialGradient>`;
+const linG = (id, arr, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops(arr)}</linearGradient>`;
+// блик
+const shine = (cx, cy, rx, ry, o = .6) =>
+  `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="#fff" opacity="${o}" transform="rotate(-35 ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
+// объёмный шар с бликом
+const ball = (id, cx, cy, r, arr, stroke = '#fff', sw = 2) =>
+  radG(id, arr) + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${id})" stroke="${stroke}" stroke-width="${sw}"/>` +
+  shine(cx - r * .35, cy - r * .4, r * .32, r * .18);
+// мягкое свечение
+const halo = (id, cx, cy, r, color, o = .55) =>
+  `<radialGradient id="${id}" cx=".5" cy=".5" r=".5"><stop offset=".3" stop-color="${color}" stop-opacity="${o}"/>` +
+  `<stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${id})"/>`;
+// половина орбиты: front=false — задняя (верхняя, тусклая), true — передняя
+const arcHalf = (cx, cy, rx, ry, rot, color, w, front, o = 1) =>
+  `<path d="M${cx - rx} ${cy}A${rx} ${ry} 0 0 ${front ? 0 : 1} ${cx + rx} ${cy}" fill="none" stroke="${color}" stroke-width="${w}" ` +
+  `opacity="${o}" stroke-linecap="round" transform="rotate(${rot} ${cx} ${cy})"/>`;
+// звёздчатая вспышка (path d)
+const burst = (cx, cy, n, r1, r2, rot = 0) => {
+  let d = '';
+  for (let i = 0; i < n * 2; i++) {
+    const a = i * Math.PI / n + rot, r = i % 2 ? r2 : r1;
+    d += (i ? 'L' : 'M') + (cx + r * Math.sin(a)).toFixed(1) + ' ' + (cy - r * Math.cos(a)).toFixed(1);
+  }
+  return d + 'Z';
+};
+// сужающиеся лучи
+const rays = (cx, cy, n, r1, r2, w, color, off = 0, o = 1) =>
+  `<g fill="${color}" opacity="${o}">` + Array.from({ length: n }, (_, i) =>
+    `<path d="M${cx} ${cy - r2}L${cx + w} ${cy - r1}H${cx - w}Z" transform="rotate(${off + i * 360 / n} ${cx} ${cy})"/>`).join('') + '</g>';
+// символ/текст на иконке
+const sym = (t, x = 32, y = 32, size = 16, color = '#fff') =>
+  `<text x="${x}" y="${(y + size * .36).toFixed(1)}" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" ` +
+  `font-weight="800" font-size="${size}" fill="${color}" stroke="rgba(30,10,60,.45)" stroke-width="1.2" paint-order="stroke">${t}</text>`;
+// химический элемент: шар с символом и орбитой электрона
+const token = (s, arr, stroke, orbit) =>
+  arcHalf(32, 33, 27, 8, -20, orbit, 2, false, .55) + ball('__b', 32, 32, 16, arr, stroke) +
+  sym(s, 32, 32, s.length > 1 ? 14 : 18) + arcHalf(32, 33, 27, 8, -20, orbit, 2.2, true) +
+  `<circle cx="56.8" cy="26.8" r="2.8" fill="${orbit}"/>`;
+
 const ICONS = {
   // энергия — плазменный шар с разрядами (а не молния из эмодзи)
   energy: { color: '#ffb347', svg: `
