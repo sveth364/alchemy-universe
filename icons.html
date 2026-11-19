@@ -37,19 +37,20 @@
 <script src="icons-civ.js"></script>
 <script src="icons-tech.js"></script>
 <script src="icons-cosmos.js"></script>
+<script src="icons-ui.js"></script>
 <script>
 // по эпохам; показываем эпоху, если в ней нарисована хотя бы одна иконка
 const card = ([id, name, emoji]) => `<div class="card"><div class="big">${iconHtml(id, emoji)}</div>
   <div class="row"><div class="tile">${iconHtml(id, emoji)}</div><div class="tile">${emoji}</div></div>
   <div class="name">${name}</div></div>`;
-const total = Object.keys(ICONS).length;
+const total = ELEMENTS.filter(e => ICONS[e[0]]).length;
 document.querySelector('p').textContent += ` Нарисовано ${total} из ${ELEMENTS.length}.`;
 document.getElementById('grid').outerHTML = ERAS.map(([era, title, icon]) => {
   const all = ELEMENTS.filter(e => e[3] === era), done = all.filter(e => ICONS[e[0]]);
   if (!done.length) return '';
   return `<h2 style="font-size:16px;margin:22px 0 10px">${icon} ${title} <span style="color:#9aa0c8;font-weight:400">${done.length}/${all.length}</span></h2>
     <div class="grid">${done.map(card).join('')}</div>`;
-}).join('');
+}).join('') + `<h2 style="font-size:16px;margin:22px 0 10px">Интерфейс</h2><div class="grid">${Object.keys(ICONS).filter(k => k.startsWith('ui_') || k === 'logo').map(k => card([k, k, ''])).join('')}</div>`;
 </script>
 </body>
 </html>

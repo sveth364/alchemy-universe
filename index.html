@@ -141,6 +141,14 @@
   .cell.locked .svg-ico { filter: none; }
   .svg-ico.mini, .cell .svg-ico.mini { width: 16px; height: 16px; display: inline-block; vertical-align: -4px; filter: none; }
   .svg-ico.modal-ico { width: 52px; height: 52px; margin: 0 auto; }
+  footer button span.i { display: block; }
+  .svg-ico.ui { display: block; width: 26px; height: 26px; filter: drop-shadow(0 0 3px currentColor); }
+  #btnClose .svg-ico.ui { width: 16px; height: 16px; filter: none; }
+  .search-wrap { position: relative; margin: 0 16px 8px; }
+  .search-wrap .svg-ico.ui { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; filter: none; pointer-events: none; }
+  .search-wrap #search { margin: 0; width: 100%; padding-left: 36px; }
+  .svg-ico.win-ico { width: 120px; height: 120px; margin: 0 auto; filter: drop-shadow(0 0 12px currentColor); }
+  #eras .svg-ico.mini { vertical-align: -3px; }
   .svg-ico.logo { width: 22px; height: 22px; display: inline-block; vertical-align: -5px; }
   .cell.locked { cursor: default; }
   .cell.locked .ico { background: transparent; border-style: dashed; }
@@ -202,17 +210,17 @@
   <div id="progress"><div></div></div>
   <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы</div></div>
   <footer>
-    <button id="btnList"><span class="i">📖</span>Список</button>
-    <button id="btnHint"><span class="i">💡</span><span id="hintLabel">Подсказка</span></button>
-    <button id="btnClear"><span class="i">🧹</span>Очистка</button>
-    <button id="btnTrash"><span class="i">🗑️</span>Корзина</button>
+    <button id="btnList"><span class="i" data-ui="ui_list"></span>Список</button>
+    <button id="btnHint"><span class="i" data-ui="ui_hint"></span><span id="hintLabel">Подсказка</span></button>
+    <button id="btnClear"><span class="i" data-ui="ui_clear"></span>Очистка</button>
+    <button id="btnTrash"><span class="i" data-ui="ui_trash"></span>Корзина</button>
   </footer>
 </div>
 
 <div id="sheet">
   <div class="box">
-    <div class="head"><b>Элементы</b><span id="sheetCount"></span><button class="btn-sm" id="btnClose">✕</button></div>
-    <input id="search" type="search" placeholder="🔍 Поиск по открытым" autocomplete="off">
+    <div class="head"><b>Элементы</b><span id="sheetCount"></span><button class="btn-sm" id="btnClose"><span data-ui="ui_close"></span></button></div>
+    <div class="search-wrap"><span data-ui="ui_search"></span><input id="search" type="search" placeholder="Поиск по открытым" autocomplete="off"></div>
     <div id="eras"></div>
     <div id="grid"></div>
     <div class="sheet-foot">
@@ -234,7 +242,7 @@
 <div id="toast"></div>
 <div id="win">
   <div>
-    <div class="big">🌌</div>
+    <div class="big" id="winIcon"></div>
     <h2>Ты создал Вселенную!</h2>
     <p id="winText"></p>
     <button id="btnWin">Продолжить</button>
@@ -253,6 +261,7 @@
 <script src="icons-civ.js"></script>
 <script src="icons-tech.js"></script>
 <script src="icons-cosmos.js"></script>
+<script src="icons-ui.js"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -460,7 +469,7 @@ function combine(a, b) {
 function discover(id) {
   const era = byId[id].era, newEra = !eraOpen(era);
   discovered.add(id); save(); updateCounter(); haptic('success');
-  if (newEra) toast(`Открыта эпоха: <b>${eraById[era].icon} ${eraById[era].name}</b><br>${label(id)}`, 'era');
+  if (newEra) toast(`Открыта эпоха: <b>${eraIcon(era)} ${eraById[era].name}</b><br>${label(id)}`, 'era');
   else toast(`Новый элемент: <b>${label(id)}</b>`);
   if (id === GOAL) setTimeout(showWin, 700);
 }
@@ -497,7 +506,7 @@ function renderEras() {
     `<button data-era="${id}" class="${eraFilter === id ? 'on' : ''}${locked ? ' locked' : ''}">${text}</button>`;
   box.innerHTML = btn('all', 'Все') + ERAS.map(([id, name, icon]) => {
     const all = ELEMENTS.filter(e => e[3] === id), got = all.filter(e => discovered.has(e[0])).length;
-    return got ? btn(id, `${icon} ${name} ${got}/${all.length}`) : btn(id, `🔒 ${name}`, true);
+    return got ? btn(id, `${eraIcon(id)} ${name} ${got}/${all.length}`) : btn(id, `${iconHtml('ui_lock', '🔒', 'mini')} ${name}`, true);
   }).join('');
   box.querySelectorAll('button').forEach(b => b.onclick = () => { eraFilter = b.dataset.era; renderList(); });
 }
@@ -516,12 +525,12 @@ function renderList() {
     if (q) ids = ids.filter(id => byId[id].name.toLowerCase().includes(q));
     if (!got && !q) {
       if (eraFilter === era || !onlyOpen)
-        html += `<div class="era-title">🔒 ${name}<span>0 / ${all.length}</span></div>` +
+        html += `<div class="era-title"><b>${iconHtml('ui_lock', '🔒', 'mini')} ${name}</b><span>0 / ${all.length}</span></div>` +
                 `<div class="era-locked">Эпоха откроется, когда найдёшь её первый элемент.</div>`;
       return;
     }
     if (!ids.length) return;
-    html += `<div class="era-title">${icon} ${name}<span>${got} / ${all.length}</span></div>` +
+    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span>${got} / ${all.length}</span></div>` +
             `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`;
   });
   grid.innerHTML = html || '<div class="empty">Ничего не найдено</div>';
@@ -540,7 +549,7 @@ sheet.addEventListener('click', e => { if (e.target === sheet) closeList(); });
 searchEl.addEventListener('input', renderList);
 chkOpen.addEventListener('change', renderList);
 document.getElementById('btnReset').onclick = () => modal({
-  icon: '⚠️', title: 'Сбросить прогресс?', text: 'Все открытые элементы будут потеряны.',
+  icon: iconHtml('ui_warn', '⚠️', 'modal-ico'), title: 'Сбросить прогресс?', text: 'Все открытые элементы будут потеряны.',
   buttons: [
     { text: 'Отмена' },
     { text: 'Сбросить', primary: true, onClick: () => {
@@ -576,7 +585,7 @@ hintBtn.onclick = () => {
   const left = hintLeft();
   if (left) { toast(`Следующая подсказка через <b>${fmt(left)}</b>`); return; }
   modal({
-    icon: '💡', title: 'Получить подсказку?',
+    icon: iconHtml('ui_hint', '💡', 'modal-ico'), title: 'Получить подсказку?',
     text: 'Подскажу один ингредиент для нового элемента.<br>Следующая подсказка будет доступна через 5 минут.',
     buttons: [{ text: 'Не сейчас' }, { text: 'Получить', primary: true, onClick: giveHint }],
   });
@@ -584,7 +593,7 @@ hintBtn.onclick = () => {
 function giveHint() {
   const list = hintCandidates();
   if (!list.length) {
-    modal({ icon: '🏆', title: 'Подсказок нет', text: 'Ты открыл всё, что можно собрать!', buttons: [{ text: 'Ок', primary: true }] });
+    modal({ icon: iconHtml('ui_trophy', '🏆', 'modal-ico'), title: 'Подсказок нет', text: 'Ты открыл всё, что можно собрать!', buttons: [{ text: 'Ок', primary: true }] });
     return;
   }
   const h = list[Math.floor(Math.random() * list.length)];
@@ -614,6 +623,9 @@ document.getElementById('btnWin').onclick = () => document.getElementById('win')
 
 /* ============ СТАРТ ============ */
 document.getElementById('logo').innerHTML = iconHtml('logo', '✨', 'logo');
+// иконки интерфейса
+document.querySelectorAll('[data-ui]').forEach(el => el.innerHTML = iconHtml(el.dataset.ui, '', 'ui'));
+document.getElementById('winIcon').innerHTML = iconHtml('universe', '🌌', 'win-ico');
 load(); updateCounter(); updateHintBtn();
 requestAnimationFrame(placeStarters);
 </script>
