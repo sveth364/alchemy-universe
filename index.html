@@ -156,7 +156,7 @@
     <span id="counter">0 / 0</span>
   </header>
   <div id="progress"><div></div></div>
-  <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их</div></div>
+  <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы</div></div>
   <footer>
     <button id="btnList"><span class="i">📖</span>Список</button>
     <button id="btnClear"><span class="i">🧹</span>Очистка</button>
@@ -416,6 +416,19 @@ function combine(a, b) {
     if (result === GOAL) setTimeout(showWin, 700);
   } else haptic('medium');
 }
+
+/* двойной тап по пустому месту — добавить стартовые элементы вокруг точки касания */
+let lastBoardTap = { t: 0, x: 0, y: 0 };
+board.addEventListener('pointerdown', e => {
+  if (e.target !== board && e.target !== hint) return;
+  const now = Date.now();
+  if (now - lastBoardTap.t < 350 && Math.hypot(e.clientX - lastBoardTap.x, e.clientY - lastBoardTap.y) < 40) {
+    const r = board.getBoundingClientRect();
+    const x = e.clientX - r.left - 38, y = e.clientY - r.top - 42, o = 48;
+    [[-o, -o], [o, -o], [-o, o], [o, o]].forEach(([dx, dy], i) => spawn(STARTERS[i], x + dx, y + dy, true));
+    haptic('light'); lastBoardTap = { t: 0, x: 0, y: 0 };
+  } else lastBoardTap = { t: now, x: e.clientX, y: e.clientY };
+});
 
 function checkEmpty() { if (!board.querySelector('.el')) hint.style.display = ''; }
 
