@@ -56,9 +56,10 @@ const ICONS = {
     <defs><radialGradient id="__g" cx=".35" cy=".3" r=".75">
       <stop offset="0" stop-color="#ffd1e8"/><stop offset=".45" stop-color="#ff5fa2"/><stop offset="1" stop-color="#b3135f"/>
     </radialGradient></defs>
-    <ellipse cx="32" cy="33" rx="27" ry="10" fill="none" stroke="#6ee7ff" stroke-width="2" opacity=".75" transform="rotate(-20 32 33)"/>
+    <path d="M5 33A27 10 0 0 1 59 33" fill="none" stroke="#6ee7ff" stroke-width="2" opacity=".6" transform="rotate(-20 32 33)"/>
     <circle cx="32" cy="32" r="15" fill="url(#__g)" stroke="#ffc2df" stroke-width="2.2"/>
     <ellipse cx="26" cy="26" rx="5" ry="3" fill="#fff" opacity=".7" transform="rotate(-30 26 26)"/>
+    <path d="M5 33A27 10 0 0 0 59 33" fill="none" stroke="#6ee7ff" stroke-width="2.2" transform="rotate(-20 32 33)"/>
     <circle cx="55" cy="24" r="3.2" fill="#6ee7ff"/><circle cx="9" cy="42" r="2.5" fill="#ffd166"/>
     ${spark(50, 50, 4)}` },
 
@@ -85,11 +86,12 @@ const ICONS = {
     <defs><linearGradient id="__g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffd166"/><stop offset=".5" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff3d7f"/>
     </linearGradient><clipPath id="__c"><circle cx="32" cy="32" r="17"/></clipPath></defs>
+    <path d="M3 34A29 8 0 0 1 61 34" fill="none" stroke="#6ee7ff" stroke-width="2.4" opacity=".6" transform="rotate(-15 32 34)"/>
     <circle cx="32" cy="32" r="17" fill="url(#__g)"/>
     <g clip-path="url(#__c)" fill="#fff" opacity=".28"><rect x="10" y="22" width="44" height="4"/><rect x="10" y="33" width="44" height="5"/><rect x="10" y="43" width="44" height="3"/></g>
     <circle cx="32" cy="32" r="17" fill="none" stroke="#ffe0b0" stroke-width="2"/>
-    <ellipse cx="32" cy="34" rx="29" ry="8" fill="none" stroke="#6ee7ff" stroke-width="2.6" transform="rotate(-15 32 34)"/>
     <ellipse cx="25" cy="24" rx="5" ry="3" fill="#fff" opacity=".6" transform="rotate(-30 25 24)"/>
+    <path d="M3 34A29 8 0 0 0 61 34" fill="none" stroke="#6ee7ff" stroke-width="2.8" transform="rotate(-15 32 34)"/>
     ${spark(53, 10, 4)}${spark(9, 52, 3, '#ffd6ff')}` },
 
   // звезда — раскалённый шар с короной и лучами + блик-искра (узнаваемо как «звезда»)
@@ -132,21 +134,20 @@ const ICONS = {
     <g fill="#fff59d"><circle cx="58" cy="32" r="3"/><circle cx="19" cy="9.5" r="3"/><circle cx="19" cy="54.5" r="3"/></g>
     ${spark(53, 52, 3.5)}` },
 
+  // галактика — 4 закрученных рукава, сужающихся к концам
   galaxy: { color: '#c77dff', svg: `
-    <defs><linearGradient id="__a" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#7b5cff"/>
-    </linearGradient><radialGradient id="__c" cx=".5" cy=".5" r=".5">
+    <defs><radialGradient id="__a" gradientUnits="userSpaceOnUse" cx="32" cy="32" r="26">
+      <stop offset="0" stop-color="#ffe066"/><stop offset=".35" stop-color="#ff5fa2"/><stop offset="1" stop-color="#7b5cff"/>
+    </radialGradient><radialGradient id="__c" cx=".5" cy=".5" r=".5">
       <stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#ffe066"/><stop offset="1" stop-color="#ff5fa2" stop-opacity="0"/>
     </radialGradient></defs>
-    <g fill="none" stroke="url(#__a)" stroke-width="5" stroke-linecap="round">
-      <path d="M32 32c8-6 18-2 18 8s-14 16-24 10"/><path d="M32 32c-8 6-18 2-18-8s14-16 24-10"/>
-    </g>
-    <g fill="none" stroke="#ffd6ff" stroke-width="1.4" stroke-linecap="round" opacity=".7">
-      <path d="M32 32c8-6 18-2 18 8"/><path d="M32 32c-8 6-18 2-18-8"/>
-    </g>
-    <circle cx="32" cy="32" r="10" fill="url(#__c)"/>
-    <g fill="#9ff"><circle cx="49" cy="18" r="1.5"/><circle cx="14" cy="45" r="1.5"/><circle cx="42" cy="54" r="1.2"/></g>
-    ${spark(54, 9, 4)}${spark(9, 12, 2.5, '#ffd6ff')}` },
+    <g fill="url(#__a)">${[0, 90, 180, 270].map(a =>
+      `<path d="M29 27C40 18 56 25 55 41 50 31 41 28 32 34z" transform="rotate(${a} 32 32)"/>`).join('')}</g>
+    <g fill="none" stroke="#ffd6ff" stroke-width="1.2" stroke-linecap="round" opacity=".6">${[0, 90, 180, 270].map(a =>
+      `<path d="M33 29c8-4 16 0 18 7" transform="rotate(${a} 32 32)"/>`).join('')}</g>
+    <circle cx="32" cy="32" r="11" fill="url(#__c)"/>
+    <g fill="#9ff"><circle cx="50" cy="17" r="1.4"/><circle cx="13" cy="46" r="1.4"/><circle cx="46" cy="52" r="1.1"/><circle cx="17" cy="13" r="1.1"/></g>
+    ${spark(55, 8, 3.5)}` },
 
   blackhole: { color: '#ff9f43', svg: `
     <defs><linearGradient id="__d" x1="0" y1="0" x2="1" y2="0">
