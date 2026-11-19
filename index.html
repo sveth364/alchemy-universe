@@ -32,7 +32,9 @@
   #progress { height: 3px; background: rgba(255,255,255,.08); margin: 0 16px; border-radius: 2px; overflow: hidden; }
   #progress > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #ff8bd1); transition: width .4s; }
 
-  #board { position: relative; flex: 1; overflow: hidden; }
+  /* поле поверх шапки и кнопок: перетаскиваемый элемент не прячется за панелью */
+  #board { position: relative; flex: 1; z-index: 5; }
+  header, #progress, footer { position: relative; z-index: 1; }
   #board::before {
     content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
     background-image:
@@ -135,6 +137,9 @@
     background: var(--tile); border: 1px solid var(--tile-border);
   }
   .cell .name { margin-top: 4px; font-size: 11px; text-align: center; color: var(--text); line-height: 1.15; }
+  .svg-ico { width: 46px; height: 46px; display: block; filter: drop-shadow(0 0 4px currentColor); }
+  .cell .svg-ico { width: 42px; height: 42px; }
+  .cell.locked .svg-ico { filter: none; }
   .cell.locked { cursor: default; }
   .cell.locked .ico { background: transparent; border-style: dashed; }
   .cell.locked .ico span { filter: brightness(0) invert(1); opacity: .16; }
@@ -235,6 +240,7 @@
 </div>
 
 <script src="elements.js"></script>
+<script src="icons.js"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -325,7 +331,7 @@ function spawn(id, x, y, anim) {
   const el = document.createElement('div');
   el.className = 'el' + (anim ? ' pop' : '');
   el.dataset.id = id;
-  el.innerHTML = `<div class="ico">${d.icon}</div><div class="name">${d.name}</div>`;
+  el.innerHTML = `<div class="ico">${iconHtml(id, d.icon)}</div><div class="name">${d.name}</div>`;
   const r = board.getBoundingClientRect();
   x = Math.max(0, Math.min(r.width - 76, x)); y = Math.max(0, Math.min(r.height - 84, y));
   el.style.left = x + 'px'; el.style.top = y + 'px';
@@ -467,7 +473,7 @@ function knownRecipe(id) {
 function cellHtml(id) {
   const d = byId[id], open = discovered.has(id);
   const recipe = open && producers[id] ? `<div class="recipe">${knownRecipe(id)}</div>` : '';
-  return `<div class="cell${open ? '' : ' locked'}" data-id="${id}"><div class="ico"><span>${d.icon}</span></div>` +
+  return `<div class="cell${open ? '' : ' locked'}" data-id="${id}"><div class="ico"><span>${iconHtml(id, d.icon)}</span></div>` +
          `<div class="name">${open ? d.name : '???'}</div>${recipe}</div>`;
 }
 function renderEras() {
