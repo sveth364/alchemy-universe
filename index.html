@@ -160,6 +160,14 @@
     margin: 12px 4px 8px; font-weight: 700; font-size: 14px;
   }
   .era-title span { color: var(--muted); font-weight: 400; font-size: 12px; }
+  .era-title { align-items: center; }
+  .era-right { display: flex; align-items: center; gap: 8px; }
+  .to-board {
+    padding: 4px 10px; border-radius: 99px; border: 1px solid var(--accent); background: rgba(139,123,255,.14);
+    color: var(--text); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .to-board:active { background: var(--accent); }
+  .to-board.wide { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin: 6px 0 2px; padding: 9px 12px; font-size: 13px; }
   .era-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 10px 6px; }
   .era-locked { color: var(--muted); font-size: 13px; padding: 4px 4px 8px; }
   .cell { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
@@ -313,22 +321,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=28"></script>
-<script src="icons.js?v=28"></script>
-<script src="icons-micro.js?v=28"></script>
-<script src="icons-stars.js?v=28"></script>
-<script src="icons-planet.js?v=28"></script>
-<script src="icons-weather.js?v=28"></script>
-<script src="icons-life.js?v=28"></script>
-<script src="icons-animals.js?v=28"></script>
-<script src="icons-human.js?v=28"></script>
-<script src="icons-civ.js?v=28"></script>
-<script src="icons-tech.js?v=28"></script>
-<script src="icons-cosmos.js?v=28"></script>
-<script src="icons-ui.js?v=28"></script>
-<script src="info.js?v=28"></script>
-<script src="modes.js?v=28"></script>
-<script src="sound.js?v=28"></script>
+<script src="elements.js?v=29"></script>
+<script src="icons.js?v=29"></script>
+<script src="icons-micro.js?v=29"></script>
+<script src="icons-stars.js?v=29"></script>
+<script src="icons-planet.js?v=29"></script>
+<script src="icons-weather.js?v=29"></script>
+<script src="icons-life.js?v=29"></script>
+<script src="icons-animals.js?v=29"></script>
+<script src="icons-human.js?v=29"></script>
+<script src="icons-civ.js?v=29"></script>
+<script src="icons-tech.js?v=29"></script>
+<script src="icons-cosmos.js?v=29"></script>
+<script src="icons-ui.js?v=29"></script>
+<script src="info.js?v=29"></script>
+<script src="modes.js?v=29"></script>
+<script src="sound.js?v=29"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -679,12 +687,41 @@ function renderList() {
       return;
     }
     if (!ids.length) return;
-    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span>${got} / ${all.length}</span></div>` +
+    const n = q ? 0 : usefulIds(era).length;
+    const toBoard = n ? `<button class="to-board" data-era="${era}">На поле · ${n}</button>` : '';
+    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span class="era-right">${toBoard}<span>${got} / ${all.length}</span></span></div>` +
             `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`;
   });
-  grid.innerHTML = html || '<div class="empty">Ничего не найдено</div>';
+  // на вкладке «Все» — кнопка выложить все полезные элементы сразу
+  const nAll = eraFilter === 'all' && !q ? usefulIds('all').length : 0;
+  const allBtn = nAll ? `<button class="to-board wide" data-era="all">Выложить на поле всё полезное · ${nAll}</button>` : '';
+  grid.innerHTML = html ? allBtn + html : '<div class="empty">Ничего не найдено</div>';
+}
+
+/* ============ «НА ПОЛЕ» ============ */
+// открытые элементы, из которых ещё можно получить что-то новое; самые «плодовитые» — первыми
+function usefulIds(era) {
+  return modeEls.filter(e => (era === 'all' || e[3] === era) && discovered.has(e[0]) && !isDone(e[0]))
+    .map(e => e[0]).sort((a, b) => newFrom(b).length - newFrom(a).length);
+}
+function layOut(era) {
+  const ids = usefulIds(era);
+  if (!ids.length) return;
+  const r = board.getBoundingClientRect(), CW = 82, CH = 92;
+  const cols = Math.max(1, Math.floor((r.width - 8) / CW)), rows = Math.max(1, Math.floor((r.height - 8) / CH));
+  const list = ids.slice(0, cols * rows), usedRows = Math.ceil(list.length / cols);
+  const x0 = (r.width - cols * CW) / 2 + (CW - 76) / 2, y0 = Math.max(4, (r.height - usedRows * CH) / 2);
+  board.querySelectorAll('.el').forEach(e => e.remove());
+  list.forEach((id, i) => setTimeout(() => spawn(id, x0 + (i % cols) * CW, y0 + Math.floor(i / cols) * CH, true), i * 18));
+  closeList(); haptic('medium'); Sound.play('pop');
+  const where = era === 'all' ? '' : ` из эпохи «${eraById[era].name}»`;
+  toast(list.length < ids.length
+    ? `На поле ${list.length} из ${ids.length}${where} — самые полезные.<br>Остальные не поместились`
+    : `На поле ${list.length}${where}`);
 }
 grid.addEventListener('click', e => {
+  const tb = e.target.closest('.to-board');
+  if (tb) { layOut(tb.dataset.era); return; }
   const c = e.target.closest('.cell'); if (!c || c.classList.contains('locked')) return;
   if (infoMode) { showInfo(c.dataset.id); return; }
   const r = board.getBoundingClientRect();
