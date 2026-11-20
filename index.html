@@ -688,7 +688,7 @@ function showInfo(id) {
     : (producers[id] || []).map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('');
   modal({
     icon: iconHtml(id, d.icon, 'modal-ico'), title: d.name, cls: 'info',
-    text: `<span class="chip">${eraIcon(d.era)} ${eraById[d.era].name}</span><span class="desc">${INFO[id] || ''}</span>` +
+    text: `<span class="chip">${eraIcon(d.era)} ${eraById[d.era].name}</span><span class="desc">${(MODE === 'classic' && INFO_CLASSIC[id]) || INFO[id] || ''}</span>` +
           `<b class="how">Как получить</b>${how}` +
           `<b class="how">Что из него получается</b><div class="rec">${leftLine(id)}</div>`,
     buttons: [{ text: 'Понятно', primary: true }],
