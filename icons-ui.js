@@ -2,9 +2,24 @@
 
 // эпоха → элемент, чья иконка её обозначает
 const ERA_ICON = { micro: 'atom', stars: 'star', planet: 'planet', weather: 'storm', life: 'plant',
-  human: 'human', civ: 'civ', tech: 'computer', cosmos: 'galaxy' };
+  human: 'era_human', civ: 'civ', tech: 'computer', cosmos: 'galaxy' };
 
 Object.assign(ICONS, {
+  // эпоха «Человек» — наскальный трафарет ладони на каменной плитке (как в пещерах древних людей)
+  era_human: { color: '#ff9f5a', svg: `
+    ${linG('__s', ['#9a8574', '#5a4638'])}
+    <circle cx="32" cy="32" r="27" fill="url(#__s)" stroke="#e8d6c4" stroke-width="2.4"/>
+    <path d="M10 24c5 2 9-2 13 0M40 52c5-2 8 1 12-1M42 11c3 2 6 1 9 3" fill="none" stroke="#3e2f26" stroke-width="1.4" opacity=".5"/>
+    <radialGradient id="__o" cx=".5" cy=".52" r=".5"><stop offset="0" stop-color="#ffb24d"/><stop offset=".55" stop-color="#ff7a2e" stop-opacity=".85"/><stop offset="1" stop-color="#ff7a2e" stop-opacity="0"/></radialGradient>
+    <circle cx="32" cy="33" r="24" fill="url(#__o)"/>
+    <g fill="#3a2a22" transform="translate(32 33) scale(.72) translate(-31 -31)">
+        <rect x="19" y="30" width="26" height="23" rx="10"/><rect x="20" y="13" width="7" height="24" rx="3.5"/>
+        <rect x="28.5" y="8" width="7" height="28" rx="3.5"/><rect x="37" y="11" width="7" height="25" rx="3.5"/>
+        <rect x="44" y="19" width="6.5" height="19" rx="3.25" transform="rotate(12 47 28)"/>
+        <rect x="11" y="31" width="7" height="17" rx="3.5" transform="rotate(-38 15 40)"/></g>
+    <g fill="#ffc27a" opacity=".8"><circle cx="16" cy="18" r="1.3"/><circle cx="48" cy="47" r="1.5"/><circle cx="47" cy="18" r="1"/><circle cx="17" cy="47" r="1.1"/></g>
+    ${spark(55, 8, 3.5)}` },
+
   // «Список» — книга заклинаний алхимика с золотой оправой
   ui_list: { color: '#c77dff', svg: `
     ${linG('__c', ['#c77dff', '#5b1f9a'])}

@@ -294,7 +294,12 @@
   .feat { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--tile); border: 1px solid var(--tile-border); }
   .feat .svg-ico { width: 30px; height: 30px; flex: none; }
   .feat b { display: block; font-size: 13.5px; color: var(--text); } .feat span { display: block; font-size: 11.5px; color: var(--muted); }
-  .feat.got { border-color: rgba(255,209,102,.6); } .feat.off .svg-ico { filter: grayscale(1); opacity: .35; }
+  .feat.got { border-color: rgba(255,209,102,.6); }
+  .feat.off { border-style: dashed; background: transparent; }
+  .feat-ico { width: 30px; height: 30px; flex: none; display: grid; place-items: center; }
+  .feat.off .svg-ico { filter: brightness(0) invert(1); opacity: .18; }
+  .feat.off b { letter-spacing: 2px; color: var(--muted); }
+  .theme-btn .svg-ico.mini { vertical-align: -3px; }
   .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .theme-btn { border-radius: 12px; border: 2px solid var(--tile-border); padding: 26px 4px 6px; font: inherit; font-size: 11.5px; color: #fff; cursor: pointer; }
   .theme-btn.on { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,.4); }
@@ -356,22 +361,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=32"></script>
-<script src="icons.js?v=32"></script>
-<script src="icons-micro.js?v=32"></script>
-<script src="icons-stars.js?v=32"></script>
-<script src="icons-planet.js?v=32"></script>
-<script src="icons-weather.js?v=32"></script>
-<script src="icons-life.js?v=32"></script>
-<script src="icons-animals.js?v=32"></script>
-<script src="icons-human.js?v=32"></script>
-<script src="icons-civ.js?v=32"></script>
-<script src="icons-tech.js?v=32"></script>
-<script src="icons-cosmos.js?v=32"></script>
-<script src="icons-ui.js?v=32"></script>
-<script src="info.js?v=32"></script>
-<script src="modes.js?v=32"></script>
-<script src="sound.js?v=32"></script>
+<script src="elements.js?v=35"></script>
+<script src="icons.js?v=35"></script>
+<script src="icons-micro.js?v=35"></script>
+<script src="icons-stars.js?v=35"></script>
+<script src="icons-planet.js?v=35"></script>
+<script src="icons-weather.js?v=35"></script>
+<script src="icons-life.js?v=35"></script>
+<script src="icons-animals.js?v=35"></script>
+<script src="icons-human.js?v=35"></script>
+<script src="icons-civ.js?v=35"></script>
+<script src="icons-tech.js?v=35"></script>
+<script src="icons-cosmos.js?v=35"></script>
+<script src="icons-ui.js?v=35"></script>
+<script src="info.js?v=35"></script>
+<script src="modes.js?v=35"></script>
+<script src="sound.js?v=35"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -1030,13 +1035,16 @@ function awardsHtml() {
   const eras = ERAS.filter(([e]) => modeEls.some(x => x[3] === e));
   const medals = eras.map(([e, name]) => `<span class="medal${eraComplete(MODE, e, M) ? '' : ' off'}"><i>${eraIcon(e, '')}</i>${name}</span>`).join('');
   const got = eras.filter(([e]) => eraComplete(MODE, e, M)).length;
-  const feat = (ok, icon, title, text) => `<div class="feat ${ok ? 'got' : 'off'}">${iconHtml(icon, '', '')}<div><b>${title}</b><span>${text}</span></div></div>`;
+  // неполученные награды — тайна: силуэт и «???»
+  const feat = (ok, icon, title, text) => ok
+    ? `<div class="feat got">${iconHtml(icon, '', '')}<div><b>${title}</b><span>${text}</span></div></div>`
+    : `<div class="feat off"><span class="feat-ico">${iconHtml(icon, '', '')}</span><div><b>???</b><span>Секретная награда</span></div></div>`;
   const feats = [
     feat(goalDone(MODE), 'universe', 'Создатель Вселенной', `Найти Вселенную в режиме «${M.name}» · тема «Туманность»`),
     feat(fullDone(MODE), 'ui_trophy', 'Полная коллекция', `Открыть все ${modeEls.length} элементов режима`),
     feat(allGoals(), 'logo', 'Творец', 'Создать Вселенную в обоих режимах · тема «Сияние» и золотая колба'),
   ].join('');
-  const themes = THEMES.map(t => `<button class="theme-btn${t.id === theme ? ' on' : ''}${t.ok() ? '' : ' locked'}" data-theme="${t.id}" style="background:${t.bg}">${t.ok() ? t.name : '🔒 ' + t.name}</button>`).join('');
+  const themes = THEMES.map(t => `<button class="theme-btn${t.id === theme ? ' on' : ''}${t.ok() ? '' : ' locked'}" data-theme="${t.id}" style="background:${t.bg}">${t.ok() ? t.name : iconHtml('ui_lock', '🔒', 'mini') + ' ' + t.name}</button>`).join('');
   return `<b class="awards-title">Медали эпох · ${got} / ${eras.length}</b><span class="medals">${medals}</span>` +
          `<b class="awards-title">Награды</b><span class="feats">${feats}</span>` +
          `<b class="awards-title">Тема оформления</b><span class="themes">${themes}</span>`;
