@@ -264,13 +264,46 @@
 
   #win {
     position: fixed; inset: 0; z-index: 4000; display: none; place-items: center; text-align: center;
-    background: radial-gradient(circle, rgba(139,123,255,.35), rgba(5,6,20,.92)); padding: 16px;
+    background: radial-gradient(circle, rgba(52,38,120,.97), rgba(5,6,20,.98) 75%); padding: 16px;
   }
   #win.open { display: grid; }
   #win .big { font-size: 96px; animation: pop .8s ease-out; }
   #win h2 { margin: 10px 0 6px; }
   #win p { color: var(--muted); margin: 0 0 18px; }
   #win button { background: var(--accent); color: #fff; border: 0; border-radius: 14px; padding: 12px 22px; font-size: 16px; cursor: pointer; }
+  #win > div { max-width: 360px; width: 100%; }
+  #win .win-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px; }
+  #win .win-stats div { background: var(--tile); border: 1px solid var(--tile-border); border-radius: 12px; padding: 8px 4px; }
+  #win .win-stats b { display: block; font-size: 15px; } #win .win-stats span { color: var(--muted); font-size: 11px; }
+  #win .win-unlock { display: block; color: var(--gold); font-size: 13.5px; margin: 0 0 16px; }
+  #win .win-btns { display: flex; gap: 10px; justify-content: center; }
+  #win .win-btns .ghost { background: var(--tile); border: 1px solid var(--tile-border); color: var(--text); }
+  /* ---- награды ---- */
+  .awards-title { display: block; margin: 16px 0 8px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; text-align: left; }
+  .medals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 4px; }
+  .medal { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: var(--text); line-height: 1.1; }
+  .medal i {
+    width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-style: normal;
+    border: 2px solid var(--gold); background: radial-gradient(circle at 35% 30%, rgba(255,209,102,.35), rgba(255,209,102,.05));
+    box-shadow: 0 0 10px rgba(255,209,102,.35);
+  }
+  .medal i .svg-ico { width: 26px; height: 26px; filter: none; }
+  .medal.off { color: var(--muted); } .medal.off i { border-color: var(--tile-border); background: transparent; box-shadow: none; }
+  .medal.off i .svg-ico { filter: grayscale(1) brightness(.7); opacity: .35; }
+  .feats { display: grid; gap: 6px; text-align: left; }
+  .feat { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--tile); border: 1px solid var(--tile-border); }
+  .feat .svg-ico { width: 30px; height: 30px; flex: none; }
+  .feat b { display: block; font-size: 13.5px; color: var(--text); } .feat span { display: block; font-size: 11.5px; color: var(--muted); }
+  .feat.got { border-color: rgba(255,209,102,.6); } .feat.off .svg-ico { filter: grayscale(1); opacity: .35; }
+  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .theme-btn { border-radius: 12px; border: 2px solid var(--tile-border); padding: 26px 4px 6px; font: inherit; font-size: 11.5px; color: #fff; cursor: pointer; }
+  .theme-btn.on { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,.4); }
+  .theme-btn.locked { opacity: .45; }
+  .era-title span.era-done { color: var(--gold); font-weight: 700; }
+  /* темы оформления (открываются наградами) */
+  body.theme-nebula { --bg1: #1a0b1e; --bg2: #4a1d44; --accent: #ff7fb5; --panel: rgba(42,18,44,.95); }
+  body.theme-aurora { --bg1: #041619; --bg2: #0e3f45; --accent: #2fd6b8; --panel: rgba(10,38,44,.95); }
+  body.creator #logo .svg-ico { filter: drop-shadow(0 0 6px #ffd166); }
 </style>
 </head>
 <body>
@@ -317,26 +350,28 @@
     <div class="big" id="winIcon"></div>
     <h2>Ты создал Вселенную!</h2>
     <p id="winText"></p>
-    <button id="btnWin">Продолжить</button>
+    <div class="win-stats" id="winStats"></div>
+    <span class="win-unlock" id="winUnlock"></span>
+    <div class="win-btns"><button class="ghost" id="btnShare">Поделиться</button><button id="btnWin">Продолжить</button></div>
   </div>
 </div>
 
-<script src="elements.js?v=30"></script>
-<script src="icons.js?v=30"></script>
-<script src="icons-micro.js?v=30"></script>
-<script src="icons-stars.js?v=30"></script>
-<script src="icons-planet.js?v=30"></script>
-<script src="icons-weather.js?v=30"></script>
-<script src="icons-life.js?v=30"></script>
-<script src="icons-animals.js?v=30"></script>
-<script src="icons-human.js?v=30"></script>
-<script src="icons-civ.js?v=30"></script>
-<script src="icons-tech.js?v=30"></script>
-<script src="icons-cosmos.js?v=30"></script>
-<script src="icons-ui.js?v=30"></script>
-<script src="info.js?v=30"></script>
-<script src="modes.js?v=30"></script>
-<script src="sound.js?v=30"></script>
+<script src="elements.js?v=31"></script>
+<script src="icons.js?v=31"></script>
+<script src="icons-micro.js?v=31"></script>
+<script src="icons-stars.js?v=31"></script>
+<script src="icons-planet.js?v=31"></script>
+<script src="icons-weather.js?v=31"></script>
+<script src="icons-life.js?v=31"></script>
+<script src="icons-animals.js?v=31"></script>
+<script src="icons-human.js?v=31"></script>
+<script src="icons-civ.js?v=31"></script>
+<script src="icons-tech.js?v=31"></script>
+<script src="icons-cosmos.js?v=31"></script>
+<script src="icons-ui.js?v=31"></script>
+<script src="info.js?v=31"></script>
+<script src="modes.js?v=31"></script>
+<script src="sound.js?v=31"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -407,7 +442,7 @@ function fillMissingPairs() {
 const STAT_KEYS = ['s', 'ok', 't', 'h', 'n'];
 const blankStats = () => Object.fromEntries(STAT_KEYS.map(k => [k, 0]));
 const stats = Object.fromEntries(Object.keys(MODES).map(id => [id, blankStats()]));
-let statsDirty = false;
+let statsDirty = false, theme = 'night';
 function addStats(mode, o) {
   if (!stats[mode] || !o) return;
   for (const k of STAT_KEYS) stats[mode][k] = Math.max(stats[mode][k], +o[k] || 0);
@@ -417,6 +452,7 @@ function applySave(raw) {
   const s = JSON.parse(raw);
   if (Array.isArray(s)) { addIds('cosmos', s); return; }                       // v1
   for (const m in s.st || {}) addStats(m, s.st[m]);
+  if (s.th) theme = s.th;
   if (s.v === 3) {
     for (const m in s.p || {}) addIds(m, s.p[m]);
     for (const m in s.r || {}) addPairs(m, s.r[m]);
@@ -444,10 +480,10 @@ function save() {
   const p = Object.fromEntries(Object.keys(progress).map(m => [m, [...progress[m]]]));
   const r = Object.fromEntries(Object.keys(found).map(m => [m, encPairs(found[m])]));
   statsDirty = false;
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p, r, st: stats })); } catch (e) {}
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p, r, st: stats, th: theme })); } catch (e) {}
   try {
     if (!cloudOk) return;
-    tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint, st: stats }));
+    tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint, st: stats, th: theme }));
     tg.CloudStorage.setItem(CLOUD[MODE], JSON.stringify(p[MODE]));
     tg.CloudStorage.setItem(CLOUD[MODE] + '_r', r[MODE]);
   } catch (e) {}
@@ -622,6 +658,7 @@ function discover(id) {
   else toast(`Новый элемент: <b>${label(id)}</b>`);
   refreshDone();
   if (id === GOAL_ID) setTimeout(showWin, 700);
+  else checkAwards(era);
 }
 
 function checkEmpty() { if (!board.querySelector('.el')) hint.style.display = ''; }
@@ -689,7 +726,7 @@ function renderList() {
     if (!ids.length) return;
     const n = q ? 0 : Math.min(usefulIds(era).length, boardCap());          // столько, сколько реально встанет на поле
     const toBoard = n ? `<button class="to-board" data-era="${era}">На поле · ${n}</button>` : '';
-    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span class="era-right">${toBoard}<span>${got} / ${all.length}</span></span></div>` +
+    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span class="era-right">${toBoard}<span class="${got === all.length ? 'era-done' : ''}">${got === all.length ? '★ ' : ''}${got} / ${all.length}</span></span></div>` +
             `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`;
   });
   // на вкладке «Все» — кнопка выложить все полезные элементы сразу
@@ -901,11 +938,21 @@ trashBtn.onclick = () => toast('Перетащи элемент на корзи�
 
 /* ============ ПОБЕДА ============ */
 function showWin() {
+  tickTime(); save();
+  const st = stats[MODE];
   document.getElementById('winText').textContent =
-    `Режим «${M.name}»: открыто ${discovered.size} из ${modeEls.length} элементов. Можно продолжить и найти остальные!`;
+    discovered.size >= modeEls.length ? `Режим «${M.name}»: открыты все ${modeEls.length} элементов. Полная коллекция!`
+    : `Режим «${M.name}»: открыто ${discovered.size} из ${modeEls.length} элементов. Можно продолжить и найти остальные!`;
+  document.getElementById('winStats').innerHTML =
+    `<div><b>${fmtDur(st.t)}</b><span>в игре</span></div><div><b>${st.s}</b><span>попыток</span></div><div><b>${st.h}</b><span>подсказок</span></div>`;
+  document.getElementById('winUnlock').innerHTML = allGoals()
+    ? '★ Награда «Творец»: оба режима пройдены! Открыта тема «Сияние» и золотая колба'
+    : '★ Награда «Создатель Вселенной». Открыта тема «Туманность» — выбери её в окне статистики';
+  applyTheme();
   document.getElementById('win').classList.add('open'); Sound.play('win');
 }
 document.getElementById('btnWin').onclick = () => document.getElementById('win').classList.remove('open');
+document.getElementById('btnShare').onclick = shareResult;
 
 /* ============ СТАРТ ============ */
 document.getElementById('logo').innerHTML = iconHtml('logo', '✨', 'logo');
@@ -946,14 +993,83 @@ function showStats() {
     tile(st.h, 'Подсказок взято', true),
   ].join('');
   modal({
-    icon: iconHtml('ui_stats', '📊', 'modal-ico'), title: `Статистика · ${M.name}`,
+    icon: iconHtml('ui_stats', '📊', 'modal-ico'), title: `Статистика и награды · ${M.name}`,
     text: `<span class="stats-grid">${tiles}</span>` +
-          `<span class="stats-note">У каждого режима своя статистика. Время идёт, только пока ты играешь.</span>`,
-    buttons: [{ text: 'Понятно', primary: true }],
+          `<span class="stats-note">У каждого режима своя статистика. Время идёт, только пока ты играешь.</span>` + awardsHtml(),
+    buttons: [{ text: 'Понятно', primary: true }], cls: 'info',
   });
+  bindThemeButtons();
   haptic('light');
 }
 document.getElementById('counter').onclick = showStats;
+
+/* ============ НАГРАДЫ ============ */
+// Медали эпох и особые награды не хранятся отдельно — они вычисляются из прогресса.
+const BOT_LINK = '';   // ссылка на бота (https://t.me/имя_бота) — для кнопки «Поделиться»
+const eraComplete = (mode, era, B) => { const els = ELEMENTS.filter(e => e[3] === era && B.set.has(e[0]));
+  return els.length > 0 && els.every(e => progress[mode].has(e[0])); };
+const goalDone = (m) => progress[m].has(MODES[m].goal);
+const fullDone = (m) => m === MODE && discovered.size >= modeEls.length;
+const anyGoal = () => Object.keys(MODES).some(goalDone);
+const allGoals = () => Object.keys(MODES).every(goalDone);
+const THEMES = [
+  { id: 'night', name: 'Ночь', bg: 'linear-gradient(135deg,#1b1446,#0b1026)', ok: () => true, need: '' },
+  { id: 'nebula', name: 'Туманность', bg: 'linear-gradient(135deg,#4a1d44,#1a0b1e)', ok: anyGoal, need: 'Создай Вселенную в любом режиме' },
+  { id: 'aurora', name: 'Сияние', bg: 'linear-gradient(135deg,#0e3f45,#041619)', ok: allGoals, need: 'Создай Вселенную в обоих режимах' },
+];
+function applyTheme() {
+  const t = THEMES.find(x => x.id === theme && x.ok()) || THEMES[0];
+  document.body.classList.remove(...THEMES.map(x => 'theme-' + x.id));
+  if (t.id !== 'night') document.body.classList.add('theme-' + t.id);
+  document.body.classList.toggle('creator', allGoals());
+  const bg = getComputedStyle(document.body).getPropertyValue('--bg1').trim() || '#0b1026';
+  try { tg && tg.setHeaderColor && tg.setHeaderColor(bg); tg && tg.setBackgroundColor && tg.setBackgroundColor(bg);
+    tg && tg.setBottomBarColor && tg.isVersionAtLeast('7.10') && tg.setBottomBarColor(bg); } catch (e) {}
+}
+function awardsHtml() {
+  const eras = ERAS.filter(([e]) => modeEls.some(x => x[3] === e));
+  const medals = eras.map(([e, name]) => `<span class="medal${eraComplete(MODE, e, M) ? '' : ' off'}"><i>${eraIcon(e, '')}</i>${name}</span>`).join('');
+  const got = eras.filter(([e]) => eraComplete(MODE, e, M)).length;
+  const feat = (ok, icon, title, text) => `<div class="feat ${ok ? 'got' : 'off'}">${iconHtml(icon, '', '')}<div><b>${title}</b><span>${text}</span></div></div>`;
+  const feats = [
+    feat(goalDone(MODE), 'universe', 'Создатель Вселенной', `Найти Вселенную в режиме «${M.name}» · тема «Туманность»`),
+    feat(fullDone(MODE), 'ui_trophy', 'Полная коллекция', `Открыть все ${modeEls.length} элементов режима`),
+    feat(allGoals(), 'logo', 'Творец', 'Создать Вселенную в обоих режимах · тема «Сияние» и золотая колба'),
+  ].join('');
+  const themes = THEMES.map(t => `<button class="theme-btn${t.id === theme ? ' on' : ''}${t.ok() ? '' : ' locked'}" data-theme="${t.id}" style="background:${t.bg}">${t.ok() ? t.name : '🔒 ' + t.name}</button>`).join('');
+  return `<b class="awards-title">Медали эпох · ${got} / ${eras.length}</b><span class="medals">${medals}</span>` +
+         `<b class="awards-title">Награды</b><span class="feats">${feats}</span>` +
+         `<b class="awards-title">Тема оформления</b><span class="themes">${themes}</span>`;
+}
+function bindThemeButtons() {
+  document.querySelectorAll('.theme-btn').forEach(b => b.onclick = () => {
+    const t = THEMES.find(x => x.id === b.dataset.theme);
+    if (!t.ok()) { toast(`Тема «${t.name}»: ${t.need.toLowerCase()}`); return; }
+    theme = t.id; applyTheme(); save(); haptic('light');
+    document.querySelectorAll('.theme-btn').forEach(x => x.classList.toggle('on', x === b));
+  });
+}
+// после открытия элемента: медаль эпохи или полная коллекция
+function checkAwards(era) {
+  if (fullDone(MODE)) {
+    setTimeout(() => { Sound.play('era'); modal({ icon: iconHtml('ui_trophy', '🏆', 'modal-ico'), title: 'Полная коллекция!',
+      text: `Ты открыл все ${modeEls.length} элементов режима «${M.name}». Невероятно!`, buttons: [{ text: 'Ура!', primary: true }] }); }, 900);
+  } else if (eraComplete(MODE, era, M)) {
+    setTimeout(() => { Sound.play('era'); toast(`Медаль эпохи <b>${eraIcon(era)} ${eraById[era].name}</b><br>Все элементы эпохи открыты!`, 'era'); }, 1400);
+  }
+}
+function shareResult() {
+  const st = stats[MODE];
+  const text = `Я создал Вселенную в «Алхимии» (режим «${M.name}»)` + (st.t ? ` за ${fmtDur(st.t)}` : '') + '! Попробуй и ты 🌌';
+  if (BOT_LINK && tg && tg.openTelegramLink) {
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(BOT_LINK)}&text=${encodeURIComponent(text)}`);
+  } else {
+    const full = text + (BOT_LINK ? ' ' + BOT_LINK : '');
+    const manual = () => modal({ icon: iconHtml('universe', '', 'modal-ico'), title: 'Поделиться', text: `Скопируй и отправь друзьям:<br><b style="user-select:text;-webkit-user-select:text">${full}</b>`, buttons: [{ text: 'Готово', primary: true }] });
+    try { navigator.clipboard.writeText(full).then(() => toast('Текст скопирован — отправь его друзьям'), manual); }
+    catch (e) { manual(); }
+  }
+}
 
 document.getElementById('winIcon').innerHTML = iconHtml('universe', '🌌', 'win-ico');
 load();
@@ -961,6 +1077,7 @@ load();
 const startMode = savedMode || (progress.cosmos.size > 4 ? 'cosmos' : null);
 useMode(startMode || 'classic'); discovered = progress[MODE];
 fillMissingPairs();
+applyTheme();
 document.getElementById('modeName').textContent = M.name;
 updateCounter(); updateHintBtn();
 requestAnimationFrame(placeStarters);
