@@ -15,8 +15,8 @@ Object.assign(ICONS, {
     <g fill="#3a2a22" transform="translate(32 33) scale(.72) translate(-31 -31)">
         <rect x="19" y="30" width="26" height="23" rx="10"/><rect x="20" y="13" width="7" height="24" rx="3.5"/>
         <rect x="28.5" y="8" width="7" height="28" rx="3.5"/><rect x="37" y="11" width="7" height="25" rx="3.5"/>
-        <rect x="44" y="19" width="6.5" height="19" rx="3.25" transform="rotate(12 47 28)"/>
-        <rect x="11" y="31" width="7" height="17" rx="3.5" transform="rotate(-38 15 40)"/></g>
+        <rect x="40" y="17" width="6.5" height="24" rx="3.25" transform="rotate(12 43 38)"/>
+        <rect x="18.25" y="26" width="7.5" height="22" rx="3.75" transform="rotate(-40 22 46)"/></g>
     <g fill="#ffc27a" opacity=".8"><circle cx="16" cy="18" r="1.3"/><circle cx="48" cy="47" r="1.5"/><circle cx="47" cy="18" r="1"/><circle cx="17" cy="47" r="1.1"/></g>
     ${spark(55, 8, 3.5)}` },
 

@@ -9,7 +9,7 @@ const temple = (fill, roof, cols = 4, badge = '') => `
   <path d="M6 22 32 8l26 14z" fill="${roof}" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
   <rect x="8" y="22" width="48" height="5" fill="url(#__tf)" stroke="#fff" stroke-width="1.4"/>
   <g fill="url(#__tf)" stroke="#fff" stroke-width="1.4">${Array.from({ length: cols }, (_, i) =>
-    `<rect x="${12 + i * (36 / (cols - 1)) - 3}" y="27" width="6" height="22"/>`).join('')}</g>
+    `<rect x="${14 + i * (36 / (cols - 1)) - 3}" y="27" width="6" height="22"/>`).join('')}</g>
   <rect x="6" y="49" width="52" height="5" fill="url(#__tf)" stroke="#fff" stroke-width="1.4"/>
   <rect x="2" y="54" width="60" height="5" rx="1" fill="url(#__tf)" stroke="#fff" stroke-width="1.4"/>${badge}`;
 

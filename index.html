@@ -361,22 +361,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=35"></script>
-<script src="icons.js?v=35"></script>
-<script src="icons-micro.js?v=35"></script>
-<script src="icons-stars.js?v=35"></script>
-<script src="icons-planet.js?v=35"></script>
-<script src="icons-weather.js?v=35"></script>
-<script src="icons-life.js?v=35"></script>
-<script src="icons-animals.js?v=35"></script>
-<script src="icons-human.js?v=35"></script>
-<script src="icons-civ.js?v=35"></script>
-<script src="icons-tech.js?v=35"></script>
-<script src="icons-cosmos.js?v=35"></script>
-<script src="icons-ui.js?v=35"></script>
-<script src="info.js?v=35"></script>
-<script src="modes.js?v=35"></script>
-<script src="sound.js?v=35"></script>
+<script src="elements.js?v=36"></script>
+<script src="icons.js?v=36"></script>
+<script src="icons-micro.js?v=36"></script>
+<script src="icons-stars.js?v=36"></script>
+<script src="icons-planet.js?v=36"></script>
+<script src="icons-weather.js?v=36"></script>
+<script src="icons-life.js?v=36"></script>
+<script src="icons-animals.js?v=36"></script>
+<script src="icons-human.js?v=36"></script>
+<script src="icons-civ.js?v=36"></script>
+<script src="icons-tech.js?v=36"></script>
+<script src="icons-cosmos.js?v=36"></script>
+<script src="icons-ui.js?v=36"></script>
+<script src="info.js?v=36"></script>
+<script src="modes.js?v=36"></script>
+<script src="sound.js?v=36"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -1018,9 +1018,9 @@ const fullDone = (m) => m === MODE && discovered.size >= modeEls.length;
 const anyGoal = () => Object.keys(MODES).some(goalDone);
 const allGoals = () => Object.keys(MODES).every(goalDone);
 const THEMES = [
-  { id: 'night', name: 'Ночь', bg: 'linear-gradient(135deg,#1b1446,#0b1026)', ok: () => true, need: '' },
-  { id: 'nebula', name: 'Туманность', bg: 'linear-gradient(135deg,#4a1d44,#1a0b1e)', ok: anyGoal, need: 'Создай Вселенную в любом режиме' },
-  { id: 'aurora', name: 'Сияние', bg: 'linear-gradient(135deg,#0e3f45,#041619)', ok: allGoals, need: 'Создай Вселенную в обоих режимах' },
+  { id: 'night', name: 'Ночь', bg: 'linear-gradient(135deg,#1b1446,#0b1026)', ok: () => true },
+  { id: 'nebula', name: 'Туманность', bg: 'linear-gradient(135deg,#4a1d44,#1a0b1e)', ok: anyGoal },
+  { id: 'aurora', name: 'Сияние', bg: 'linear-gradient(135deg,#0e3f45,#041619)', ok: allGoals },
 ];
 function applyTheme() {
   const t = THEMES.find(x => x.id === theme && x.ok()) || THEMES[0];
@@ -1052,7 +1052,7 @@ function awardsHtml() {
 function bindThemeButtons() {
   document.querySelectorAll('.theme-btn').forEach(b => b.onclick = () => {
     const t = THEMES.find(x => x.id === b.dataset.theme);
-    if (!t.ok()) { toast(`Тема «${t.name}»: ${t.need.toLowerCase()}`); return; }
+    if (!t.ok()) { toast(`Тема «${t.name}» откроется вместе с секретной наградой`); return; }
     theme = t.id; applyTheme(); save(); haptic('light');
     document.querySelectorAll('.theme-btn').forEach(x => x.classList.toggle('on', x === b));
   });
