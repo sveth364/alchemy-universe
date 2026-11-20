@@ -471,7 +471,7 @@ const RECIPES = [
   // цивилизация
   'village+village=city', 'village+time=city',
   'city+city=civ', 'city+writing=civ',
-  'plant+water=paper', 'wood+pressure=paper',
+  'plant+pressure=paper', 'wood+pressure=paper',
   'human+paper=writing', 'paper+bird=writing',
   'paper+writing=book', 'book+book=library', 'book+human=knowledge',
   'knowledge+house=school',

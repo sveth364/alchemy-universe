@@ -172,7 +172,17 @@
   .cell.locked .name { color: var(--muted); }
   .cell .recipe { font-size: 10px; color: var(--muted); margin-top: 1px; text-align: center; }
   .sheet-foot { display: flex; justify-content: space-between; align-items: center; padding: 6px 16px 12px; }
-  #onlyOpen { color: var(--muted); font-size: 13px; display: flex; gap: 6px; align-items: center; }
+  #btnOpen {
+    display: flex; gap: 8px; align-items: center; padding: 6px 12px 6px 7px; border-radius: 999px; cursor: pointer;
+    background: var(--tile); border: 1px solid var(--tile-border); color: var(--muted); font: inherit; font-size: 13px; transition: all .15s;
+  }
+  #btnOpen .sw { width: 28px; height: 16px; border-radius: 8px; background: rgba(255,255,255,.12); position: relative; transition: background .15s; }
+  #btnOpen .sw::after { content: ''; position: absolute; left: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: all .15s; }
+  #btnOpen.on { color: var(--text); border-color: var(--accent); }
+  #btnOpen.on .sw { background: var(--accent); }
+  #btnOpen.on .sw::after { left: 14px; background: #fff; }
+  #sheet .head span small { display: block; font-size: 11px; text-align: right; }
+  .rec.q-rec { opacity: .55; }
   #btnReset { color: var(--danger); }
   .empty { color: var(--muted); text-align: center; padding: 30px 0; font-size: 14px; }
 
@@ -257,7 +267,7 @@
     <div id="eras"></div>
     <div id="grid"></div>
     <div class="sheet-foot">
-      <label id="onlyOpen"><input type="checkbox" id="chkOpen"> только открытые</label>
+      <button id="btnOpen" aria-pressed="false"><span class="sw"></span>Только открытые</button>
       <button class="btn-sm" id="btnReset">Сбросить прогресс</button>
     </div>
   </div>
@@ -336,12 +346,39 @@ const progress = Object.fromEntries(Object.keys(MODES).map(id => [id, new Set(MO
 let discovered = progress[MODE];
 let lastHint = 0, tutDone = false, savedMode = null;
 const addIds = (mode, list) => (list || []).forEach(id => byId[id] && progress[mode] && progress[mode].add(id));
+/* Найденные рецепты (пары), по режимам. Чтобы влезть в 4 КБ облака, пара кодируется
+   4 символами: номер каждого элемента в ELEMENTS в base36. Поэтому новые элементы
+   в ELEMENTS добавляем только в конец. */
+const found = Object.fromEntries(Object.keys(MODES).map(id => [id, new Set()]));
+const EL_INDEX = Object.fromEntries(ELEMENTS.map((e, i) => [e[0], i]));
+const encPairs = (set) => [...set].map(k => k.split('+').map(x => EL_INDEX[x].toString(36).padStart(2, '0')).join('')).join('');
+function addPairs(mode, str) {
+  if (!found[mode] || typeof str !== 'string') return;
+  for (const c of str.match(/.{4}/g) || []) {
+    const a = ELEMENTS[parseInt(c.slice(0, 2), 36)], b = ELEMENTS[parseInt(c.slice(2), 36)];
+    if (a && b) found[mode].add(pairKey(a[0], b[0]));
+  }
+}
+/* Старые сохранения не знают, каким рецептом открыт элемент: берём первый подходящий.
+   Так же страхуемся при слиянии с облаком — у каждого открытого элемента есть хоть один рецепт. */
+function fillMissingPairs() {
+  for (const mode of Object.keys(MODES)) {
+    const B = mode === MODE ? M : buildMode(mode), have = new Set();
+    for (const k of found[mode]) if (B.recipes[k]) have.add(B.recipes[k]);
+    for (const id of progress[mode]) {
+      if (have.has(id) || B.starters.includes(id)) continue;
+      const p = (B.producers[id] || []).find(([a, b]) => progress[mode].has(a) && progress[mode].has(b));
+      if (p) found[mode].add(pairKey(p[0], p[1]));
+    }
+  }
+}
 function applySave(raw) {
   if (!raw) return;
   const s = JSON.parse(raw);
   if (Array.isArray(s)) { addIds('cosmos', s); return; }                       // v1
   if (s.v === 3) {
     for (const m in s.p || {}) addIds(m, s.p[m]);
+    for (const m in s.r || {}) addPairs(m, s.r[m]);
     if (s.m && MODES[s.m]) savedMode = s.m;
   } else { addIds('cosmos', s.d); if ((s.d || []).length > 4) tutDone = true; } // v2: раньше был только «Космос»
   if (s.h) lastHint = Math.max(lastHint, s.h);
@@ -351,22 +388,26 @@ function load() {
   for (const k of [V1, V2, SAVE_KEY]) try { applySave(localStorage.getItem(k)); } catch (e) {}
   try {
     if (!cloudOk) return;
-    tg.CloudStorage.getItems([V2, CLOUD.meta, CLOUD.classic, CLOUD.cosmos], (err, v) => {
+    tg.CloudStorage.getItems([V2, CLOUD.meta, CLOUD.classic, CLOUD.cosmos, CLOUD.classic + '_r', CLOUD.cosmos + '_r'], (err, v) => {
       if (err || !v) return;
       try { applySave(v[V2]); } catch (e) {}
       try { if (v[CLOUD.meta]) applySave(JSON.stringify({ v: 3, ...JSON.parse(v[CLOUD.meta]) })); } catch (e) {}
       for (const m of ['classic', 'cosmos']) try { if (v[CLOUD[m]]) addIds(m, JSON.parse(v[CLOUD[m]])); } catch (e) {}
+      for (const m of ['classic', 'cosmos']) addPairs(m, v[CLOUD[m] + '_r']);
+      fillMissingPairs();
       updateCounter(); updateHintBtn(); refreshDone();
     });
   } catch (e) {}
 }
 function save() {
   const p = Object.fromEntries(Object.keys(progress).map(m => [m, [...progress[m]]]));
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p })); } catch (e) {}
+  const r = Object.fromEntries(Object.keys(found).map(m => [m, encPairs(found[m])]));
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p, r })); } catch (e) {}
   try {
     if (!cloudOk) return;
     tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint }));
     tg.CloudStorage.setItem(CLOUD[MODE], JSON.stringify(p[MODE]));
+    tg.CloudStorage.setItem(CLOUD[MODE] + '_r', r[MODE]);
   } catch (e) {}
 }
 
@@ -519,10 +560,15 @@ function combine(a, b) {
   }
   const x = (parseFloat(a.style.left) + parseFloat(b.style.left)) / 2;
   const y = (parseFloat(a.style.top) + parseFloat(b.style.top)) / 2;
+  const pk = key(a.dataset.id, b.dataset.id), newPair = !found[MODE].has(pk);
+  found[MODE].add(pk);
   a.remove(); b.remove();
   spawn(result, x, y, true);
   if (!discovered.has(result)) discover(result);
-  else haptic('medium');
+  else if (newPair) {
+    save(); haptic('success');
+    toast(`Новый рецепт: <b>${label(result)}</b><br>${mini(a.dataset.id)} + ${mini(b.dataset.id)}`);
+  } else haptic('medium');
 }
 
 function discover(id) {
@@ -546,12 +592,15 @@ function placeStarters() {
 const sheet = document.getElementById('sheet');
 const grid = document.getElementById('grid');
 const searchEl = document.getElementById('search');
-const chkOpen = document.getElementById('chkOpen');
+const btnOpen = document.getElementById('btnOpen');
+let onlyOpenOn = false;
 let eraFilter = 'all';
 
+/* рецепты элемента, которые игрок действительно собирал */
+const foundPairs = (id) => (producers[id] || []).filter(([a, b]) => found[MODE].has(key(a, b)));
+const foundCount = () => [...found[MODE]].filter(k => recipes[k]).length;
 function knownRecipe(id) {
-  const list = producers[id] || [];
-  const r = list.find(([a, b]) => discovered.has(a) && discovered.has(b)) || list[0];
+  const r = foundPairs(id)[0];
   return r ? `${mini(r[0])} + ${mini(r[1])}` : '';
 }
 function cellHtml(id) {
@@ -573,9 +622,10 @@ function renderEras() {
 }
 function renderList() {
   renderEras();
-  document.getElementById('sheetCount').textContent = `${discovered.size} / ${modeEls.length}`;
+  document.getElementById('sheetCount').innerHTML =
+    `${discovered.size} / ${modeEls.length}<small>рецепты ${foundCount()} / ${Object.keys(recipes).length}</small>`;
   const q = searchEl.value.trim().toLowerCase();
-  const onlyOpen = chkOpen.checked || q;
+  const onlyOpen = onlyOpenOn || q;
   let html = '';
   // открытые эпохи — первыми, закрытые — в конце
   [...ERAS].sort((x, y) => eraOpen(y[0]) - eraOpen(x[0])).forEach(([era, name, icon]) => {
@@ -611,13 +661,16 @@ document.getElementById('btnList').onclick = openList;
 document.getElementById('btnClose').onclick = closeList;
 sheet.addEventListener('click', e => { if (e.target === sheet) closeList(); });
 searchEl.addEventListener('input', renderList);
-chkOpen.addEventListener('change', renderList);
+btnOpen.onclick = () => {
+  onlyOpenOn = !onlyOpenOn; btnOpen.classList.toggle('on', onlyOpenOn); btnOpen.setAttribute('aria-pressed', onlyOpenOn);
+  renderList(); haptic('light');
+};
 document.getElementById('btnReset').onclick = () => modal({
   icon: iconHtml('ui_warn', '⚠️', 'modal-ico'), title: 'Сбросить прогресс?', text: `Все открытые элементы в режиме «${M.name}» будут потеряны. Другой режим не пострадает.`,
   buttons: [
     { text: 'Отмена' },
     { text: 'Сбросить', primary: true, onClick: () => {
-      progress[MODE] = discovered = new Set(STARTERS); save(); updateCounter(); updateHintBtn();
+      progress[MODE] = discovered = new Set(STARTERS); found[MODE].clear(); save(); updateCounter(); updateHintBtn();
       board.querySelectorAll('.el').forEach(e => e.remove()); placeStarters(); closeList();
     } },
   ],
@@ -684,12 +737,16 @@ function showInfo(id) {
   const d = byId[id];
   // ингредиенты, которые ещё не открыты, не раскрываем
   const part = (x) => discovered.has(x) ? `${mini(x)} ${byId[x].name}` : '<span class="q">???</span>';
+  // найденные рецепты — целиком, ненайденные — «??? + ???»
+  const all = producers[id] || [], got = foundPairs(id);
   const how = STARTERS.includes(id) ? '<div class="rec">Стартовый элемент — есть с самого начала</div>'
-    : (producers[id] || []).map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('');
+    : got.map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('') +
+      '<div class="rec q-rec"><span class="q">???</span><i>+</i><span class="q">???</span></div>'.repeat(all.length - got.length);
+  const howTitle = STARTERS.includes(id) ? 'Как получить' : `Рецепты: ${got.length} из ${all.length}`;
   modal({
     icon: iconHtml(id, d.icon, 'modal-ico'), title: d.name, cls: 'info',
     text: `<span class="chip">${eraIcon(d.era)} ${eraById[d.era].name}</span><span class="desc">${(MODE === 'classic' && INFO_CLASSIC[id]) || INFO[id] || ''}</span>` +
-          `<b class="how">Как получить</b>${how}` +
+          `<b class="how">${howTitle}</b>${how}` +
           `<b class="how">Что из него получается</b><div class="rec">${leftLine(id)}</div>`,
     buttons: [{ text: 'Понятно', primary: true }],
   });
@@ -777,6 +834,7 @@ load();
 // режим: сохранённый; старые игроки (прогресс в «Космосе») — сразу в «Космос»; новые — выбирают
 const startMode = savedMode || (progress.cosmos.size > 4 ? 'cosmos' : null);
 useMode(startMode || 'classic'); discovered = progress[MODE];
+fillMissingPairs();
 document.getElementById('modeName').textContent = M.name;
 updateCounter(); updateHintBtn();
 requestAnimationFrame(placeStarters);
