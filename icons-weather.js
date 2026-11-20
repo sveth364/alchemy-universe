@@ -6,6 +6,16 @@ const cloudPuff = (fill, stroke, dy = 0) => cloudShape(
 const WATER = ['#b8f3ff', '#3fb6ff', '#3a4bff'];
 
 Object.assign(ICONS, {
+  // «Земля»-стихия: глыба земли с травой и камешками
+  land: { color: '#c68b59', svg: `
+    ${linG('__g', ['#e0b48a', '#9c6644', '#5a3420'])}
+    <path d="M6 30c8-4 16-6 26-6s18 2 26 6l-4 20c-6 6-14 8-22 8s-16-2-22-8z" fill="url(#__g)" stroke="#f0c9a0" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M10 40c8 3 14-2 22 0s14 3 22 0" fill="none" stroke="#5a3420" stroke-width="1.8" opacity=".6"/>
+    <g fill="#e6dcff" opacity=".55"><circle cx="20" cy="46" r="2.2"/><circle cx="40" cy="48" r="1.6"/><circle cx="32" cy="38" r="1.4"/></g>
+    ${linG('__t', ['#a6ff8a', '#1fae5a'])}
+    <path d="M6 30c8-4 16-6 26-6s18 2 26 6c-8 3-17 4-26 4S14 33 6 30z" fill="url(#__t)" stroke="#d9ffc4" stroke-width="1.6"/>
+    <g stroke="#7dff9a" stroke-width="2" stroke-linecap="round"><path d="M16 27l-2-6M20 26l1-6M44 26l-1-6M48 27l2-6M32 25v-7"/></g>
+    ${spark(54, 12, 3)}` },
   ice: { color: '#9fdcff', svg: `
     ${linG('__l', ['#e0fbff', '#7cc8ff'])}${linG('__r', ['#9fdcff', '#4b8fe0'])}
     <g stroke="#ffffff" stroke-width="2" stroke-linejoin="round">

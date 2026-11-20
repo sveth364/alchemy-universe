@@ -27,7 +27,23 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); font-size: 15px;
   }
-  header .title { font-weight: 700; letter-spacing: .3px; }
+  header .title { font-weight: 700; letter-spacing: .3px; display: flex; align-items: center; gap: 6px;
+    background: none; border: 0; color: var(--text); font: inherit; font-weight: 700; padding: 0; cursor: pointer; }
+  header .title .caret { color: var(--muted); font-size: 12px; }
+  /* исчерпанные элементы: все их рецепты уже найдены */
+  .el.done .ico, .cell.done .ico { opacity: .45; filter: saturate(.4); }
+  .el.done .name, .cell.done .name { opacity: .6; }
+  /* выбор режима */
+  .modes { display: grid; gap: 10px; margin-top: 10px; text-align: left; }
+  .mode-card { display: grid; grid-template-columns: 52px 1fr; gap: 2px 12px; align-items: center; width: 100%;
+    padding: 12px; border-radius: 16px; border: 1px solid var(--tile-border); background: var(--tile); color: var(--text);
+    font: inherit; cursor: pointer; text-align: left; }
+  .mode-card.on { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139,123,255,.35); }
+  .mode-card .svg-ico { width: 52px; height: 52px; grid-row: span 4; }
+  .mode-card b { font-size: 16px; }
+  .mode-card small { color: var(--gold); font-size: 12px; }
+  .mode-card span { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+  .mode-card em { font-style: normal; font-size: 12px; color: var(--muted); }
   #counter { color: var(--muted); font-variant-numeric: tabular-nums; }
   #progress { height: 3px; background: rgba(255,255,255,.08); margin: 0 16px; border-radius: 2px; overflow: hidden; }
   #progress > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #ff8bd1); transition: width .4s; }
@@ -221,7 +237,7 @@
 <body>
 <div id="app">
   <header>
-    <span class="title"><span id="logo"></span> Алхимия Вселенной</span>
+    <button class="title" id="btnMode"><span id="logo"></span><span>Алхимия · <span id="modeName"></span></span><span class="caret">▾</span></button>
     <div class="hdr-right"><span id="counter">0 / 0</span><button id="btnInfo" aria-label="Справка">?</button></div>
   </header>
   <div id="progress"><div></div></div>
@@ -280,19 +296,23 @@
 <script src="icons-cosmos.js"></script>
 <script src="icons-ui.js"></script>
 <script src="info.js"></script>
+<script src="modes.js"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
 
-const byId = {}, recipes = {}, producers = {};
-const key = (a, b) => [a, b].sort().join('+');
+const byId = {};
+const key = pairKey;
 ELEMENTS.forEach(([id, name, icon, era], i) => byId[id] = { id, name, icon, era, order: i });
-RECIPES.forEach(r => {
-  const [ab, res] = r.split('='), [a, b] = ab.split('+');
-  recipes[key(a, b)] = res;
-  (producers[res] = producers[res] || []).push([a, b]);
-});
-const STARTERS = ELEMENTS.map(e => e[0]).filter(id => !producers[id]);
+const MODE_SIZE = Object.fromEntries(Object.keys(MODES).map(id => [id, buildMode(id).set.size]));
+// данные текущего режима (см. modes.js)
+let MODE, M, recipes, producers, STARTERS, GOAL_ID, modeEls;
+function useMode(id) {
+  MODE = id; M = buildMode(id);
+  recipes = M.recipes; producers = M.producers; STARTERS = M.starters; GOAL_ID = M.goal;
+  modeEls = ELEMENTS.filter(e => M.set.has(e[0]));
+}
+useMode('classic');
 const eraById = Object.fromEntries(ERAS.map(([id, name, icon]) => [id, { id, name, icon }]));
 
 /* ============ TELEGRAM ============ */
@@ -309,27 +329,45 @@ const haptic = (type) => { try { tg && tg.HapticFeedback && (type === 'error' ||
   ? tg.HapticFeedback.notificationOccurred(type) : tg.HapticFeedback.impactOccurred(type)); } catch (e) {} };
 
 /* ============ СОХРАНЕНИЕ ============ */
-const SAVE_KEY = 'alchemy_universe_v2', OLD_KEY = 'alchemy_universe_v1';
-let discovered = new Set(STARTERS);
-let lastHint = 0;
+// v3: прогресс отдельно по режимам. Облако Telegram хранит до 4 КБ на ключ — поэтому по ключу на режим.
+const SAVE_KEY = 'alchemy_universe_v3', V2 = 'alchemy_universe_v2', V1 = 'alchemy_universe_v1';
+const CLOUD = { meta: 'au3_meta', classic: 'au3_classic', cosmos: 'au3_cosmos' };
+const progress = Object.fromEntries(Object.keys(MODES).map(id => [id, new Set(MODES[id].starters)]));
+let discovered = progress[MODE];
+let lastHint = 0, tutDone = false, savedMode = null;
+const addIds = (mode, list) => (list || []).forEach(id => byId[id] && progress[mode] && progress[mode].add(id));
 function applySave(raw) {
   if (!raw) return;
   const s = JSON.parse(raw);
-  const list = Array.isArray(s) ? s : (s.d || []);
-  list.forEach(id => byId[id] && discovered.add(id));
-  if (!Array.isArray(s) && s.h) lastHint = Math.max(lastHint, s.h);
+  if (Array.isArray(s)) { addIds('cosmos', s); return; }                       // v1
+  if (s.v === 3) {
+    for (const m in s.p || {}) addIds(m, s.p[m]);
+    if (s.m && MODES[s.m]) savedMode = s.m;
+  } else { addIds('cosmos', s.d); if ((s.d || []).length > 4) tutDone = true; } // v2: раньше был только «Космос»
+  if (s.h) lastHint = Math.max(lastHint, s.h);
+  if (s.t) tutDone = true;
 }
 function load() {
-  try { applySave(localStorage.getItem(OLD_KEY)); } catch (e) {}
-  try { applySave(localStorage.getItem(SAVE_KEY)); } catch (e) {}
-  try { cloudOk && tg.CloudStorage.getItem(SAVE_KEY, (err, v) => {
-    if (!err && v) { try { applySave(v); } catch (e) {} updateCounter(); updateHintBtn(); }
-  }); } catch (e) {}
+  for (const k of [V1, V2, SAVE_KEY]) try { applySave(localStorage.getItem(k)); } catch (e) {}
+  try {
+    if (!cloudOk) return;
+    tg.CloudStorage.getItems([V2, CLOUD.meta, CLOUD.classic, CLOUD.cosmos], (err, v) => {
+      if (err || !v) return;
+      try { applySave(v[V2]); } catch (e) {}
+      try { if (v[CLOUD.meta]) applySave(JSON.stringify({ v: 3, ...JSON.parse(v[CLOUD.meta]) })); } catch (e) {}
+      for (const m of ['classic', 'cosmos']) try { if (v[CLOUD[m]]) addIds(m, JSON.parse(v[CLOUD[m]])); } catch (e) {}
+      updateCounter(); updateHintBtn(); refreshDone();
+    });
+  } catch (e) {}
 }
 function save() {
-  const v = JSON.stringify({ d: [...discovered], h: lastHint });
-  try { localStorage.setItem(SAVE_KEY, v); } catch (e) {}
-  try { cloudOk && tg.CloudStorage.setItem(SAVE_KEY, v); } catch (e) {}
+  const p = Object.fromEntries(Object.keys(progress).map(m => [m, [...progress[m]]]));
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p })); } catch (e) {}
+  try {
+    if (!cloudOk) return;
+    tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint }));
+    tg.CloudStorage.setItem(CLOUD[MODE], JSON.stringify(p[MODE]));
+  } catch (e) {}
 }
 
 /* ============ ОБЩЕЕ UI ============ */
@@ -343,11 +381,11 @@ function toast(html, cls) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.className = '', 2200);
 }
 function updateCounter() {
-  const total = ELEMENTS.length;
+  const total = modeEls.length;
   document.getElementById('counter').textContent = `${discovered.size} / ${total}`;
   document.querySelector('#progress > div').style.width = (discovered.size / total * 100) + '%';
 }
-const eraOpen = (era) => ELEMENTS.some(e => e[3] === era && discovered.has(e[0]));
+const eraOpen = (era) => modeEls.some(e => e[3] === era && discovered.has(e[0]));
 const mini = (id) => iconHtml(id, byId[id].icon, 'mini');
 const label = (id) => `${mini(id)} ${byId[id].name}`;
 
@@ -381,6 +419,7 @@ function spawn(id, x, y, anim) {
   board.appendChild(el);
   el.addEventListener('pointerdown', startDrag);
   el.addEventListener('animationend', () => el.classList.remove('pop', 'shake'));
+  if (isDone(id)) el.classList.add('done');
   hint.style.display = 'none';
   return el;
 }
@@ -491,7 +530,8 @@ function discover(id) {
   discovered.add(id); save(); updateCounter(); haptic('success');
   if (newEra) toast(`Открыта эпоха: <b>${eraIcon(era)} ${eraById[era].name}</b><br>${label(id)}`, 'era');
   else toast(`Новый элемент: <b>${label(id)}</b>`);
-  if (id === GOAL) setTimeout(showWin, 700);
+  refreshDone();
+  if (id === GOAL_ID) setTimeout(showWin, 700);
 }
 
 function checkEmpty() { if (!board.querySelector('.el')) hint.style.display = ''; }
@@ -516,8 +556,8 @@ function knownRecipe(id) {
 }
 function cellHtml(id) {
   const d = byId[id], open = discovered.has(id);
-  const recipe = open && producers[id] ? `<div class="recipe">${knownRecipe(id)}</div>` : '';
-  return `<div class="cell${open ? '' : ' locked'}" data-id="${id}"><div class="ico"><span>${iconHtml(id, d.icon)}</span></div>` +
+  const recipe = open && producers[id] && !STARTERS.includes(id) ? `<div class="recipe">${knownRecipe(id)}</div>` : '';
+  return `<div class="cell${open ? '' : ' locked'}${open && isDone(id) ? ' done' : ''}" data-id="${id}"><div class="ico"><span>${iconHtml(id, d.icon)}</span></div>` +
          `<div class="name">${open ? d.name : '???'}</div>${recipe}</div>`;
 }
 function renderEras() {
@@ -525,20 +565,23 @@ function renderEras() {
   const btn = (id, text, locked) =>
     `<button data-era="${id}" class="${eraFilter === id ? 'on' : ''}${locked ? ' locked' : ''}">${text}</button>`;
   box.innerHTML = btn('all', 'Все') + ERAS.map(([id, name, icon]) => {
-    const all = ELEMENTS.filter(e => e[3] === id), got = all.filter(e => discovered.has(e[0])).length;
+    const all = modeEls.filter(e => e[3] === id), got = all.filter(e => discovered.has(e[0])).length;
+    if (!all.length) return '';
     return got ? btn(id, `${eraIcon(id)} ${name} ${got}/${all.length}`) : btn(id, `${iconHtml('ui_lock', '🔒', 'mini')} ${name}`, true);
   }).join('');
   box.querySelectorAll('button').forEach(b => b.onclick = () => { eraFilter = b.dataset.era; renderList(); });
 }
 function renderList() {
   renderEras();
-  document.getElementById('sheetCount').textContent = `${discovered.size} / ${ELEMENTS.length}`;
+  document.getElementById('sheetCount').textContent = `${discovered.size} / ${modeEls.length}`;
   const q = searchEl.value.trim().toLowerCase();
   const onlyOpen = chkOpen.checked || q;
   let html = '';
-  ERAS.forEach(([era, name, icon]) => {
+  // открытые эпохи — первыми, закрытые — в конце
+  [...ERAS].sort((x, y) => eraOpen(y[0]) - eraOpen(x[0])).forEach(([era, name, icon]) => {
     if (eraFilter !== 'all' && eraFilter !== era) return;
-    const all = ELEMENTS.filter(e => e[3] === era).map(e => e[0]);
+    const all = modeEls.filter(e => e[3] === era).map(e => e[0]);
+    if (!all.length) return;
     const got = all.filter(id => discovered.has(id)).length;
     let ids = all;
     if (onlyOpen) ids = ids.filter(id => discovered.has(id));
@@ -570,11 +613,11 @@ sheet.addEventListener('click', e => { if (e.target === sheet) closeList(); });
 searchEl.addEventListener('input', renderList);
 chkOpen.addEventListener('change', renderList);
 document.getElementById('btnReset').onclick = () => modal({
-  icon: iconHtml('ui_warn', '⚠️', 'modal-ico'), title: 'Сбросить прогресс?', text: 'Все открытые элементы будут потеряны.',
+  icon: iconHtml('ui_warn', '⚠️', 'modal-ico'), title: 'Сбросить прогресс?', text: `Все открытые элементы в режиме «${M.name}» будут потеряны. Другой режим не пострадает.`,
   buttons: [
     { text: 'Отмена' },
     { text: 'Сбросить', primary: true, onClick: () => {
-      discovered = new Set(STARTERS); lastHint = 0; save(); updateCounter(); updateHintBtn();
+      progress[MODE] = discovered = new Set(STARTERS); save(); updateCounter(); updateHintBtn();
       board.querySelectorAll('.el').forEach(e => e.remove()); placeStarters(); closeList();
     } },
   ],
@@ -641,15 +684,74 @@ function showInfo(id) {
   const d = byId[id];
   // ингредиенты, которые ещё не открыты, не раскрываем
   const part = (x) => discovered.has(x) ? `${mini(x)} ${byId[x].name}` : '<span class="q">???</span>';
-  const how = (producers[id] || []).map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('')
-    || '<div class="rec">Стартовый элемент — есть с самого начала</div>';
+  const how = STARTERS.includes(id) ? '<div class="rec">Стартовый элемент — есть с самого начала</div>'
+    : (producers[id] || []).map(([a, b]) => `<div class="rec">${part(a)}<i>+</i>${part(b)}</div>`).join('');
   modal({
     icon: iconHtml(id, d.icon, 'modal-ico'), title: d.name, cls: 'info',
     text: `<span class="chip">${eraIcon(d.era)} ${eraById[d.era].name}</span><span class="desc">${INFO[id] || ''}</span>` +
-          `<b class="how">Как получить</b>${how}`,
+          `<b class="how">Как получить</b>${how}` +
+          `<b class="how">Что из него получается</b><div class="rec">${leftLine(id)}</div>`,
     buttons: [{ text: 'Понятно', primary: true }],
   });
   haptic('light');
+}
+
+/* ============ ИСЧЕРПАННЫЕ ЭЛЕМЕНТЫ ============ */
+// элемент «исчерпан», если всё, что из него можно получить, уже открыто
+const newFrom = (id) => [...new Set((M.uses[id] || []).filter(r => !discovered.has(r)))];
+const isDone = (id) => newFrom(id).length === 0;
+function leftLine(id) {
+  const n = newFrom(id).length;
+  return n ? `Ещё может дать новых элементов: <b>${n}</b>` : 'Все сочетания с ним уже найдены ✓';
+}
+function refreshDone() { board.querySelectorAll('.el').forEach(el => el.classList.toggle('done', isDone(el.dataset.id))); }
+
+/* ============ РЕЖИМЫ ============ */
+const START_EXAMPLE = { classic: ['fire', 'water'], cosmos: ['energy', 'energy'] };
+function chooseMode(first) {
+  const cards = Object.keys(MODES).map(id => {
+    const m = MODES[id];
+    return `<button class="mode-card${id === MODE && !first ? ' on' : ''}" data-mode="${id}">${iconHtml(m.icon, '', 'mode-ico')}` +
+      `<b>${m.name}</b><small>${m.short}</small><span>${m.desc}</span><em>Открыто: ${progress[id].size} / ${MODE_SIZE[id]}</em></button>`;
+  }).join('');
+  modal({
+    icon: iconHtml('logo', '', 'modal-ico'), title: first ? 'Выбери режим' : 'Режим игры',
+    text: `${first ? 'Режим можно сменить в любой момент — нажми на название вверху. Прогресс у режимов свой.' : 'Прогресс каждого режима сохраняется отдельно.'}<span class="modes">${cards}</span>`,
+    buttons: first ? [] : [{ text: 'Отмена' }],
+  });
+  document.querySelectorAll('.mode-card').forEach(b => b.onclick = () => {
+    modalEl.classList.remove('open'); switchMode(b.dataset.mode);
+  });
+}
+function switchMode(id) {
+  if (id !== MODE) {
+    useMode(id); discovered = progress[id];
+    board.querySelectorAll('.el').forEach(e => e.remove()); placeStarters();
+    updateCounter(); toast(`Режим «${M.name}»`); haptic('medium');
+  }
+  document.getElementById('modeName').textContent = M.name;
+  save();
+  if (!tutDone) setTimeout(() => tutorial(0), 300);
+}
+document.getElementById('btnMode').onclick = () => chooseMode(false);
+
+/* ============ ОБУЧЕНИЕ ============ */
+function tutorial(step) {
+  const [a, b] = START_EXAMPLE[MODE];
+  const res = recipes[key(a, b)];
+  const steps = [
+    { icon: iconHtml(res, '', 'modal-ico'), title: 'Соединяй элементы',
+      text: `Перетащи один элемент на другой. Например: <b>${label(a)}</b> + <b>${label(b)}</b> = <b>${label(res)}</b>.` },
+    { icon: iconHtml('ui_list', '', 'modal-ico'), title: 'Полезные жесты',
+      text: '<b>Двойной тап</b> по элементу — его копия.<br><b>Двойной тап по пустому месту</b> — снова стартовые элементы.<br>Перетащи элемент на <b>Корзину</b>, чтобы убрать его.' },
+    { icon: iconHtml('ui_hint', '', 'modal-ico'), title: 'Если застрял',
+      text: '<b>Список</b> — все элементы по эпохам.<br><b>Подсказка</b> — раз в 5 минут.<br><b>?</b> вверху — справка об элементе.<br>Потускневший элемент уже отдал все свои рецепты.' },
+  ];
+  const st = steps[step];
+  modal({ ...st, text: `${st.text}<br><br><span style="opacity:.6">${step + 1} / ${steps.length}</span>`,
+    buttons: step < steps.length - 1
+      ? [{ text: 'Пропустить', onClick: () => { tutDone = true; save(); } }, { text: 'Дальше', primary: true, onClick: () => tutorial(step + 1) }]
+      : [{ text: 'Играть!', primary: true, onClick: () => { tutDone = true; save(); } }] });
 }
 
 /* ============ ОЧИСТКА / КОРЗИНА ============ */
@@ -661,7 +763,7 @@ trashBtn.onclick = () => toast('Перетащи элемент на корзи�
 /* ============ ПОБЕДА ============ */
 function showWin() {
   document.getElementById('winText').textContent =
-    `Открыто ${discovered.size} из ${ELEMENTS.length} элементов. Можно продолжить и найти остальные!`;
+    `Режим «${M.name}»: открыто ${discovered.size} из ${modeEls.length} элементов. Можно продолжить и найти остальные!`;
   document.getElementById('win').classList.add('open');
 }
 document.getElementById('btnWin').onclick = () => document.getElementById('win').classList.remove('open');
@@ -671,8 +773,17 @@ document.getElementById('logo').innerHTML = iconHtml('logo', '✨', 'logo');
 // иконки интерфейса
 document.querySelectorAll('[data-ui]').forEach(el => el.innerHTML = iconHtml(el.dataset.ui, '', 'ui'));
 document.getElementById('winIcon').innerHTML = iconHtml('universe', '🌌', 'win-ico');
-load(); updateCounter(); updateHintBtn();
+load();
+// режим: сохранённый; старые игроки (прогресс в «Космосе») — сразу в «Космос»; новые — выбирают
+const startMode = savedMode || (progress.cosmos.size > 4 ? 'cosmos' : null);
+useMode(startMode || 'classic'); discovered = progress[MODE];
+document.getElementById('modeName').textContent = M.name;
+updateCounter(); updateHintBtn();
 requestAnimationFrame(placeStarters);
+if (!startMode) setTimeout(() => chooseMode(true), 400);
+else if (!tutDone) setTimeout(() => tutorial(0), 400);
+// игрокам из прошлой версии — один раз рассказать о новом режиме
+else if (!savedMode) { save(); setTimeout(() => toast('Новое: режим «Классика» от четырёх стихий — нажми на название вверху'), 900); }
 </script>
 </body>
 </html>

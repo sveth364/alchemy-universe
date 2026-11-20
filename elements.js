@@ -96,7 +96,7 @@ const ELEMENTS = [
   ['salt', 'Соль', '🧂', 'planet'],
   ['glass', 'Стекло', '🫙', 'planet'],
   ['diamond', 'Алмаз', '💎', 'planet'],
-  ['earth', 'Земля', '🌍', 'planet'],
+  ['earth', 'Планета Земля', '🌍', 'planet'],
   ['fossil', 'Окаменелость', '🦴', 'planet'],
   ['oil', 'Нефть', '🛢️', 'planet'],
   ['glacier', 'Ледник', '🏔️', 'planet'],
@@ -106,6 +106,7 @@ const ELEMENTS = [
   ['night', 'Ночь', '🌃', 'planet'],
 
   // ───────── СТИХИИ ─────────
+  ['land', 'Земля', '🟫', 'weather'],          // стартовый элемент «Классики»
   ['water', 'Вода', '💧', 'weather'],
   ['ice', 'Лёд', '🧊', 'weather'],
   ['fire', 'Огонь', '🔥', 'weather'],
