@@ -79,6 +79,18 @@ Object.assign(ICONS, {
     <path d="M8 30 26 18l10 4L54 6" fill="none" stroke="#ffcf5a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M6 58h52" stroke="#8a93c9" stroke-width="2.4" stroke-linecap="round"/>
     ${spark(54, 6, 3.5, '#fff')}` },
+
+  // звук включён — динамик с волнами
+  ui_sound: { color: '#6ee7ff', svg: `
+    ${linG('__g', ['#e6dcff', '#8b7bff'])}
+    <path d="M8 24h10l14-12v40L18 40H8z" fill="url(#__g)" stroke="#f3eeff" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M40 24a10 10 0 0 1 0 16" fill="none" stroke="#6ee7ff" stroke-width="4" stroke-linecap="round"/>
+    <path d="M46 16a20 20 0 0 1 0 32" fill="none" stroke="#6ee7ff" stroke-width="4" stroke-linecap="round" opacity=".7"/>` },
+
+  // звук выключен — динамик с крестиком
+  ui_mute: { color: '#8a93c9', svg: `
+    <path d="M8 24h10l14-12v40L18 40H8z" fill="#5b5f80" stroke="#c9cde6" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M42 24l14 16M56 24 42 40" stroke="#ff5f8a" stroke-width="4.4" stroke-linecap="round"/>` },
 });
 
 // иконка эпохи (мини)

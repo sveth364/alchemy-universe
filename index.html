@@ -30,6 +30,9 @@
   header .title { font-weight: 700; letter-spacing: .3px; display: flex; align-items: center; gap: 6px;
     background: none; border: 0; color: var(--text); font: inherit; font-weight: 700; padding: 0; cursor: pointer; }
   header .title .caret { color: var(--muted); font-size: 12px; }
+  header .title, #counter { white-space: nowrap; }
+  /* на узких экранах вместо «Алхимия · Космос» — колба и «Космос» */
+  @media (max-width: 420px) { header .brand { display: none; } }
   /* исчерпанные элементы: все их рецепты уже найдены */
   .el.done .ico, .cell.done .ico { opacity: .45; filter: saturate(.4); }
   .el.done .name, .cell.done .name { opacity: .6; }
@@ -219,6 +222,11 @@
     width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--tile-border); background: var(--panel);
     color: var(--text); font-weight: 800; font-size: 16px; cursor: pointer; transition: all .15s;
   }
+  #btnSound {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--tile-border); background: var(--panel);
+    display: grid; place-items: center; padding: 0; cursor: pointer;
+  }
+  #btnSound .svg-ico.ui { width: 18px; height: 18px; filter: none; }
   #btnInfo.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(139,123,255,.8); }
   body.info-mode #board .el .ico, body.info-mode .cell:not(.locked) .ico { border-color: var(--accent); }
   .modal .card.info { max-height: 82vh; overflow-y: auto; }
@@ -260,8 +268,8 @@
 <body>
 <div id="app">
   <header>
-    <button class="title" id="btnMode"><span id="logo"></span><span>Алхимия · <span id="modeName"></span></span><span class="caret">▾</span></button>
-    <div class="hdr-right"><button id="counter" aria-label="Статистика"><span data-ui="ui_stats"></span><span id="counterText">0 / 0</span></button><button id="btnInfo" aria-label="Справка">?</button></div>
+    <button class="title" id="btnMode"><span id="logo"></span><span><span class="brand">Алхимия · </span><span id="modeName"></span></span><span class="caret">▾</span></button>
+    <div class="hdr-right"><button id="counter" aria-label="Статистика"><span data-ui="ui_stats"></span><span id="counterText">0 / 0</span></button><button id="btnSound" aria-label="Звук"></button><button id="btnInfo" aria-label="Справка">?</button></div>
   </header>
   <div id="progress"><div></div></div>
   <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы.<br>«?» вверху — справка об элементе</div></div>
@@ -305,21 +313,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=26"></script>
-<script src="icons.js?v=26"></script>
-<script src="icons-micro.js?v=26"></script>
-<script src="icons-stars.js?v=26"></script>
-<script src="icons-planet.js?v=26"></script>
-<script src="icons-weather.js?v=26"></script>
-<script src="icons-life.js?v=26"></script>
-<script src="icons-animals.js?v=26"></script>
-<script src="icons-human.js?v=26"></script>
-<script src="icons-civ.js?v=26"></script>
-<script src="icons-tech.js?v=26"></script>
-<script src="icons-cosmos.js?v=26"></script>
-<script src="icons-ui.js?v=26"></script>
-<script src="info.js?v=26"></script>
-<script src="modes.js?v=26"></script>
+<script src="elements.js?v=27"></script>
+<script src="icons.js?v=27"></script>
+<script src="icons-micro.js?v=27"></script>
+<script src="icons-stars.js?v=27"></script>
+<script src="icons-planet.js?v=27"></script>
+<script src="icons-weather.js?v=27"></script>
+<script src="icons-life.js?v=27"></script>
+<script src="icons-animals.js?v=27"></script>
+<script src="icons-human.js?v=27"></script>
+<script src="icons-civ.js?v=27"></script>
+<script src="icons-tech.js?v=27"></script>
+<script src="icons-cosmos.js?v=27"></script>
+<script src="icons-ui.js?v=27"></script>
+<script src="info.js?v=27"></script>
+<script src="modes.js?v=27"></script>
+<script src="sound.js?v=27"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -511,7 +520,7 @@ function startDrag(e) {
   const r = el.getBoundingClientRect();
   drag = { el, dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false, target: null };
   e.preventDefault();
-  el.classList.add('dragging');
+  el.classList.add('dragging'); Sound.play('pick');
   board.appendChild(el);
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerup', endDrag);
@@ -542,7 +551,7 @@ function endDrag(e) {
   if (target) target.classList.remove('target');
   drag = null;
 
-  if (overTrash(e.clientX, e.clientY)) { el.remove(); haptic('light'); checkEmpty(); return; }
+  if (overTrash(e.clientX, e.clientY)) { el.remove(); haptic('light'); Sound.play('trash'); checkEmpty(); return; }
   if (!moved) { handleTap(el); return; }
   if (target) combine(el, target);
   else {
@@ -559,7 +568,7 @@ function handleTap(el) {
   const now = Date.now();
   if (lastTap.el === el && now - lastTap.t < 350) {
     spawn(el.dataset.id, parseFloat(el.style.left) + 30, parseFloat(el.style.top) + 30, true);
-    haptic('light'); lastTap = { el: null, t: 0 };
+    haptic('light'); Sound.play('pop'); lastTap = { el: null, t: 0 };
   } else lastTap = { el, t: now };
 }
 
@@ -572,7 +581,7 @@ board.addEventListener('pointerdown', e => {
     const r = board.getBoundingClientRect();
     const x = e.clientX - r.left - 38, y = e.clientY - r.top - 42, o = 48;
     [[-o, -o], [o, -o], [-o, o], [o, o]].forEach(([dx, dy], i) => STARTERS[i] && spawn(STARTERS[i], x + dx, y + dy, true));
-    haptic('light'); lastBoardTap = { t: 0, x: 0, y: 0 };
+    haptic('light'); Sound.play('pop'); lastBoardTap = { t: 0, x: 0, y: 0 };
   } else lastBoardTap = { t: now, x: e.clientX, y: e.clientY };
 });
 
@@ -580,7 +589,7 @@ function combine(a, b) {
   const result = recipes[key(a.dataset.id, b.dataset.id)];
   stats[MODE].s++; if (result) stats[MODE].ok++; statsDirty = true;
   if (!result) {
-    a.classList.add('shake'); b.classList.add('shake'); haptic('error');
+    a.classList.add('shake'); b.classList.add('shake'); haptic('error'); Sound.play('fail');
     a.style.left = (parseFloat(a.style.left) + 40) + 'px';
     return;
   }
@@ -592,14 +601,15 @@ function combine(a, b) {
   spawn(result, x, y, true);
   if (!discovered.has(result)) discover(result);
   else if (newPair) {
-    save(); haptic('success');
+    save(); haptic('success'); Sound.play('recipe');
     toast(`Новый рецепт: <b>${label(result)}</b><br>${mini(a.dataset.id)} + ${mini(b.dataset.id)}`);
-  } else haptic('medium');
+  } else { haptic('medium'); Sound.play('combine'); }
 }
 
 function discover(id) {
   const era = byId[id].era, newEra = !eraOpen(era);
   discovered.add(id); stats[MODE].n++; save(); updateCounter(); haptic('success');
+  Sound.play(id === GOAL_ID ? 'combine' : newEra ? 'era' : 'discover');
   if (newEra) toast(`Открыта эпоха: <b>${eraIcon(era)} ${eraById[era].name}</b><br>${label(id)}`, 'era');
   else toast(`Новый элемент: <b>${label(id)}</b>`);
   refreshDone();
@@ -679,9 +689,9 @@ grid.addEventListener('click', e => {
   if (infoMode) { showInfo(c.dataset.id); return; }
   const r = board.getBoundingClientRect();
   spawn(c.dataset.id, r.width / 2 - 38 + (Math.random() - .5) * 80, r.height / 2 - 42 + (Math.random() - .5) * 80, true);
-  closeList(); haptic('light');
+  closeList(); haptic('light'); Sound.play('pop');
 });
-function openList() { searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
+function openList() { Sound.play('tap'); searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
 function closeList() { sheet.classList.remove('open'); searchEl.blur(); }
 document.getElementById('btnList').onclick = openList;
 document.getElementById('btnClose').onclick = closeList;
@@ -741,7 +751,7 @@ function giveHint() {
   }
   const h = list[Math.floor(Math.random() * list.length)];
   const [x] = Math.random() < .5 ? [h.a, h.b] : [h.b, h.a];
-  lastHint = Date.now(); stats[MODE].h++; save(); updateHintBtn();
+  lastHint = Date.now(); stats[MODE].h++; save(); updateHintBtn(); Sound.play('hint');
   modal({
     icon: iconHtml(x, byId[x].icon, 'modal-ico'), title: 'Подсказка',
     text: `Возьми <b>${label(x)}</b> и найди ему пару среди открытых элементов.<br>Получится новый элемент из эпохи «${eraById[byId[h.res].era].name}».`,
@@ -757,7 +767,12 @@ function setInfoMode(on) {
   infoMode = on; infoBtn.classList.toggle('on', on); document.body.classList.toggle('info-mode', on);
   if (on) toast('Режим справки: нажми на элемент на поле или в списке');
 }
-infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); };
+infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); Sound.play('tap'); };
+/* звук вкл/выкл */
+const soundBtn = document.getElementById('btnSound');
+const drawSoundBtn = () => { soundBtn.innerHTML = iconHtml(Sound.on ? 'ui_sound' : 'ui_mute', Sound.on ? '🔊' : '🔇', 'ui'); };
+soundBtn.onclick = () => { const on = Sound.toggle(); drawSoundBtn(); haptic('light'); toast(on ? 'Звук включён' : 'Звук выключен'); };
+drawSoundBtn();
 function showInfo(id) {
   setInfoMode(false);
   const d = byId[id];
@@ -839,7 +854,7 @@ function tutorial(step) {
 
 /* ============ ОЧИСТКА / КОРЗИНА ============ */
 document.getElementById('btnClear').onclick = () => {
-  board.querySelectorAll('.el').forEach(e => e.remove()); checkEmpty(); haptic('medium');
+  board.querySelectorAll('.el').forEach(e => e.remove()); checkEmpty(); haptic('medium'); Sound.play('clear');
 };
 trashBtn.onclick = () => toast('Перетащи элемент на корзину, чтобы убрать его');
 
@@ -847,7 +862,7 @@ trashBtn.onclick = () => toast('Перетащи элемент на корзи�
 function showWin() {
   document.getElementById('winText').textContent =
     `Режим «${M.name}»: открыто ${discovered.size} из ${modeEls.length} элементов. Можно продолжить и найти остальные!`;
-  document.getElementById('win').classList.add('open');
+  document.getElementById('win').classList.add('open'); Sound.play('win');
 }
 document.getElementById('btnWin').onclick = () => document.getElementById('win').classList.remove('open');
 
