@@ -356,22 +356,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=31"></script>
-<script src="icons.js?v=31"></script>
-<script src="icons-micro.js?v=31"></script>
-<script src="icons-stars.js?v=31"></script>
-<script src="icons-planet.js?v=31"></script>
-<script src="icons-weather.js?v=31"></script>
-<script src="icons-life.js?v=31"></script>
-<script src="icons-animals.js?v=31"></script>
-<script src="icons-human.js?v=31"></script>
-<script src="icons-civ.js?v=31"></script>
-<script src="icons-tech.js?v=31"></script>
-<script src="icons-cosmos.js?v=31"></script>
-<script src="icons-ui.js?v=31"></script>
-<script src="info.js?v=31"></script>
-<script src="modes.js?v=31"></script>
-<script src="sound.js?v=31"></script>
+<script src="elements.js?v=32"></script>
+<script src="icons.js?v=32"></script>
+<script src="icons-micro.js?v=32"></script>
+<script src="icons-stars.js?v=32"></script>
+<script src="icons-planet.js?v=32"></script>
+<script src="icons-weather.js?v=32"></script>
+<script src="icons-life.js?v=32"></script>
+<script src="icons-animals.js?v=32"></script>
+<script src="icons-human.js?v=32"></script>
+<script src="icons-civ.js?v=32"></script>
+<script src="icons-tech.js?v=32"></script>
+<script src="icons-cosmos.js?v=32"></script>
+<script src="icons-ui.js?v=32"></script>
+<script src="info.js?v=32"></script>
+<script src="modes.js?v=32"></script>
+<script src="sound.js?v=32"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -1005,7 +1005,7 @@ document.getElementById('counter').onclick = showStats;
 
 /* ============ НАГРАДЫ ============ */
 // Медали эпох и особые награды не хранятся отдельно — они вычисляются из прогресса.
-const BOT_LINK = '';   // ссылка на бота (https://t.me/имя_бота) — для кнопки «Поделиться»
+const BOT_LINK = 'https://t.me/alchemia_universumbot';   // ссылка на бота — для кнопки «Поделиться»
 const eraComplete = (mode, era, B) => { const els = ELEMENTS.filter(e => e[3] === era && B.set.has(e[0]));
   return els.length > 0 && els.every(e => progress[mode].has(e[0])); };
 const goalDone = (m) => progress[m].has(MODES[m].goal);
