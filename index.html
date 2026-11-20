@@ -321,22 +321,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=29"></script>
-<script src="icons.js?v=29"></script>
-<script src="icons-micro.js?v=29"></script>
-<script src="icons-stars.js?v=29"></script>
-<script src="icons-planet.js?v=29"></script>
-<script src="icons-weather.js?v=29"></script>
-<script src="icons-life.js?v=29"></script>
-<script src="icons-animals.js?v=29"></script>
-<script src="icons-human.js?v=29"></script>
-<script src="icons-civ.js?v=29"></script>
-<script src="icons-tech.js?v=29"></script>
-<script src="icons-cosmos.js?v=29"></script>
-<script src="icons-ui.js?v=29"></script>
-<script src="info.js?v=29"></script>
-<script src="modes.js?v=29"></script>
-<script src="sound.js?v=29"></script>
+<script src="elements.js?v=30"></script>
+<script src="icons.js?v=30"></script>
+<script src="icons-micro.js?v=30"></script>
+<script src="icons-stars.js?v=30"></script>
+<script src="icons-planet.js?v=30"></script>
+<script src="icons-weather.js?v=30"></script>
+<script src="icons-life.js?v=30"></script>
+<script src="icons-animals.js?v=30"></script>
+<script src="icons-human.js?v=30"></script>
+<script src="icons-civ.js?v=30"></script>
+<script src="icons-tech.js?v=30"></script>
+<script src="icons-cosmos.js?v=30"></script>
+<script src="icons-ui.js?v=30"></script>
+<script src="info.js?v=30"></script>
+<script src="modes.js?v=30"></script>
+<script src="sound.js?v=30"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -687,14 +687,15 @@ function renderList() {
       return;
     }
     if (!ids.length) return;
-    const n = q ? 0 : usefulIds(era).length;
+    const n = q ? 0 : Math.min(usefulIds(era).length, boardCap());          // столько, сколько реально встанет на поле
     const toBoard = n ? `<button class="to-board" data-era="${era}">На поле · ${n}</button>` : '';
     html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span class="era-right">${toBoard}<span>${got} / ${all.length}</span></span></div>` +
             `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`;
   });
   // на вкладке «Все» — кнопка выложить все полезные элементы сразу
-  const nAll = eraFilter === 'all' && !q ? usefulIds('all').length : 0;
-  const allBtn = nAll ? `<button class="to-board wide" data-era="all">Выложить на поле всё полезное · ${nAll}</button>` : '';
+  const nAll = eraFilter === 'all' && !q ? usefulIds('all').length : 0, cap = boardCap();
+  const allBtn = !nAll ? '' : `<button class="to-board wide" data-era="all">${nAll > cap
+    ? `Выложить на поле ${cap} самых полезных` : `Выложить на поле всё полезное · ${nAll}`}</button>`;
   grid.innerHTML = html ? allBtn + html : '<div class="empty">Ничего не найдено</div>';
 }
 
@@ -704,11 +705,14 @@ function usefulIds(era) {
   return modeEls.filter(e => (era === 'all' || e[3] === era) && discovered.has(e[0]) && !isDone(e[0]))
     .map(e => e[0]).sort((a, b) => newFrom(b).length - newFrom(a).length);
 }
+const CW = 82, CH = 92;                                    // клетка сетки на поле
+const boardGrid = () => { const r = board.getBoundingClientRect();
+  return { r, cols: Math.max(1, Math.floor((r.width - 8) / CW)), rows: Math.max(1, Math.floor((r.height - 8) / CH)) }; };
+const boardCap = () => { const g = boardGrid(); return g.cols * g.rows; };
 function layOut(era) {
   const ids = usefulIds(era);
   if (!ids.length) return;
-  const r = board.getBoundingClientRect(), CW = 82, CH = 92;
-  const cols = Math.max(1, Math.floor((r.width - 8) / CW)), rows = Math.max(1, Math.floor((r.height - 8) / CH));
+  const { r, cols, rows } = boardGrid();
   const list = ids.slice(0, cols * rows), usedRows = Math.ceil(list.length / cols);
   const x0 = (r.width - cols * CW) / 2 + (CW - 76) / 2, y0 = Math.max(4, (r.height - usedRows * CH) / 2);
   board.querySelectorAll('.el').forEach(e => e.remove());
@@ -716,7 +720,7 @@ function layOut(era) {
   closeList(); haptic('medium'); Sound.play('pop');
   const where = era === 'all' ? '' : ` из эпохи «${eraById[era].name}»`;
   toast(list.length < ids.length
-    ? `На поле ${list.length} из ${ids.length}${where} — самые полезные.<br>Остальные не поместились`
+    ? `На поле ${list.length} самых полезных${where}.<br>Ещё ${ids.length - list.length} можно добавить из списка`
     : `На поле ${list.length}${where}`);
 }
 grid.addEventListener('click', e => {
