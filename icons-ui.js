@@ -69,6 +69,16 @@ Object.assign(ICONS, {
 
   ui_close: { color: '#e6dcff', svg: `
     <path d="M18 18l28 28M46 18 18 46" stroke="#e6dcff" stroke-width="6" stroke-linecap="round"/>` },
+
+  // «Статистика» — светящиеся столбики с линией роста
+  ui_stats: { color: '#8b7bff', svg: `
+    ${linG('__a', ['#bfefff', '#3aa9d6'])}${linG('__b', ['#e6dcff', '#6a4fe0'])}${linG('__c', ['#ffd6ff', '#d1479b'])}
+    <rect x="9" y="36" width="12" height="20" rx="3" fill="url(#__a)" stroke="#eaffff" stroke-width="2"/>
+    <rect x="26" y="26" width="12" height="30" rx="3" fill="url(#__b)" stroke="#f3eeff" stroke-width="2"/>
+    <rect x="43" y="14" width="12" height="42" rx="3" fill="url(#__c)" stroke="#fff0fb" stroke-width="2"/>
+    <path d="M8 30 26 18l10 4L54 6" fill="none" stroke="#ffcf5a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 58h52" stroke="#8a93c9" stroke-width="2.4" stroke-linecap="round"/>
+    ${spark(54, 6, 3.5, '#fff')}` },
 });
 
 // иконка эпохи (мини)

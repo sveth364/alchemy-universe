@@ -44,7 +44,20 @@
   .mode-card small { color: var(--gold); font-size: 12px; }
   .mode-card span { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
   .mode-card em { font-style: normal; font-size: 12px; color: var(--muted); }
-  #counter { color: var(--muted); font-variant-numeric: tabular-nums; }
+  #counter {
+    display: flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px 0 7px; border-radius: 99px; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--tile-border); color: var(--muted); font: inherit; font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  #counter .svg-ico.ui { width: 16px; height: 16px; filter: none; }
+  /* статистика */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 2px; text-align: left; }
+  .stat { background: var(--tile); border: 1px solid var(--tile-border); border-radius: 12px; padding: 9px 11px; }
+  .stat b { display: block; color: var(--text); font-size: 18px; font-variant-numeric: tabular-nums; }
+  .stat b small { color: var(--muted); font-size: 12px; font-weight: 400; }
+  .stat span { display: block; color: var(--muted); font-size: 11.5px; line-height: 1.25; margin-top: 2px; }
+  .stat.wide { grid-column: 1 / -1; }
+  .stats-note { display: block; color: var(--muted); font-size: 11.5px; margin-top: 8px; }
   #progress { height: 3px; background: rgba(255,255,255,.08); margin: 0 16px; border-radius: 2px; overflow: hidden; }
   #progress > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #ff8bd1); transition: width .4s; }
 
@@ -248,7 +261,7 @@
 <div id="app">
   <header>
     <button class="title" id="btnMode"><span id="logo"></span><span>Алхимия · <span id="modeName"></span></span><span class="caret">▾</span></button>
-    <div class="hdr-right"><span id="counter">0 / 0</span><button id="btnInfo" aria-label="Справка">?</button></div>
+    <div class="hdr-right"><button id="counter" aria-label="Статистика"><span data-ui="ui_stats"></span><span id="counterText">0 / 0</span></button><button id="btnInfo" aria-label="Справка">?</button></div>
   </header>
   <div id="progress"><div></div></div>
   <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы.<br>«?» вверху — справка об элементе</div></div>
@@ -292,21 +305,21 @@
   </div>
 </div>
 
-<script src="elements.js"></script>
-<script src="icons.js"></script>
-<script src="icons-micro.js"></script>
-<script src="icons-stars.js"></script>
-<script src="icons-planet.js"></script>
-<script src="icons-weather.js"></script>
-<script src="icons-life.js"></script>
-<script src="icons-animals.js"></script>
-<script src="icons-human.js"></script>
-<script src="icons-civ.js"></script>
-<script src="icons-tech.js"></script>
-<script src="icons-cosmos.js"></script>
-<script src="icons-ui.js"></script>
-<script src="info.js"></script>
-<script src="modes.js"></script>
+<script src="elements.js?v=26"></script>
+<script src="icons.js?v=26"></script>
+<script src="icons-micro.js?v=26"></script>
+<script src="icons-stars.js?v=26"></script>
+<script src="icons-planet.js?v=26"></script>
+<script src="icons-weather.js?v=26"></script>
+<script src="icons-life.js?v=26"></script>
+<script src="icons-animals.js?v=26"></script>
+<script src="icons-human.js?v=26"></script>
+<script src="icons-civ.js?v=26"></script>
+<script src="icons-tech.js?v=26"></script>
+<script src="icons-cosmos.js?v=26"></script>
+<script src="icons-ui.js?v=26"></script>
+<script src="info.js?v=26"></script>
+<script src="modes.js?v=26"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -372,10 +385,21 @@ function fillMissingPairs() {
     }
   }
 }
+/* Статистика по режимам: s — попыток соединения, ok — удачных, t — время в игре (мс),
+   h — взято подсказок, n — новых элементов, открытых с тех пор, как ведётся статистика */
+const STAT_KEYS = ['s', 'ok', 't', 'h', 'n'];
+const blankStats = () => Object.fromEntries(STAT_KEYS.map(k => [k, 0]));
+const stats = Object.fromEntries(Object.keys(MODES).map(id => [id, blankStats()]));
+let statsDirty = false;
+function addStats(mode, o) {
+  if (!stats[mode] || !o) return;
+  for (const k of STAT_KEYS) stats[mode][k] = Math.max(stats[mode][k], +o[k] || 0);
+}
 function applySave(raw) {
   if (!raw) return;
   const s = JSON.parse(raw);
   if (Array.isArray(s)) { addIds('cosmos', s); return; }                       // v1
+  for (const m in s.st || {}) addStats(m, s.st[m]);
   if (s.v === 3) {
     for (const m in s.p || {}) addIds(m, s.p[m]);
     for (const m in s.r || {}) addPairs(m, s.r[m]);
@@ -402,10 +426,11 @@ function load() {
 function save() {
   const p = Object.fromEntries(Object.keys(progress).map(m => [m, [...progress[m]]]));
   const r = Object.fromEntries(Object.keys(found).map(m => [m, encPairs(found[m])]));
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p, r })); } catch (e) {}
+  statsDirty = false;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, m: MODE, t: tutDone, h: lastHint, p, r, st: stats })); } catch (e) {}
   try {
     if (!cloudOk) return;
-    tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint }));
+    tg.CloudStorage.setItem(CLOUD.meta, JSON.stringify({ m: MODE, t: tutDone, h: lastHint, st: stats }));
     tg.CloudStorage.setItem(CLOUD[MODE], JSON.stringify(p[MODE]));
     tg.CloudStorage.setItem(CLOUD[MODE] + '_r', r[MODE]);
   } catch (e) {}
@@ -423,7 +448,7 @@ function toast(html, cls) {
 }
 function updateCounter() {
   const total = modeEls.length;
-  document.getElementById('counter').textContent = `${discovered.size} / ${total}`;
+  document.getElementById('counterText').textContent = `${discovered.size} / ${total}`;
   document.querySelector('#progress > div').style.width = (discovered.size / total * 100) + '%';
 }
 const eraOpen = (era) => modeEls.some(e => e[3] === era && discovered.has(e[0]));
@@ -553,6 +578,7 @@ board.addEventListener('pointerdown', e => {
 
 function combine(a, b) {
   const result = recipes[key(a.dataset.id, b.dataset.id)];
+  stats[MODE].s++; if (result) stats[MODE].ok++; statsDirty = true;
   if (!result) {
     a.classList.add('shake'); b.classList.add('shake'); haptic('error');
     a.style.left = (parseFloat(a.style.left) + 40) + 'px';
@@ -573,7 +599,7 @@ function combine(a, b) {
 
 function discover(id) {
   const era = byId[id].era, newEra = !eraOpen(era);
-  discovered.add(id); save(); updateCounter(); haptic('success');
+  discovered.add(id); stats[MODE].n++; save(); updateCounter(); haptic('success');
   if (newEra) toast(`Открыта эпоха: <b>${eraIcon(era)} ${eraById[era].name}</b><br>${label(id)}`, 'era');
   else toast(`Новый элемент: <b>${label(id)}</b>`);
   refreshDone();
@@ -670,7 +696,7 @@ document.getElementById('btnReset').onclick = () => modal({
   buttons: [
     { text: 'Отмена' },
     { text: 'Сбросить', primary: true, onClick: () => {
-      progress[MODE] = discovered = new Set(STARTERS); found[MODE].clear(); save(); updateCounter(); updateHintBtn();
+      progress[MODE] = discovered = new Set(STARTERS); found[MODE].clear(); stats[MODE] = blankStats(); save(); updateCounter(); updateHintBtn();
       board.querySelectorAll('.el').forEach(e => e.remove()); placeStarters(); closeList();
     } },
   ],
@@ -715,7 +741,7 @@ function giveHint() {
   }
   const h = list[Math.floor(Math.random() * list.length)];
   const [x] = Math.random() < .5 ? [h.a, h.b] : [h.b, h.a];
-  lastHint = Date.now(); save(); updateHintBtn();
+  lastHint = Date.now(); stats[MODE].h++; save(); updateHintBtn();
   modal({
     icon: iconHtml(x, byId[x].icon, 'modal-ico'), title: 'Подсказка',
     text: `Возьми <b>${label(x)}</b> и найди ему пару среди открытых элементов.<br>Получится новый элемент из эпохи «${eraById[byId[h.res].era].name}».`,
@@ -829,6 +855,50 @@ document.getElementById('btnWin').onclick = () => document.getElementById('win')
 document.getElementById('logo').innerHTML = iconHtml('logo', '✨', 'logo');
 // иконки интерфейса
 document.querySelectorAll('[data-ui]').forEach(el => el.innerHTML = iconHtml(el.dataset.ui, '', 'ui'));
+/* ============ СТАТИСТИКА ============ */
+// время считаем, только пока игра на экране и игрок что-то делал в последние 2 минуты
+const IDLE_LIMIT = 2 * 60 * 1000;
+let tickAt = Date.now(), lastActive = Date.now(), unsavedTime = 0;
+['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, () => { lastActive = Date.now(); }, true));
+function tickTime() {
+  const now = Date.now(), dt = now - tickAt; tickAt = now;
+  if (!MODE || document.hidden || dt > 5000 || now - lastActive > IDLE_LIMIT) return;
+  stats[MODE].t += dt; unsavedTime += dt;
+  if (unsavedTime >= 30000) { unsavedTime = 0; save(); }          // время и попытки — раз в 30 с
+}
+setInterval(tickTime, 1000);
+document.addEventListener('visibilitychange', () => { tickTime(); if (document.hidden && statsDirty) save(); });
+
+function fmtDur(ms, withSec) {
+  const s = Math.round(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+  if (h) return `${h} ч ${m} мин`;
+  if (m) return withSec && sec ? `${m} мин ${sec} с` : `${m} мин`;
+  return withSec ? `${sec} с` : 'меньше минуты';
+}
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+function showStats() {
+  tickTime();
+  const st = stats[MODE], total = modeEls.length, rec = Object.keys(recipes).length, fc = foundCount();
+  const tile = (value, label, wide) => `<div class="stat${wide ? ' wide' : ''}"><b>${value}</b><span>${label}</span></div>`;
+  const tiles = [
+    tile(`${discovered.size} <small>/ ${total} · ${pct(discovered.size, total)}%</small>`, 'Открыто элементов'),
+    tile(`${fc} <small>/ ${rec} · ${pct(fc, rec)}%</small>`, 'Найдено рецептов'),
+    tile(st.s, 'Попыток соединить'),
+    tile(`${st.ok} <small>· ${pct(st.ok, st.s)}%</small>`, 'Из них удачных'),
+    tile(fmtDur(st.t), 'Время в игре'),
+    tile(st.n ? fmtDur(st.t / st.n, true) : '—', 'В среднем на новый элемент'),
+    tile(st.h, 'Подсказок взято', true),
+  ].join('');
+  modal({
+    icon: iconHtml('ui_stats', '📊', 'modal-ico'), title: `Статистика · ${M.name}`,
+    text: `<span class="stats-grid">${tiles}</span>` +
+          `<span class="stats-note">У каждого режима своя статистика. Время идёт, только пока ты играешь.</span>`,
+    buttons: [{ text: 'Понятно', primary: true }],
+  });
+  haptic('light');
+}
+document.getElementById('counter').onclick = showStats;
+
 document.getElementById('winIcon').innerHTML = iconHtml('universe', '🌌', 'win-ico');
 load();
 // режим: сохранённый; старые игроки (прогресс в «Космосе») — сразу в «Космос»; новые — выбирают
