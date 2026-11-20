@@ -313,22 +313,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=27"></script>
-<script src="icons.js?v=27"></script>
-<script src="icons-micro.js?v=27"></script>
-<script src="icons-stars.js?v=27"></script>
-<script src="icons-planet.js?v=27"></script>
-<script src="icons-weather.js?v=27"></script>
-<script src="icons-life.js?v=27"></script>
-<script src="icons-animals.js?v=27"></script>
-<script src="icons-human.js?v=27"></script>
-<script src="icons-civ.js?v=27"></script>
-<script src="icons-tech.js?v=27"></script>
-<script src="icons-cosmos.js?v=27"></script>
-<script src="icons-ui.js?v=27"></script>
-<script src="info.js?v=27"></script>
-<script src="modes.js?v=27"></script>
-<script src="sound.js?v=27"></script>
+<script src="elements.js?v=28"></script>
+<script src="icons.js?v=28"></script>
+<script src="icons-micro.js?v=28"></script>
+<script src="icons-stars.js?v=28"></script>
+<script src="icons-planet.js?v=28"></script>
+<script src="icons-weather.js?v=28"></script>
+<script src="icons-life.js?v=28"></script>
+<script src="icons-animals.js?v=28"></script>
+<script src="icons-human.js?v=28"></script>
+<script src="icons-civ.js?v=28"></script>
+<script src="icons-tech.js?v=28"></script>
+<script src="icons-cosmos.js?v=28"></script>
+<script src="icons-ui.js?v=28"></script>
+<script src="info.js?v=28"></script>
+<script src="modes.js?v=28"></script>
+<script src="sound.js?v=28"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -691,7 +691,7 @@ grid.addEventListener('click', e => {
   spawn(c.dataset.id, r.width / 2 - 38 + (Math.random() - .5) * 80, r.height / 2 - 42 + (Math.random() - .5) * 80, true);
   closeList(); haptic('light'); Sound.play('pop');
 });
-function openList() { Sound.play('tap'); searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
+function openList() { searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
 function closeList() { sheet.classList.remove('open'); searchEl.blur(); }
 document.getElementById('btnList').onclick = openList;
 document.getElementById('btnClose').onclick = closeList;
@@ -767,7 +767,7 @@ function setInfoMode(on) {
   infoMode = on; infoBtn.classList.toggle('on', on); document.body.classList.toggle('info-mode', on);
   if (on) toast('Режим справки: нажми на элемент на поле или в списке');
 }
-infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); Sound.play('tap'); };
+infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); };
 /* звук вкл/выкл */
 const soundBtn = document.getElementById('btnSound');
 const drawSoundBtn = () => { soundBtn.innerHTML = iconHtml(Sound.on ? 'ui_sound' : 'ui_mute', Sound.on ? '🔊' : '🔇', 'ui'); };

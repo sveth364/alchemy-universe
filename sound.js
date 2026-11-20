@@ -17,7 +17,8 @@ const Sound = (() => {
       ctx = new AC();
       master = ctx.createGain(); master.gain.value = 0.55;
       const comp = ctx.createDynamicsCompressor();          // чтобы аккорды не «хрипели»
-      master.connect(comp); comp.connect(ctx.destination);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3500;  // срезаем резкие верха
+      master.connect(lp); lp.connect(comp); comp.connect(ctx.destination);
     }
     if (ctx.state === 'suspended') ctx.resume();
     return ctx;
@@ -37,49 +38,54 @@ const Sound = (() => {
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + dur + 0.05);
   }
-  // шум через полосовой фильтр — шорохи и «вжух»
-  function noise(delay, dur, { vol = 0.2, from = 2000, to = 400, q = 1.2 } = {}) {
+  // мягкий шум через фильтр нижних частот — короткий «вжух» без шипения
+  function noise(delay, dur, { vol = 0.05, from = 1200, to = 300 } = {}) {
     const t0 = ctx.currentTime + delay, len = Math.ceil(ctx.sampleRate * dur);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     const src = ctx.createBufferSource(); src.buffer = buf;
-    const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = q;
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 0.7;
     f.frequency.setValueAtTime(from, t0); f.frequency.exponentialRampToValueAtTime(to, t0 + dur);
     const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0 + 0.03);
+    g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0 + 0.04);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     src.connect(f); f.connect(g); g.connect(master); src.start(t0); src.stop(t0 + dur);
   }
+
   const arp = (notes, step, dur, opt) => notes.forEach((n, i) => tone(n, i * step, dur, opt));
 
-  // ноты
-  const C5 = 523.25, D5 = 587.33, E5 = 659.25, G5 = 783.99, A5 = 880, C6 = 1046.5, E6 = 1318.5, G6 = 1568, C7 = 2093;
+  // ноты (малая и первая октавы — ниже и мягче)
+  const G3 = 196, C4 = 261.63, D4 = 293.66, E4 = 329.63, F4 = 349.23, G4 = 392, A4 = 440, C5 = 523.25, E5 = 659.25, G5 = 783.99;
 
+  /* Успех — короткий «блуп» ВВЕРХ, неудача — мягкие две ноты ВНИЗ: на слух их не спутать */
   const SOUNDS = {
-    tap: () => tone(1200, 0, 0.04, { type: 'triangle', vol: 0.05 }),
-    pick: () => tone(700, 0, 0.07, { type: 'triangle', vol: 0.07, glide: 950 }),
-    pop: () => tone(480, 0, 0.1, { vol: 0.16, glide: 760 }),
-    fail: () => { tone(190, 0, 0.2, { type: 'triangle', vol: 0.22, glide: 120 }); tone(196, 0, 0.16, { vol: 0.1, glide: 125 }); },
-    combine: () => { tone(G5, 0, 0.14, { vol: 0.15 }); tone(C6, 0.06, 0.2, { vol: 0.13 }); },
-    recipe: () => { arp([E5, G5, C6], 0.06, 0.26, { vol: 0.13 }); tone(E6, 0.18, 0.3, { vol: 0.05 }); },
-    discover: () => {
-      arp([C5, E5, G5, C6], 0.07, 0.42, { type: 'triangle', vol: 0.14 });
-      tone(C7, 0.3, 0.35, { vol: 0.04 }); tone(G6, 0.36, 0.3, { vol: 0.03 });
-    },
+    tap: () => tone(440, 0, 0.045, { vol: 0.06, glide: 400 }),                    // все кнопки интерфейса
+    pick: () => tone(F4, 0, 0.06, { vol: 0.05, glide: A4 }),
+    pop: () => tone(260, 0, 0.09, { vol: 0.12, glide: 390 }),
+    fail: () => { tone(F4, 0, 0.1, { vol: 0.09 }); tone(D4, 0.09, 0.16, { vol: 0.08 }); },
+    combine: () => tone(G4 * 0.9, 0, 0.11, { vol: 0.11, glide: A4 }),
+    recipe: () => { tone(G4, 0, 0.1, { vol: 0.1, glide: A4 }); tone(C5, 0.08, 0.16, { vol: 0.08 }); },
+    discover: () => { tone(D4, 0, 0.14, { vol: 0.15, glide: G4 * 1.1 }); tone(A4, 0.1, 0.22, { vol: 0.07 }); },
     era: () => {
-      arp([C5, E5, G5, C6, E6], 0.08, 0.6, { type: 'triangle', vol: 0.13 });
-      [C5, E5, G5].forEach(n => tone(n / 2, 0.4, 1.1, { vol: 0.06, attack: 0.15 }));
-      tone(C7, 0.5, 0.5, { vol: 0.04 });
+      tone(D4, 0, 0.14, { vol: 0.15, glide: G4 * 1.1 }); tone(A4, 0.1, 0.3, { vol: 0.07 });
+      tone(G3, 0.08, 0.8, { vol: 0.06, attack: 0.12 }); tone(D4, 0.08, 0.8, { vol: 0.04, attack: 0.12 });
+      tone(E5, 0.22, 0.4, { vol: 0.03 });
     },
-    trash: () => noise(0, 0.28, { vol: 0.22, from: 3200, to: 300 }),
-    clear: () => { noise(0, 0.4, { vol: 0.16, from: 500, to: 5000, q: 0.8 }); tone(900, 0.05, 0.3, { vol: 0.04, glide: 1800 }); },
-    hint: () => { tone(E6, 0, 0.5, { vol: 0.1 }); tone(A5 * 2, 0.12, 0.6, { vol: 0.08 }); },
+    trash: () => { tone(420, 0, 0.16, { vol: 0.06, glide: 170 }); noise(0, 0.16, { vol: 0.04, from: 1400, to: 300 }); },
+    clear: () => { tone(200, 0, 0.22, { vol: 0.06, glide: 480 }); noise(0, 0.22, { vol: 0.035, from: 500, to: 1600 }); },
+    hint: () => { tone(C5, 0, 0.35, { vol: 0.08 }); tone(E5, 0.1, 0.4, { vol: 0.06 }); },
     win: () => {
-      arp([C5, E5, G5, C6], 0.12, 0.5, { type: 'triangle', vol: 0.14 });
-      [C5, E5, G5, C6].forEach(n => tone(n, 0.6, 1.6, { vol: 0.07, attack: 0.2 }));
-      [C7, G6, E6].forEach((n, i) => tone(n, 0.7 + i * 0.15, 0.6, { vol: 0.035 }));
+      arp([C4, E4, G4, C5], 0.12, 0.45, { vol: 0.12 });
+      [C4, E4, G4].forEach(n => tone(n, 0.55, 1.5, { vol: 0.06, attack: 0.2 }));
+      [G5, E5].forEach((n, i) => tone(n, 0.7 + i * 0.15, 0.5, { vol: 0.03 }));
     },
   };
+
+  // единый звук для всех кнопок интерфейса, кроме «Очистки» и «Корзины» (у них свои)
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (b && b.id !== 'btnClear' && b.id !== 'btnTrash') SOUNDS.tap && on && ensure() && SOUNDS.tap();
+  });
 
   return {
     get on() { return on; },
@@ -90,7 +96,7 @@ const Sound = (() => {
     toggle() {
       on = !on;
       try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
-      if (on) this.play('tap'); else if (ctx) ctx.suspend();
+      if (!on && ctx) ctx.suspend();                     // звук кнопки даёт общий обработчик
       return on;
     },
   };
