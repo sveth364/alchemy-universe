@@ -326,4 +326,15 @@ Object.assign(ICONS, {
     <g fill="#9fdcff" stroke="#fff" stroke-width="1">${[[13, 30], [23, 30], [37, 30], [47, 30], [13, 42], [47, 42]].map(([x, y]) =>
       `<rect x="${x}" y="${y}" width="5" height="6" rx="1"/>`).join('')}</g>
     <path d="M25 58V44h14v14z" fill="#6ee7ff" stroke="#fff" stroke-width="1.6"/><path d="M32 44v14" stroke="#fff" stroke-width="1.2"/>` },
+
+  // ── расширение «Космоса» ──
+  // мыло — розовый брусок в мыльных пузырях
+  soap: { color: '#ff8fd1', svg: `
+    ${linG('__s', ['#ffe0f2', '#ff8fd1', '#c2417f'], 1, 1)}
+    <g transform="rotate(-12 30 42)"><rect x="10" y="32" width="38" height="20" rx="8" fill="url(#__s)" stroke="#ffe0f2" stroke-width="2"/>
+      <rect x="16" y="36" width="26" height="6" rx="3" fill="#fff" opacity=".35"/></g>
+    <g fill="#bfefff" fill-opacity=".18" stroke="#e0fbff" stroke-width="1.6">
+      <circle cx="44" cy="16" r="9"/><circle cx="26" cy="18" r="6"/><circle cx="54" cy="34" r="5"/><circle cx="14" cy="28" r="3.5"/></g>
+    ${shine(41, 13, 3, 1.6, .8)}${shine(24, 16, 2, 1.1, .8)}${shine(53, 32, 1.6, .9, .8)}
+    ${spark(56, 54, 3)}${spark(32, 4, 2.4, '#9ff')}` },
 });

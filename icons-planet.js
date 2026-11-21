@@ -187,4 +187,25 @@ Object.assign(ICONS, {
     ${linG('__g', ['#4b2bb0', '#1a1240'])}
     <path d="M2 52c10-6 20-6 30-2s20 2 30-2v14H2z" fill="url(#__g)" stroke="#9d7bff" stroke-width="1.6"/>
     ${spark(48, 12, 3.5)}${spark(54, 30, 2.5, '#9ff')}${spark(40, 24, 2)}${spark(10, 40, 2.5, '#ffd6ff')}` },
+
+  // ── расширение «Космоса» ──
+  // уголь — чёрные гранёные куски с фиолетовыми бликами
+  coal: { color: '#9d7bff', svg: `
+    ${linG('__c', ['#6d6890', '#2a2650', '#12101f'], 1, 1)}
+    <path d="M8 48L14 34L26 30L32 40L28 54L14 56Z" fill="url(#__c)" stroke="#c9c3ec" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M28 34L38 18L52 20L58 36L50 50L34 50Z" fill="url(#__c)" stroke="#d9ccff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M38 18L42 32L58 36M42 32L34 50" fill="none" stroke="#9d7bff" stroke-width="1.2" opacity=".8"/>
+    <path d="M26 30L22 42L28 54M22 42L8 48" fill="none" stroke="#9d7bff" stroke-width="1.1" opacity=".7"/>
+    <path d="M40 22l8 1-2 6z" fill="#fff" opacity=".35"/>
+    ${spark(50, 8, 3.5)}${spark(10, 20, 2.5, '#9ff')}` },
+
+  // ржавчина — гайка с рыжими пятнами ржавчины
+  rust: { color: '#ff9a6b', svg: `
+    ${linG('__m', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 1)}
+    <path d="M32 6L54 19V45L32 58L10 45V19Z" fill="url(#__m)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="32" r="10" fill="#2a2650" stroke="#c9cde6" stroke-width="2"/>
+    <g fill="#c4572e" stroke="#ff9a6b" stroke-width="1"><path d="M12 22c6-1 9 3 7 8s-6 4-7 1z"/><path d="M40 46c5-3 11-1 12 1l-8 5c-3 0-5-3-4-6z"/>
+      <path d="M38 10c4 0 7 3 5 6s-6 1-5-6z"/></g>
+    <g fill="#e07a45"><circle cx="20" cy="44" r="2"/><circle cx="50" cy="28" r="1.6"/><circle cx="26" cy="14" r="1.3"/></g>
+    ${shine(24, 18, 3.5, 2, .5)}${spark(56, 8, 3.2)}${spark(8, 56, 2.4, '#ffe08a')}` },
 });

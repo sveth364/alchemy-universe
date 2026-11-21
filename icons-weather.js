@@ -166,4 +166,14 @@ Object.assign(ICONS, {
     ${linG('__g', ['#2a1f4a', '#120c26'])}
     <path d="M2 52l12-10 10 6 12-12 12 10 14-6v24H2z" fill="url(#__g)" stroke="#9d7bff" stroke-width="1.6" stroke-linejoin="round"/>
     ${spark(50, 8, 3)}${spark(12, 8, 2.5)}` },
+
+  // ── расширение «Космоса» ──
+  // дым — клубы, поднимающиеся от тлеющего уголька
+  smoke: { color: '#b9b4d6', svg: `
+    ${radG('__s', ['#f2efff', '#b9b4d6', '#6d6890'], .4, .35, .8)}
+    <g fill="url(#__s)" stroke="#e6e1ff" stroke-width="1.6">
+      <circle cx="30" cy="44" r="8"/><circle cx="38" cy="32" r="9"/><circle cx="28" cy="22" r="8"/><circle cx="38" cy="12" r="6"/></g>
+    <g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"><path d="M26 42c1-3 4-4 6-3M34 30c1-3 4-4 7-3M24 20c1-3 4-4 6-3"/></g>
+    ${radG('__e', ['#fff59d', '#ff9f43', '#d9480f'], .5, .5, .5)}<ellipse cx="28" cy="56" rx="8" ry="3.5" fill="url(#__e)"/>
+    ${spark(52, 50, 3.2)}${spark(12, 12, 2.6, '#ffd6ff')}` },
 });

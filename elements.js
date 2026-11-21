@@ -330,6 +330,23 @@ const ELEMENTS = [
 
   // ───────── ДОБАВЛЕНО ПОЗЖЕ (только в конец — номер элемента хранится в сохранениях) ─────────
   ['ash', 'Пепел', '🌫️', 'planet'],
+  // расширение «Космоса», этап 1: химия зарождения жизни, ракетная цепочка, побочные элементы
+  ['methane', 'Метан', '🫧', 'micro'],
+  ['ammonia', 'Аммиак', '💨', 'micro'],
+  ['aminoacid', 'Аминокислота', '🧩', 'life'],
+  ['protein', 'Белок', '🧶', 'life'],
+  ['rna', 'РНК', '🧬', 'life'],
+  ['engine', 'Двигатель', '⚙️', 'tech'],
+  ['rocketfuel', 'Ракетное топливо', '🛢️', 'tech'],
+  ['orbit', 'Орбита', '🪐', 'cosmos'],
+  ['spacetelescope', 'Космический телескоп', '🔭', 'cosmos'],
+  ['spacestation', 'Космическая станция', '🛰️', 'cosmos'],
+  ['smoke', 'Дым', '🌫️', 'weather'],
+  ['coal', 'Уголь', '⚫', 'planet'],
+  ['soap', 'Мыло', '🧼', 'civ'],
+  ['rust', 'Ржавчина', '🟤', 'planet'],
+  ['mars', 'Марс', '🔴', 'cosmos'],
+  ['rover', 'Марсоход', '🚙', 'tech'],
 ];
 
 const RECIPES = [
@@ -411,7 +428,6 @@ const RECIPES = [
   'snow+human=snowman', 'wave+air=sound',
   'solarwind+atmosphere=aurora', 'solarwind+magnetism=aurora',
   // жизнь
-  'ocean+carbon=life', 'ocean+lightning=life',
   'life+molecule=dna', 'life+dna=cell', 'life+water=cell',
   'life+time=evolution',
   'life+photon=plant', 'life+soil=plant', 'cell+light=plant', 'seed+soil=plant',
@@ -510,7 +526,6 @@ const RECIPES = [
   'car+car=bus', 'car+farm=tractor', 'car+wheat=tractor',
   'car+bird=plane', 'bird+steel=plane',
   'plane+tornado=helicopter', 'plane+wind=helicopter',
-  'plane+space=rocket',
   'electricity+glass=bulb', 'electricity+lantern=bulb',
   'electricity+iron=battery',
   'electricity+sound=phone', 'electricity+wave=radio',
@@ -522,7 +537,7 @@ const RECIPES = [
   'computer+art=game', 'tv+art=game',
   'glass+human=glasses', 'game+glasses=vr',
   'computer+steel=robot', 'robot+knowledge=ai', 'computer+knowledge=ai',
-  'rocket+radio=satellite', 'satellite+map=gps',
+  'satellite+map=gps',
   'car+battery=electriccar', 'medicine+cell=vaccine',
   // космос
   'sun+planet=system', 'stone+space=asteroid',
@@ -531,13 +546,38 @@ const RECIPES = [
   'human+rocket=astronaut', 'astronaut+moon=moonlanding',
   'star+blackhole=galaxy', 'constellation+gravity=galaxy',
   'galaxy+galaxy=cluster',
-  'galaxy+science=darkmatter',          // тёмную материю «открывают» учёные
   'space+energy=darkenergy', 'energy+darkmatter=darkenergy',
   'cluster+darkmatter=web',
   'blackhole+spacetime=wormhole',
   'bigbang+darkenergy=expansion', 'bigbang+time=expansion',
   'expansion+web=universe',
   'universe+universe=multiverse',
+  // ── расширение «Космоса» (в «Классике» этих элементов нет, см. modes.js) ──
+  // зарождение жизни: опыт Миллера — Юри (метан, аммиак и молнии в первичной атмосфере)
+  'carbon+hydrogen=methane', 'mud+gas=methane',
+  'nitrogen+hydrogen=ammonia',
+  'methane+lightning=aminoacid', 'ammonia+lightning=aminoacid',
+  'aminoacid+aminoacid=protein', 'aminoacid+water=protein',
+  'protein+molecule=rna', 'protein+dna=rna',
+  'rna+ocean=life', 'rna+protein=life',
+  // путь в космос: двигатель + топливо → ракета → орбита → спутник → телескоп на орбите
+  'petrol+steel=engine', 'petrol+gear=engine',
+  'hydrogen+fire=rocketfuel', 'petrol+oxygen=rocketfuel',
+  'engine+rocketfuel=rocket',
+  'rocket+gravity=orbit', 'rocket+planet=orbit',
+  'orbit+radio=satellite',
+  'satellite+telescope=spacetelescope', 'orbit+telescope=spacetelescope',
+  'galaxy+spacetelescope=darkmatter',   // тёмную материю выдаёт движение галактик
+  'gravity+spacetelescope=darkmatter',  // и гравитационное линзирование
+  'orbit+house=spacestation', 'satellite+astronaut=spacestation',
+  // побочные элементы
+  'fire+air=smoke', 'campfire+air=smoke',
+  'forest+pressure=coal', 'wood+campfire=coal',
+  'coal+iron=steel', 'coal+pressure=diamond',
+  'ash+water=soap', 'ash+oil=soap',
+  'iron+water=rust', 'iron+air=rust',
+  'planet+rust=mars', 'rust+system=mars',
+  'mars+robot=rover', 'mars+car=rover',
 ];
 
 const GOAL = 'universe';

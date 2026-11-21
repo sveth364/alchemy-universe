@@ -23,10 +23,16 @@ const MODES = {
       'stone+pressure=iron', 'iron+lightning=electricity', 'energy+air=space',
       'sand+glass=time', 'fire+space=sun', 'sun+space=star', 'iron+sun=gold',
       'sand+electricity=chip', 'campfire+time=carbon', 'mud+energy=life', 'cell+evolution=dna',
+      // простые рецепты, которые в «Космосе» заменены длинными цепочками
+      'ocean+carbon=life', 'ocean+lightning=life', 'plane+space=rocket', 'rocket+radio=satellite',
+      'galaxy+science=darkmatter',
     ],
     exclude: ['quark', 'photon', 'gluon', 'higgs', 'antimatter', 'electron', 'proton', 'neutron', 'nucleus', 'atom',
       'ion', 'hydrogen', 'helium', 'molecule', 'matter', 'mass', 'radiation', 'neutrino', 'annihilation',
-      'oxygen', 'nitrogen', 'silicon'],
+      'oxygen', 'nitrogen', 'silicon',
+      // расширение «Космоса»
+      'methane', 'ammonia', 'aminoacid', 'protein', 'rna', 'engine', 'rocketfuel', 'orbit', 'spacetelescope',
+      'spacestation', 'smoke', 'coal', 'soap', 'rust', 'mars', 'rover'],
   },
   cosmos: {
     name: 'Космос',

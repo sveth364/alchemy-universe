@@ -154,4 +154,50 @@ Object.assign(ICONS, {
         <circle cx="${x}" cy="${y}" r="${r}" fill="url(#__b${i})" fill-opacity=".85" stroke="#fff" stroke-width="1.6"/>
         ${miniGalaxy(x, y, r / 22, '#fff', '#ffd6ff')}${shine(x - r * .4, y - r * .45, r * .25, r * .12, .7)}`).join('')}
     ${spark(56, 56, 3.5)}${spark(56, 4, 2.5, '#9ff')}` },
+
+  // ── расширение «Космоса» ──
+  // орбита — планета и наклонённая орбита с аппаратом (задняя половина орбиты — за планетой)
+  orbit: { color: '#6ee7ff', svg: `
+    ${arcHalf(32, 32, 28, 11, -25, '#6ee7ff', 2, false, .45)}
+    ${ball('__p', 32, 32, 14, ['#c8f1ff', '#4cc9ff', '#1d4ed8'], '#c8f1ff', 2)}
+    <path d="M24 28c4-3 9-3 12 1" fill="none" stroke="#3ddc84" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    ${arcHalf(32, 32, 28, 11, -25, '#6ee7ff', 2.4, true)}
+    <g transform="translate(50 47) rotate(-25)"><rect x="-7" y="-2" width="14" height="4" rx="1" fill="#3a4bff" stroke="#c8f1ff" stroke-width="1"/>
+      <rect x="-2.5" y="-3.5" width="5" height="7" rx="1.5" fill="#fff" stroke="#c9cde6" stroke-width="1"/></g>
+    ${spark(54, 10, 3.5)}${spark(10, 54, 2.5, '#ffd6ff')}` },
+
+  // космический телескоп — труба с солнечными панелями, наклонённая к звёздам
+  spacetelescope: { color: '#c9cde6', svg: `
+    ${linG('__t', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}${linG('__p', ['#9ad7ff', '#3a4bff'], 1, 1)}
+    <g transform="rotate(-35 32 34)">
+      <rect x="6" y="18" width="16" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
+      <rect x="42" y="18" width="16" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
+      <g stroke="#c8f1ff" stroke-width=".8" opacity=".7"><path d="M14 18v9M50 18v9"/></g>
+      <rect x="22" y="10" width="20" height="42" rx="4" fill="url(#__t)" stroke="#fff" stroke-width="2"/>
+      <path d="M22 18h20" stroke="#ffcf5a" stroke-width="3"/>
+      <ellipse cx="32" cy="10" rx="10" ry="3.2" fill="#2a2650" stroke="#fff" stroke-width="1.6"/>
+    </g>
+    ${spark(52, 8, 4)}${spark(58, 26, 2.4, '#9ff')}${spark(42, 6, 2, '#ffd6ff')}${spark(8, 56, 2.5)}` },
+
+  // космическая станция — модули и большие солнечные крылья
+  spacestation: { color: '#6ee7ff', svg: `
+    ${linG('__p', ['#9ad7ff', '#3a4bff'], 1, 1)}${linG('__m', ['#ffffff', '#c9cde6', '#6a6f99'])}
+    <path d="M10 32H54" stroke="#e6e9ff" stroke-width="3.4"/>
+    <g fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2">
+      <rect x="6" y="12" width="10" height="17" rx="1"/><rect x="6" y="35" width="10" height="17" rx="1"/>
+      <rect x="48" y="12" width="10" height="17" rx="1"/><rect x="48" y="35" width="10" height="17" rx="1"/></g>
+    <g stroke="#c8f1ff" stroke-width=".8" opacity=".7"><path d="M11 12v17M11 35v17M53 12v17M53 35v17"/></g>
+    <rect x="24" y="25" width="16" height="14" rx="4" fill="url(#__m)" stroke="#fff" stroke-width="1.8"/>
+    <rect x="28" y="14" width="8" height="12" rx="3" fill="url(#__m)" stroke="#fff" stroke-width="1.6"/>
+    <rect x="28" y="38" width="8" height="12" rx="3" fill="url(#__m)" stroke="#fff" stroke-width="1.6"/>
+    <circle cx="32" cy="32" r="2.6" fill="#ffcf5a"/>
+    ${spark(54, 58, 3)}${spark(32, 6, 2.6, '#9ff')}` },
+
+  // Марс — ржавая планета с полярной шапкой и кратерами
+  mars: { color: '#ff7a59', svg: `
+    ${halo('__h', 32, 32, 30, '#ff7a59', .4)}
+    ${ball('__m', 32, 32, 21, ['#ffc9a8', '#ff7a59', '#9c2f17'], '#ffd6c4', 2.2)}
+    <path d="M22 15c6-3 14-3 20 0-5 3-15 3-20 0z" fill="#fff" opacity=".9"/>
+    <g fill="#b8452a" opacity=".75"><circle cx="40" cy="36" r="4"/><circle cx="26" cy="42" r="3"/><circle cx="44" cy="25" r="2"/><ellipse cx="30" cy="30" rx="7" ry="2.4" transform="rotate(-15 30 30)"/></g>
+    ${spark(56, 8, 3.5)}${spark(8, 54, 2.5, '#ffe08a')}` },
 });

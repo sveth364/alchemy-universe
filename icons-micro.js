@@ -221,4 +221,22 @@ Object.assign(ICONS, {
     <g stroke-width="2" stroke-linecap="round"><path d="M4 52l6-4" stroke="#6ee7ff"/><path d="M60 12l-6 4" stroke="#ff8fd1"/></g>
     ${ball('__a', 13, 46, 6, BLUE, '#c8f1ff', 1.5)}
     ${radG('__m', ['#ffd1f0', '#ff5fa2', '#7b1fa2'])}<circle cx="51" cy="18" r="6" fill="url(#__m)" stroke="#ffc2df" stroke-width="1.5" stroke-dasharray="2.5 2"/>` },
+
+  // ── расширение «Космоса» ──
+  // метан CH₄: углерод и четыре водорода
+  methane: { color: '#9d7bff', svg: `
+    <g stroke="#d9ccff" stroke-width="3" stroke-linecap="round"><path d="M32 33L14 16M32 33L50 16M32 33L16 52M32 33L48 52"/></g>
+    ${ball('__h1', 14, 16, 7, BLUE, '#d0f4ff', 1.5)}${ball('__h2', 50, 16, 7, BLUE, '#d0f4ff', 1.5)}
+    ${ball('__h3', 16, 52, 6, BLUE, '#d0f4ff', 1.5)}${ball('__h4', 48, 52, 6, BLUE, '#d0f4ff', 1.5)}
+    ${ball('__c', 32, 33, 12, ['#b9b4d6', '#5d5878', '#2a2650'], '#e6e1ff', 2)}${sym('C', 32, 33, 13)}
+    ${spark(56, 34, 3)}${spark(8, 34, 2.4, '#ffd6ff')}` },
+
+  // аммиак NH₃: азот, три водорода и «облачко» свободной пары электронов
+  ammonia: { color: '#6ee7ff', svg: `
+    ${halo('__p', 32, 14, 13, '#ff8fd1', .55)}
+    <g stroke="#c8f1ff" stroke-width="3" stroke-linecap="round"><path d="M32 30L12 46M32 30L52 46M32 30V54"/></g>
+    ${ball('__h1', 12, 46, 6.5, ['#ffffff', '#d9ccff', '#9d7bff'], '#fff', 1.5)}${ball('__h2', 52, 46, 6.5, ['#ffffff', '#d9ccff', '#9d7bff'], '#fff', 1.5)}
+    ${ball('__h3', 32, 54, 6, ['#ffffff', '#d9ccff', '#9d7bff'], '#fff', 1.5)}
+    ${ball('__n', 32, 30, 12, BLUE, '#d0f4ff', 2)}${sym('N', 32, 30, 13)}
+    ${spark(53, 12, 3.2)}${spark(11, 20, 2.4, '#ffd6ff')}` },
 });

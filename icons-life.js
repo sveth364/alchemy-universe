@@ -294,4 +294,37 @@ Object.assign(ICONS, {
     <path d="M32 6c-12 0-20 18-20 30a20 20 0 0 0 40 0C52 24 44 6 32 6z" fill="url(#__g)" stroke="#fff" stroke-width="2"/>
     <g fill="#c9a27a" opacity=".55"><circle cx="38" cy="30" r="1.8"/><circle cx="26" cy="40" r="1.4"/><circle cx="40" cy="44" r="1.2"/><circle cx="30" cy="22" r="1"/></g>
     ${shine(24, 22, 4, 2.2, .7)}${spark(54, 12, 3.5)}${spark(10, 50, 2.5, '#ffd6ff')}` },
+
+  // ── расширение «Космоса» ──
+  // аминокислота — «кирпичик»: зигзаг из трёх атомов и боковая группа
+  aminoacid: { color: '#3ddc84', svg: `
+    ${halo('__h', 32, 32, 28, '#3ddc84', .28)}
+    <g stroke="#d9ffc4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M12 40L26 28L40 40L54 28M26 28V12"/></g>
+    ${ball('__a', 12, 40, 6.5, BLUE, '#d0f4ff', 1.5)}
+    ${ball('__b', 26, 28, 7.5, GREEN, '#d9ffc4', 1.6)}
+    ${ball('__c', 40, 40, 6.5, GREEN, '#d9ffc4', 1.5)}
+    ${ball('__d', 54, 28, 6.5, ['#ffd1dc', '#ff4d6d', '#a4133c'], '#ffd1dc', 1.5)}
+    ${ball('__e', 26, 12, 6, ['#fff59d', '#ffb347', '#d9731f'], '#ffe0b0', 1.4)}
+    ${spark(52, 52, 3.5)}${spark(12, 56, 2.4, '#ffd6ff')}` },
+
+  // белок — свёрнутая лента (спираль) из бусин-аминокислот
+  protein: { color: '#ff8fd1', svg: `
+    ${linG('__r', ['#ffd6ef', '#ff7fb5', '#9d7bff'], 1, 1)}
+    <path d="M8 50C14 40 24 52 26 42S16 30 24 26S36 36 38 28S28 14 36 12S50 20 56 10" fill="none" stroke="#5a2a78" stroke-width="9" stroke-linecap="round" opacity=".55"/>
+    <path d="M8 50C14 40 24 52 26 42S16 30 24 26S36 36 38 28S28 14 36 12S50 20 56 10" fill="none" stroke="url(#__r)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M8 50C14 40 24 52 26 42S16 30 24 26S36 36 38 28S28 14 36 12S50 20 56 10" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".6"/>
+    <g fill="#fff59d" stroke="#fff" stroke-width=".8"><circle cx="8" cy="50" r="3"/><circle cx="24" cy="26" r="2.4"/><circle cx="38" cy="28" r="2.4"/><circle cx="56" cy="10" r="3"/></g>
+    ${spark(52, 50, 3.5)}${spark(12, 14, 2.6, '#9ff')}` },
+
+  // РНК — одна нить (в отличие от двойной спирали ДНК) с основаниями на одну сторону
+  rna: { color: '#ffb347', svg: `
+    ${linG('__s', ['#fff3c4', '#ffb347', '#ff5f8a'])}
+    <path d="M22 6C34 14 34 22 24 30S14 46 26 58" fill="none" stroke="url(#__s)" stroke-width="5" stroke-linecap="round"/>
+    <g stroke-width="3" stroke-linecap="round">
+      <path d="M30 13L44 9" stroke="#6ee7ff"/><path d="M30 22L46 22" stroke="#3ddc84"/>
+      <path d="M24 31L40 34" stroke="#ff8fd1"/><path d="M20 42L36 46" stroke="#9d7bff"/><path d="M22 52L38 57" stroke="#6ee7ff"/>
+    </g>
+    <g stroke="#fff" stroke-width="1.2"><circle cx="45" cy="9" r="3.4" fill="#6ee7ff"/><circle cx="47" cy="22" r="3.4" fill="#3ddc84"/>
+      <circle cx="41" cy="34" r="3.4" fill="#ff8fd1"/><circle cx="37" cy="46" r="3.4" fill="#9d7bff"/><circle cx="39" cy="57" r="3.4" fill="#6ee7ff"/></g>
+    ${spark(12, 18, 3.2)}${spark(10, 50, 2.4, '#ffd6ff')}` },
 });
