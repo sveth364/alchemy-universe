@@ -168,16 +168,22 @@ Object.assign(ICONS, {
 
   // космический телескоп — труба с солнечными панелями, наклонённая к звёздам
   spacetelescope: { color: '#c9cde6', svg: `
-    ${linG('__t', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}${linG('__p', ['#9ad7ff', '#3a4bff'], 1, 1)}
+    ${linG('__t', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}${linG('__p', ['#9ad7ff', '#3a4bff'], 1, 1)}${linG('__l', ['rgba(255,245,157,0)', 'rgba(255,245,157,.75)'], 1, 1)}
+    <path d="M58 4L45 9L50 15Z" fill="url(#__l)"/>
     <g transform="rotate(-35 32 34)">
-      <rect x="6" y="18" width="16" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
-      <rect x="42" y="18" width="16" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
-      <g stroke="#c8f1ff" stroke-width=".8" opacity=".7"><path d="M14 18v9M50 18v9"/></g>
-      <rect x="22" y="10" width="20" height="42" rx="4" fill="url(#__t)" stroke="#fff" stroke-width="2"/>
-      <path d="M22 18h20" stroke="#ffcf5a" stroke-width="3"/>
-      <ellipse cx="32" cy="10" rx="10" ry="3.2" fill="#2a2650" stroke="#fff" stroke-width="1.6"/>
+      <rect x="5" y="22" width="17" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
+      <rect x="42" y="22" width="17" height="9" rx="1.5" fill="url(#__p)" stroke="#c8f1ff" stroke-width="1.2"/>
+      <g stroke="#c8f1ff" stroke-width=".8" opacity=".75"><path d="M10.5 22v9M16 22v9M47.5 22v9M53 22v9"/></g>
+      <rect x="22" y="12" width="20" height="40" rx="3" fill="url(#__t)" stroke="#fff" stroke-width="2"/>
+      <rect x="22" y="38" width="20" height="14" rx="3" fill="#ffcf5a" stroke="#fff3c4" stroke-width="1.6"/>
+      <g stroke="#b8860b" stroke-width="1" opacity=".7"><path d="M26 40v10M31 40v10M36 40v10"/></g>
+      <path d="M22 20h20M22 30h20" stroke="#6a6f99" stroke-width="1.6"/>
+      <path d="M23 12C21 6 27 2 34 3" fill="#c9cde6" stroke="#fff" stroke-width="1.6"/>
+      <ellipse cx="32" cy="12" rx="10" ry="3.2" fill="#1a1240" stroke="#fff" stroke-width="1.6"/>
+      <circle cx="32" cy="12" r="2" fill="#6ee7ff"/>
+      <path d="M42 46l6 4" stroke="#c9cde6" stroke-width="1.6"/><path d="M45 52a5 5 0 0 1 6-6z" fill="#e6e9ff" stroke="#fff" stroke-width="1"/>
     </g>
-    ${spark(52, 8, 4)}${spark(58, 26, 2.4, '#9ff')}${spark(42, 6, 2, '#ffd6ff')}${spark(8, 56, 2.5)}` },
+    ${spark(58, 4, 3.4, '#fff59d')}${spark(60, 26, 2.2, '#9ff')}${spark(38, 6, 1.8, '#ffd6ff')}${spark(8, 56, 2.5)}` },
 
   // космическая станция — модули и большие солнечные крылья
   spacestation: { color: '#6ee7ff', svg: `

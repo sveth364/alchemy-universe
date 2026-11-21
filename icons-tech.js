@@ -306,15 +306,19 @@ Object.assign(ICONS, {
 
   // ── расширение «Космоса» ──
   // двигатель — блок цилиндров с поршнями и шкивом
+  // двигатель — ракетный: камера сгорания, трубки подачи топлива и сопло-колокол с пламенем
   engine: { color: '#ffb347', svg: `
-    ${halo('__h', 32, 36, 28, '#ff9f43', .3)}
-    ${linG('__m', ['#ffffff', '#c9cde6', '#6a6f99'])}
-    <g fill="url(#__m)" stroke="#fff" stroke-width="1.6"><rect x="13" y="10" width="10" height="16" rx="3"/><rect x="27" y="7" width="10" height="19" rx="3"/><rect x="41" y="10" width="10" height="16" rx="3"/></g>
-    <g fill="#ff9f43"><rect x="15" y="13" width="6" height="3" rx="1.5"/><rect x="29" y="10" width="6" height="3" rx="1.5"/><rect x="43" y="13" width="6" height="3" rx="1.5"/></g>
-    <rect x="8" y="24" width="48" height="28" rx="6" fill="url(#__m)" stroke="#fff" stroke-width="2"/>
-    <circle cx="22" cy="38" r="9" fill="#2a2650" stroke="#ffcf5a" stroke-width="2.4"/><circle cx="22" cy="38" r="3" fill="#ffcf5a"/>
-    <g stroke="#6a6f99" stroke-width="2" stroke-linecap="round"><path d="M38 32h12M38 38h12M38 44h12"/></g>
-    ${spark(56, 8, 3.5)}${spark(8, 58, 2.5, '#ffe08a')}` },
+    ${linG('__f', ['#ffffff', '#9ad7ff', '#ff9f43', 'rgba(255,61,90,0)'])}
+    <path d="M18 44C20 54 26 62 32 63C38 62 44 54 46 44Z" fill="url(#__f)"/>
+    <path d="M26 44C27 50 29 54 32 56C35 54 37 50 38 44Z" fill="#fff" opacity=".7"/>
+    ${linG('__n', ['#ffe0b0', '#ff9f43', '#b8562a'], 1, 0)}${linG('__m', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}
+    <path d="M26 26H38C38 34 44 40 48 44H16C20 40 26 34 26 26Z" fill="url(#__n)" stroke="#fff3c4" stroke-width="2" stroke-linejoin="round"/>
+    <g fill="none" stroke="#ffe0b0" stroke-width="1.2" opacity=".7"><path d="M24 34.5h16M21 39.5h22"/></g>
+    <rect x="22" y="12" width="20" height="15" rx="4" fill="url(#__m)" stroke="#fff" stroke-width="2"/>
+    <rect x="27" y="5" width="10" height="8" rx="2" fill="url(#__m)" stroke="#fff" stroke-width="1.6"/>
+    <g fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M22 17C14 17 12 24 18 30" stroke="#6ee7ff"/><path d="M42 17C50 17 52 24 46 30" stroke="#ff8fd1"/></g>
+    <circle cx="10" cy="12" r="5" fill="url(#__m)" stroke="#6ee7ff" stroke-width="1.6"/><path d="M14 14l8 2" stroke="#6ee7ff" stroke-width="2"/>
+    ${spark(55, 9, 3.5)}${spark(56, 34, 2.4, '#ffe08a')}` },
 
   // ракетное топливо — криогенный бак: жидкий водород и жидкий кислород
   rocketfuel: { color: '#6ee7ff', svg: `
@@ -330,12 +334,16 @@ Object.assign(ICONS, {
   // марсоход — шестиколёсный робот с мачтой-камерой на красном грунте
   rover: { color: '#ff7a59', svg: `
     ${linG('__g', ['#ff9a6b', '#a63c1f'])}${linG('__b', ['#ffffff', '#c9cde6', '#6a6f99'])}
-    <path d="M2 54c10-4 20-3 30-1s20 2 30-2v12H2z" fill="url(#__g)" stroke="#ffc2a8" stroke-width="1.4"/>
-    <path d="M22 26V12" stroke="#c9cde6" stroke-width="2.6" stroke-linecap="round"/>
-    <rect x="17" y="6" width="12" height="7" rx="2.5" fill="url(#__b)" stroke="#fff" stroke-width="1.4"/><circle cx="26" cy="9.5" r="1.8" fill="#6ee7ff"/>
-    <rect x="10" y="26" width="42" height="12" rx="4" fill="url(#__b)" stroke="#fff" stroke-width="2"/>
-    <rect x="36" y="20" width="16" height="6" rx="1.5" fill="#3a4bff" stroke="#c8f1ff" stroke-width="1.2"/>
-    <g stroke="#c9c3ec" stroke-width="2" fill="none"><path d="M14 38l-2 8M31 38v8M48 38l2 8"/></g>
-    ${tyre(12, 48, 5)}${tyre(31, 48, 5)}${tyre(50, 48, 5)}
-    ${spark(56, 8, 3.2)}${spark(6, 16, 2.4, '#ffd6ff')}` },
+    <path d="M0 62L64 46V64H0z" fill="url(#__g)" stroke="#ffc2a8" stroke-width="1.4"/>
+    <g fill="#ffc2a8" opacity=".5"><circle cx="6" cy="54" r="2"/><circle cx="2" cy="49" r="1.4"/><circle cx="9" cy="48" r="1.2"/></g>
+    <g transform="rotate(-14 32 40)">
+      <path d="M40 24V10" stroke="#c9cde6" stroke-width="2.6" stroke-linecap="round"/>
+      <rect x="34" y="4" width="13" height="7" rx="2.5" fill="url(#__b)" stroke="#fff" stroke-width="1.4"/><circle cx="44" cy="7.5" r="1.8" fill="#6ee7ff"/>
+      <path d="M16 22L12 14" stroke="#c9cde6" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="13" r="2.4" fill="#ffcf5a"/>
+      <rect x="10" y="20" width="40" height="5" rx="1.5" fill="#3a4bff" stroke="#c8f1ff" stroke-width="1.2"/>
+      <rect x="13" y="25" width="34" height="10" rx="3" fill="url(#__b)" stroke="#fff" stroke-width="1.8"/>
+      <g fill="none" stroke="#e6e9ff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M14 47L22 37L32 47M22 37h8M30 37L42 37L50 47"/></g>
+      ${tyre(14, 48, 5.5)}${tyre(32, 48, 5.5)}${tyre(50, 48, 5.5)}
+    </g>
+    ${spark(58, 10, 3.2)}${spark(20, 6, 2.4, '#ffd6ff')}` },
 });
