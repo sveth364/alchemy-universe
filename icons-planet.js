@@ -95,11 +95,25 @@ Object.assign(ICONS, {
       <path d="M${x + s} ${y - s / 2}l-${s} ${s / 2}v${s * 1.1}l${s}-${s / 2}z" fill="url(#__s)" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>`).join('')}
     ${spark(53, 14, 3.5)}${spark(10, 52, 2.5, '#ffd6ff')}` },
 
+  // стекло — два прозрачных листа в перспективе с бликами (не похоже на «файл»)
   glass: { color: '#bfefff', svg: `
-    <path d="M14 10h30l8 8v36H14z" fill="#bfefff" fill-opacity=".14" stroke="#d6f8ff" stroke-width="2.2" stroke-linejoin="round"/>
-    <path d="M44 10v8h8" fill="none" stroke="#d6f8ff" stroke-width="2" stroke-linejoin="round"/>
-    <g stroke="#fff" stroke-linecap="round" opacity=".7"><path d="M20 30l12-12" stroke-width="3"/><path d="M22 40l18-18" stroke-width="1.6"/><path d="M34 48l12-12" stroke-width="2.2"/></g>
-    ${spark(54, 50, 3.5)}${spark(10, 8, 2.5, '#9ff')}` },
+    ${linG('__a', ['#e8fbff', '#6ee7ff', '#7b5cff'], 1, 1)}${linG('__b', ['#ffffff', '#bfefff', '#4cc9ff'], 1, 1)}
+    <path d="M22 8L50 16L44 50L16 42Z" fill="url(#__a)" fill-opacity=".35" stroke="#bfefff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12 18L40 24L36 58L8 52Z" fill="url(#__b)" fill-opacity=".42" stroke="#e8fbff" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M12 18L40 24L39.4 29L11.4 23Z" fill="#fff" opacity=".35"/>
+    <g stroke="#fff" stroke-linecap="round"><path d="M17 34L27 27" stroke-width="2.6" opacity=".85"/><path d="M15 43L31 32" stroke-width="1.6" opacity=".7"/><path d="M27 50L35 44" stroke-width="2" opacity=".6"/></g>
+    ${spark(54, 50, 3.5)}${spark(52, 8, 2.8, '#9ff')}${spark(8, 10, 2.2)}` },
+
+  // пепел — серая горка с тлеющими угольками и струйкой дыма
+  ash: { color: '#c9c3e6', svg: `
+    ${linG('__s', ['#b9b4d6', '#5d5878'])}${radG('__e', ['#fff59d', '#ff9f43', '#d9480f'], .5, .5, .5)}
+    <path d="M30 34c-5-5 3-9-1-15s2-10 0-14" fill="none" stroke="#d9d4f5" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>
+    <path d="M37 32c-3-4 2-7-1-11" fill="none" stroke="#d9d4f5" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
+    <path d="M5 55C8 49 12 46 17 45C19 40 24 37 29 38C33 34 40 35 43 40C49 40 54 46 59 55Z" fill="url(#__s)" stroke="#e6e1ff" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M20 43c3-3 7-4 11-3" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".45"/>
+    <g fill="url(#__e)"><circle cx="24" cy="48" r="3"/><circle cx="38" cy="45" r="2.4"/><circle cx="46" cy="50" r="2"/><circle cx="31" cy="52" r="1.6"/></g>
+    <g fill="#9a95b8"><circle cx="12" cy="58" r="1.2"/><circle cx="52" cy="58" r="1"/><circle cx="20" cy="59" r="1"/></g>
+    ${spark(53, 14, 3.5)}${spark(14, 22, 2.4, '#ffe08a')}` },
 
   diamond: { color: '#6ee7ff', svg: `
     ${linG('__t', ['#ffffff', '#bfefff'])}${linG('__b', ['#6ee7ff', '#7b5cff'])}

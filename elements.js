@@ -327,6 +327,9 @@ const ELEMENTS = [
   ['expansion', 'Расширение', '↔️', 'cosmos'],
   ['universe', 'Вселенная', '🌌', 'cosmos'],
   ['multiverse', 'Мультивселенная', '🫧', 'cosmos'],
+
+  // ───────── ДОБАВЛЕНО ПОЗЖЕ (только в конец — номер элемента хранится в сохранениях) ─────────
+  ['ash', 'Пепел', '🌫️', 'planet'],
 ];
 
 const RECIPES = [
@@ -384,6 +387,9 @@ const RECIPES = [
   'ice+mountain=glacier', 'snow+mountain=glacier',
   'planet+ice=rings', 'sun+moon=eclipse', 'sun+earth=day',
   'moon+earth=night', 'day+time=night',
+  'tree+fire=ash', 'forest+fire=ash', 'volcano+wind=ash',
+  'ash+soil=wheat',                     // подсечно-огневое земледелие: пепел удобряет почву
+  'ash+pressure=carbon',
   // стихии
   'hydrogen+oxygen=water', 'ice+heat=water',
   'water+cold=ice', 'water+space=ice',
@@ -504,7 +510,7 @@ const RECIPES = [
   'car+car=bus', 'car+farm=tractor', 'car+wheat=tractor',
   'car+bird=plane', 'bird+steel=plane',
   'plane+tornado=helicopter', 'plane+wind=helicopter',
-  'plane+space=rocket', 'fire+space=rocket',
+  'plane+space=rocket',
   'electricity+glass=bulb', 'electricity+lantern=bulb',
   'electricity+iron=battery',
   'electricity+sound=phone', 'electricity+wave=radio',

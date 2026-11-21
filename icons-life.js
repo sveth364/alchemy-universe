@@ -24,12 +24,21 @@ Object.assign(ICONS, {
     <g fill="#6ee7ff"><circle cx="18" cy="38" r="2"/><circle cx="44" cy="22" r="1.6"/><circle cx="24" cy="46" r="1.4"/></g>
     ${spark(55, 9, 3.5)}` },
 
+  // эволюция — ветвящееся «древо жизни»: от одной клетки к разным видам
   evolution: { color: '#3ddc84', svg: `
-    <path d="M8 52C20 50 36 40 52 14" fill="none" stroke="#e6dcff" stroke-width="2" stroke-dasharray="3 3" opacity=".7"/>
-    <path d="M48 12l6-2-1 6" fill="none" stroke="#e6dcff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    ${ball('__a', 12, 50, 5, GREEN, '#d9ffc4', 1.4)}
-    ${ball('__b', 27, 40, 7.5, ['#c8f1ff', '#4cc9ff', '#1d4ed8'], '#c8f1ff', 1.6)}
-    ${ball('__c', 44, 25, 10, ['#e6dcff', '#9d7bff', '#4b2bb0'], '#d9ccff', 1.8)}` },
+    ${halo('__h', 32, 34, 28, '#3ddc84', .3)}
+    ${linG('__t', ['#a6ff8a', '#1fae5a'])}
+    <g fill="none" stroke="url(#__t)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M32 55V41" stroke-width="4"/>
+      <path d="M32 42C32 34 22 32 18 24M32 42C32 34 44 33 46 24" stroke-width="3.2"/>
+      <path d="M19 26C15 22 10 21 9 15M19 26C20 20 25 17 26 11M45 26C43 20 39 17 38 11M45 26C49 22 54 21 55 15" stroke-width="2.4"/>
+    </g>
+    ${ball('__r', 32, 55, 4.5, GREEN, '#d9ffc4', 1.4)}
+    ${ball('__a', 9, 13, 4.6, ['#ffd6ef', '#ff7fb5', '#b8336a'], '#ffd6ef', 1.3)}
+    ${ball('__b', 26, 9, 4.6, ['#fff59d', '#ffb347', '#d9731f'], '#ffe0b0', 1.3)}
+    ${ball('__c', 38, 9, 4.6, ['#c8f1ff', '#4cc9ff', '#1d4ed8'], '#c8f1ff', 1.3)}
+    ${ball('__d', 55, 13, 4.6, ['#e6dcff', '#9d7bff', '#4b2bb0'], '#d9ccff', 1.3)}
+    ${spark(54, 50, 3.5)}${spark(11, 46, 2.5, '#d9ffc4')}` },
 
   plant: { color: '#3ddc84', svg: `
     ${linG('__s', ['#c68b59', '#7a4a2a'])}

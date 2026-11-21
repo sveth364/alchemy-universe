@@ -212,7 +212,7 @@
 
   /* ---- модальные окна ---- */
   .modal {
-    position: fixed; inset: 0; z-index: 3500; display: none; place-items: center; padding: 16px;
+    position: fixed; inset: 0; z-index: 4500; display: none; place-items: center; padding: 16px;
     background: rgba(5,6,20,.7); backdrop-filter: blur(3px);
   }
   .modal.open { display: grid; }
@@ -237,7 +237,22 @@
   #btnSound .svg-ico.ui { width: 18px; height: 18px; filter: none; }
   #btnInfo.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(139,123,255,.8); }
   body.info-mode #board .el .ico, body.info-mode .cell:not(.locked) .ico { border-color: var(--accent); }
-  .modal .card.info { max-height: 82vh; overflow-y: auto; }
+  .modal .card.info { max-height: 82vh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
+  /* крестик закрытия: «прилипает» к верху длинного окна, пока его листаешь */
+  .m-x-wrap { display: none; position: sticky; top: 0; height: 0; z-index: 3; }
+  .card.info .m-x-wrap.on { display: block; }
+  .m-x { position: absolute; right: -8px; top: -8px; width: 32px; height: 32px; border-radius: 50%; padding: 0;
+    display: grid; place-items: center; background: var(--panel); border: 1px solid var(--tile-border); cursor: pointer; }
+  .m-x .svg-ico.ui { width: 14px; height: 14px; filter: none; }
+  /* свёрнутые эпохи в списке */
+  .era-title .era-name { display: flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; color: var(--text);
+    font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; text-align: left; }
+  .era-fold { color: var(--muted); font-size: 11px; display: inline-block; transition: transform .15s; }
+  .era-title.folded .era-fold { transform: rotate(-90deg); }
+  .era-title.folded { opacity: .7; margin-bottom: 4px; }
+  #btnInfoList { width: 32px; height: 32px; padding: 0; border-radius: 50%; font-weight: 800; font-size: 15px; }
+  #btnInfoList.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px rgba(139,123,255,.8); }
+  .share-ico { width: 120px; height: 120px; border-radius: 22px; display: block; margin: 0 auto 4px; box-shadow: 0 0 22px rgba(139,123,255,.55); }
   .modal .card.info p { text-align: left; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; background: var(--tile);
           border: 1px solid var(--tile-border); font-size: 12px; color: var(--text); margin-bottom: 10px; }
@@ -256,7 +271,7 @@
   #toast {
     position: fixed; top: 64px; left: 50%; transform: translateX(-50%) translateY(-20px);
     background: var(--panel); border: 1px solid var(--accent); border-radius: 14px;
-    padding: 10px 16px; font-size: 14px; opacity: 0; pointer-events: none; z-index: 3000;
+    padding: 10px 16px; font-size: 14px; opacity: 0; pointer-events: none; z-index: 5000;
     transition: opacity .25s, transform .25s; max-width: calc(100% - 32px); text-align: center;
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -301,7 +316,10 @@
   .feat.off b { letter-spacing: 2px; color: var(--muted); }
   .theme-btn .svg-ico.mini { vertical-align: -3px; }
   .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .theme-btn { border-radius: 12px; border: 2px solid var(--tile-border); padding: 26px 4px 6px; font: inherit; font-size: 11.5px; color: #fff; cursor: pointer; }
+  /* замок всегда над названием — у всех тем одинаково, независимо от длины текста */
+  .theme-btn { border-radius: 12px; border: 2px solid var(--tile-border); padding: 8px 4px 6px; min-height: 64px; font: inherit; font-size: 11.5px; color: #fff; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; white-space: nowrap; }
+  .theme-btn .svg-ico.mini { width: 18px; height: 18px; vertical-align: 0; }
   .theme-btn.on { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,.4); }
   .theme-btn.locked { opacity: .45; }
   .era-title span.era-done { color: var(--gold); font-weight: 700; }
@@ -329,7 +347,7 @@
 
 <div id="sheet">
   <div class="box">
-    <div class="head"><b>Элементы</b><span id="sheetCount"></span><button class="btn-sm" id="btnClose"><span data-ui="ui_close"></span></button></div>
+    <div class="head"><b>Элементы</b><span id="sheetCount"></span><button class="btn-sm" id="btnInfoList" aria-label="Справка">?</button><button class="btn-sm" id="btnClose"><span data-ui="ui_close"></span></button></div>
     <div class="search-wrap"><span data-ui="ui_search"></span><input id="search" type="search" placeholder="Поиск по открытым" autocomplete="off"></div>
     <div id="eras"></div>
     <div id="grid"></div>
@@ -342,6 +360,7 @@
 
 <div class="modal" id="modal">
   <div class="card">
+    <div class="m-x-wrap" id="mXWrap"><button class="m-x" id="mClose" aria-label="Закрыть"><span data-ui="ui_close"></span></button></div>
     <div class="big" id="mIcon"></div>
     <h3 id="mTitle"></h3>
     <p id="mText"></p>
@@ -361,22 +380,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=38"></script>
-<script src="icons.js?v=38"></script>
-<script src="icons-micro.js?v=38"></script>
-<script src="icons-stars.js?v=38"></script>
-<script src="icons-planet.js?v=38"></script>
-<script src="icons-weather.js?v=38"></script>
-<script src="icons-life.js?v=38"></script>
-<script src="icons-animals.js?v=38"></script>
-<script src="icons-human.js?v=38"></script>
-<script src="icons-civ.js?v=38"></script>
-<script src="icons-tech.js?v=38"></script>
-<script src="icons-cosmos.js?v=38"></script>
-<script src="icons-ui.js?v=38"></script>
-<script src="info.js?v=38"></script>
-<script src="modes.js?v=38"></script>
-<script src="sound.js?v=38"></script>
+<script src="elements.js?v=39"></script>
+<script src="icons.js?v=39"></script>
+<script src="icons-micro.js?v=39"></script>
+<script src="icons-stars.js?v=39"></script>
+<script src="icons-planet.js?v=39"></script>
+<script src="icons-weather.js?v=39"></script>
+<script src="icons-life.js?v=39"></script>
+<script src="icons-animals.js?v=39"></script>
+<script src="icons-human.js?v=39"></script>
+<script src="icons-civ.js?v=39"></script>
+<script src="icons-tech.js?v=39"></script>
+<script src="icons-cosmos.js?v=39"></script>
+<script src="icons-ui.js?v=39"></script>
+<script src="info.js?v=39"></script>
+<script src="modes.js?v=39"></script>
+<script src="sound.js?v=39"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -513,10 +532,19 @@ const eraOpen = (era) => modeEls.some(e => e[3] === era && discovered.has(e[0]))
 const mini = (id) => iconHtml(id, byId[id].icon, 'mini');
 const label = (id) => `${mini(id)} ${byId[id].name}`;
 
-/* модальное окно: modal({icon, title, text, buttons:[{text, primary, onClick}]}) */
+/* модальное окно: modal({icon, title, text, buttons:[{text, primary, onClick}], cls, dismiss})
+   dismiss — можно закрыть тапом мимо окна (и крестиком у длинных окон). По умолчанию — да,
+   если у окна есть кнопки; обучение и первый выбор режима закрыть мимо нельзя. */
 const modalEl = document.getElementById('modal');
-function modal({ icon, title, text, buttons, cls }) {
+let modalDismiss = false;
+const closeModal = () => modalEl.classList.remove('open');
+modalEl.addEventListener('click', e => { if (e.target === modalEl && modalDismiss) closeModal(); });
+document.getElementById('mClose').onclick = closeModal;
+function modal({ icon, title, text, buttons, cls, dismiss }) {
+  modalDismiss = dismiss !== undefined ? dismiss : buttons.length > 0;
+  document.getElementById('mXWrap').classList.toggle('on', modalDismiss);
   document.querySelector('#modal .card').className = 'card' + (cls ? ' ' + cls : '');
+  document.querySelector('#modal .card').scrollTop = 0;
   document.getElementById('mIcon').innerHTML = icon || '';
   document.getElementById('mTitle').textContent = title || '';
   document.getElementById('mText').innerHTML = text || '';
@@ -639,7 +667,13 @@ function combine(a, b) {
   stats[MODE].s++; if (result) stats[MODE].ok++; statsDirty = true;
   if (!result) {
     a.classList.add('shake'); b.classList.add('shake'); haptic('error'); Sound.play('fail');
-    a.style.left = (parseFloat(a.style.left) + 40) + 'px';
+    // отталкиваем от второго элемента, но не за край поля: у края — в другую сторону
+    const br = board.getBoundingClientRect(), maxX = br.width - 76;
+    const ax = parseFloat(a.style.left), dir = ax >= parseFloat(b.style.left) ? 1 : -1;
+    let nx = ax + dir * 44;
+    if (nx < 0 || nx > maxX) nx = ax - dir * 44;
+    a.style.left = Math.max(0, Math.min(maxX, nx)) + 'px';
+    a.style.top = Math.max(0, Math.min(br.height - 84, parseFloat(a.style.top))) + 'px';
     return;
   }
   const x = (parseFloat(a.style.left) + parseFloat(b.style.left)) / 2;
@@ -712,6 +746,7 @@ function renderList() {
     `${discovered.size} / ${modeEls.length}<small>рецепты ${foundCount()} / ${Object.keys(recipes).length}</small>`;
   const q = searchEl.value.trim().toLowerCase();
   const onlyOpen = onlyOpenOn || q;
+  const free = freeCells().length;                         // сколько ещё встанет на поле
   let html = '';
   // открытые эпохи — первыми, закрытые — в конце
   [...ERAS].sort((x, y) => eraOpen(y[0]) - eraOpen(x[0])).forEach(([era, name, icon]) => {
@@ -729,15 +764,18 @@ function renderList() {
       return;
     }
     if (!ids.length) return;
-    const n = q ? 0 : Math.min(usefulIds(era).length, boardCap());          // столько, сколько реально встанет на поле
+    const n = q ? 0 : Math.min(toAdd(era).length, free);    // столько, сколько реально добавится на поле
     const toBoard = n ? `<button class="to-board" data-era="${era}">На поле · ${n}</button>` : '';
-    html += `<div class="era-title"><b>${eraIcon(era)} ${name}</b><span class="era-right">${toBoard}<span class="${got === all.length ? 'era-done' : ''}">${got === all.length ? '★ ' : ''}${got} / ${all.length}</span></span></div>` +
-            `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`;
+    // свёрнутая эпоха: только заголовок (при поиске и при выборе эпохи вверху — всегда развёрнута)
+    const folded = !q && eraFilter !== era && collapsed.has(era);
+    html += `<div class="era-title${folded ? ' folded' : ''}"><button class="era-name" data-fold="${era}"><span class="era-fold">▾</span>${eraIcon(era)} ${name}</button>` +
+            `<span class="era-right">${toBoard}<span class="${got === all.length ? 'era-done' : ''}">${got === all.length ? '★ ' : ''}${got} / ${all.length}</span></span></div>` +
+            (folded ? '' : `<div class="era-grid">${ids.map(cellHtml).join('')}</div>`);
   });
-  // на вкладке «Все» — кнопка выложить все полезные элементы сразу
-  const nAll = eraFilter === 'all' && !q ? usefulIds('all').length : 0, cap = boardCap();
-  const allBtn = !nAll ? '' : `<button class="to-board wide" data-era="all">${nAll > cap
-    ? `Выложить на поле ${cap} самых полезных` : `Выложить на поле всё полезное · ${nAll}`}</button>`;
+  // на вкладке «Все» — кнопка добавить на поле все полезные элементы сразу
+  const nAll = eraFilter === 'all' && !q ? toAdd('all').length : 0;
+  const allBtn = !nAll ? '' : `<button class="to-board wide" data-era="all">${!free ? 'Поле заполнено — нажми «Очистка»'
+    : nAll > free ? `Добавить на поле ${free} самых полезных` : `Добавить на поле всё полезное · ${nAll}`}</button>`;
   grid.innerHTML = html ? allBtn + html : '<div class="empty">Ничего не найдено</div>';
 }
 
@@ -750,31 +788,59 @@ function usefulIds(era) {
 const CW = 82, CH = 92;                                    // клетка сетки на поле
 const boardGrid = () => { const r = board.getBoundingClientRect();
   return { r, cols: Math.max(1, Math.floor((r.width - 8) / CW)), rows: Math.max(1, Math.floor((r.height - 8) / CH)) }; };
-const boardCap = () => { const g = boardGrid(); return g.cols * g.rows; };
-function layOut(era) {
-  const ids = usefulIds(era);
-  if (!ids.length) return;
+/* Свободные клетки сетки. Клетка занята, если на ней заметно лежит элемент поля.
+   Поле не очищается: новые элементы ложатся рядом с теми, что уже есть. */
+function freeCells() {
   const { r, cols, rows } = boardGrid();
-  const list = ids.slice(0, cols * rows), usedRows = Math.ceil(list.length / cols);
-  const x0 = (r.width - cols * CW) / 2 + (CW - 76) / 2, y0 = Math.max(4, (r.height - usedRows * CH) / 2);
-  board.querySelectorAll('.el').forEach(e => e.remove());
-  list.forEach((id, i) => setTimeout(() => spawn(id, x0 + (i % cols) * CW, y0 + Math.floor(i / cols) * CH, true), i * 18));
+  const x0 = (r.width - cols * CW) / 2 + (CW - 76) / 2, y0 = Math.max(4, (r.height - rows * CH) / 2);
+  const boxes = [...board.querySelectorAll('.el')].map(e => [parseFloat(e.style.left), parseFloat(e.style.top)]);
+  const cells = [];
+  for (let i = 0; i < cols * rows; i++) {
+    const x = x0 + (i % cols) * CW, y = y0 + Math.floor(i / cols) * CH;
+    if (!boxes.some(([ex, ey]) => Math.abs(ex - x) < 56 && Math.abs(ey - y) < 64)) cells.push({ x, y });
+  }
+  return cells;
+}
+const onBoard = () => new Set([...board.querySelectorAll('.el')].map(e => e.dataset.id));
+// полезные элементы, которых ещё нет на поле
+const toAdd = (era) => { const have = onBoard(); return usefulIds(era).filter(id => !have.has(id)); };
+function layOut(era) {
+  const ids = toAdd(era), cells = freeCells();
+  if (!ids.length) { toast('Все полезные элементы уже на поле'); return; }
+  if (!cells.length) { toast('Поле заполнено — убери лишнее или нажми «Очистка»'); return; }
+  const list = ids.slice(0, cells.length);
+  list.forEach((id, i) => setTimeout(() => spawn(id, cells[i].x, cells[i].y, true), i * 18));
   closeList(); haptic('medium'); Sound.play('pop');
   const where = era === 'all' ? '' : ` из эпохи «${eraById[era].name}»`;
   toast(list.length < ids.length
-    ? `На поле ${list.length} самых полезных${where}.<br>Ещё ${ids.length - list.length} можно добавить из списка`
-    : `На поле ${list.length}${where}`);
+    ? `Добавлено ${list.length} самых полезных${where}.<br>Ещё ${ids.length - list.length} не поместились — освободи место`
+    : `Добавлено на поле: ${list.length}${where}`);
 }
 grid.addEventListener('click', e => {
   const tb = e.target.closest('.to-board');
   if (tb) { layOut(tb.dataset.era); return; }
+  const fold = e.target.closest('[data-fold]');
+  if (fold) { toggleFold(fold.dataset.fold); return; }
   const c = e.target.closest('.cell'); if (!c || c.classList.contains('locked')) return;
   if (infoMode) { showInfo(c.dataset.id); return; }
-  const r = board.getBoundingClientRect();
-  spawn(c.dataset.id, r.width / 2 - 38 + (Math.random() - .5) * 80, r.height / 2 - 42 + (Math.random() - .5) * 80, true);
+  // в свободную клетку поближе к центру, а если поле занято — просто в центр
+  const r = board.getBoundingClientRect(), cx = r.width / 2 - 38, cy = r.height / 2 - 42;
+  const cell = freeCells().sort((p, q) => Math.hypot(p.x - cx, p.y - cy) - Math.hypot(q.x - cx, q.y - cy))[0];
+  if (cell) spawn(c.dataset.id, cell.x, cell.y, true);
+  else spawn(c.dataset.id, cx + (Math.random() - .5) * 80, cy + (Math.random() - .5) * 80, true);
   closeList(); haptic('light'); Sound.play('pop');
 });
-function openList() { searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
+/* свёрнутые эпохи — удобство на этом устройстве, храним локально, у каждого режима свои */
+const FOLD_KEY = 'au_folded';
+let collapsed = new Set();
+function loadFolds() { try { collapsed = new Set((JSON.parse(localStorage.getItem(FOLD_KEY)) || {})[MODE] || []); } catch (e) { collapsed = new Set(); } }
+function toggleFold(era) {
+  if (eraFilter === era) return;                           // выбранная вверху эпоха всегда развёрнута
+  collapsed.has(era) ? collapsed.delete(era) : collapsed.add(era);
+  try { const all = JSON.parse(localStorage.getItem(FOLD_KEY)) || {}; all[MODE] = [...collapsed]; localStorage.setItem(FOLD_KEY, JSON.stringify(all)); } catch (e) {}
+  const y = grid.scrollTop; renderList(); grid.scrollTop = y; haptic('light');
+}
+function openList() { loadFolds(); searchEl.value = ''; renderList(); sheet.classList.add('open'); grid.scrollTop = 0; }
 function closeList() { sheet.classList.remove('open'); searchEl.blur(); }
 document.getElementById('btnList').onclick = openList;
 document.getElementById('btnClose').onclick = closeList;
@@ -846,18 +912,21 @@ function giveHint() {
 /* ============ СПРАВКА «?» ============ */
 let infoMode = false;
 const infoBtn = document.getElementById('btnInfo');
+/* режим справки остаётся включённым, пока его не выключат: можно читать про элементы подряд.
+   Переключается «?» в шапке или «?» в списке. */
+const infoListBtn = document.getElementById('btnInfoList');
 function setInfoMode(on) {
-  infoMode = on; infoBtn.classList.toggle('on', on); document.body.classList.toggle('info-mode', on);
-  if (on) toast('Режим справки: нажми на элемент на поле или в списке');
+  infoMode = on; document.body.classList.toggle('info-mode', on);
+  infoBtn.classList.toggle('on', on); infoListBtn.classList.toggle('on', on);
+  toast(on ? 'Справка: нажимай на элементы на поле или в списке.<br>Выключить — снова «?»' : 'Справка выключена');
 }
-infoBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); };
+infoBtn.onclick = infoListBtn.onclick = () => { setInfoMode(!infoMode); haptic('light'); };
 /* звук вкл/выкл */
 const soundBtn = document.getElementById('btnSound');
 const drawSoundBtn = () => { soundBtn.innerHTML = iconHtml(Sound.on ? 'ui_sound' : 'ui_mute', Sound.on ? '🔊' : '🔇', 'ui'); };
 soundBtn.onclick = () => { const on = Sound.toggle(); drawSoundBtn(); haptic('light'); toast(on ? 'Звук включён' : 'Звук выключен'); };
 drawSoundBtn();
 function showInfo(id) {
-  setInfoMode(false);
   const d = byId[id];
   // ингредиенты, которые ещё не открыты, не раскрываем
   const part = (x) => discovered.has(x) ? `${mini(x)} ${byId[x].name}` : '<span class="q">???</span>';
@@ -929,7 +998,7 @@ function tutorial(step) {
       text: '<b>Список</b> — все элементы по эпохам.<br><b>Подсказка</b> — раз в 5 минут.<br><b>?</b> вверху — справка об элементе.<br>Потускневший элемент уже отдал все свои рецепты.' },
   ];
   const st = steps[step];
-  modal({ ...st, text: `${st.text}<br><br><span style="opacity:.6">${step + 1} / ${steps.length}</span>`,
+  modal({ ...st, dismiss: false, text: `${st.text}<br><br><span style="opacity:.6">${step + 1} / ${steps.length}</span>`,
     buttons: step < steps.length - 1
       ? [{ text: 'Пропустить', onClick: () => { tutDone = true; save(); } }, { text: 'Дальше', primary: true, onClick: () => tutorial(step + 1) }]
       : [{ text: 'Играть!', primary: true, onClick: () => { tutDone = true; save(); } }] });
@@ -1044,7 +1113,7 @@ function awardsHtml() {
     feat(fullDone(MODE), 'ui_trophy', 'Полная коллекция', `Открыть все ${modeEls.length} элементов режима`),
     feat(allGoals(), 'logo', 'Творец', 'Создать Вселенную в обоих режимах · тема «Сияние» и золотая колба'),
   ].join('');
-  const themes = THEMES.map(t => `<button class="theme-btn${t.id === theme ? ' on' : ''}${t.ok() ? '' : ' locked'}" data-theme="${t.id}" style="background:${t.bg}">${t.ok() ? t.name : iconHtml('ui_lock', '🔒', 'mini') + ' ' + t.name}</button>`).join('');
+  const themes = THEMES.map(t => `<button class="theme-btn${t.id === theme ? ' on' : ''}${t.ok() ? '' : ' locked'}" data-theme="${t.id}" style="background:${t.bg}">${t.ok() ? '' : iconHtml('ui_lock', '🔒', 'mini')}<span>${t.name}</span></button>`).join('');
   return `<b class="awards-title">Медали эпох · ${got} / ${eras.length}</b><span class="medals">${medals}</span>` +
          `<b class="awards-title">Награды</b><span class="feats">${feats}</span>` +
          `<b class="awards-title">Тема оформления</b><span class="themes">${themes}</span>`;
@@ -1066,17 +1135,37 @@ function checkAwards(era) {
     setTimeout(() => { Sound.play('era'); toast(`Медаль эпохи <b>${eraIcon(era)} ${eraById[era].name}</b><br>Все элементы эпохи открыты!`, 'era'); }, 1400);
   }
 }
-function shareResult() {
+/* Поделиться: в чат — ссылка на share.html (Telegram покажет превью с картинкой, по нажатию — бот);
+   в историю — картинка img/story.jpg (Telegram 7.8+). */
+const SHARE_PAGE = new URL('share.html', location.href).href;
+const STORY_IMG = new URL('img/story.jpg', location.href).href;
+const canStory = () => !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast('7.8'));
+function shareText() {
   const st = stats[MODE];
-  const text = `Я создал Вселенную в «Алхимии» (режим «${M.name}»)` + (st.t ? ` за ${fmtDur(st.t)}` : '') + '! Попробуй и ты 🌌';
-  if (BOT_LINK && tg && tg.openTelegramLink) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(BOT_LINK)}&text=${encodeURIComponent(text)}`);
+  return `Я создал Вселенную в «Алхимии» (режим «${M.name}»)` + (st.t >= 60000 ? ` за ${fmtDur(st.t)}` : '') + '! Попробуй и ты 🌌';
+}
+function shareToChat() {
+  const text = shareText() + `\nИграть: ${BOT_LINK}`;
+  if (tg && tg.openTelegramLink) {
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(SHARE_PAGE)}&text=${encodeURIComponent(text)}`);
   } else {
-    const full = text + (BOT_LINK ? ' ' + BOT_LINK : '');
+    const full = shareText() + ' ' + BOT_LINK;
     const manual = () => modal({ icon: iconHtml('universe', '', 'modal-ico'), title: 'Поделиться', text: `Скопируй и отправь друзьям:<br><b style="user-select:text;-webkit-user-select:text">${full}</b>`, buttons: [{ text: 'Готово', primary: true }] });
     try { navigator.clipboard.writeText(full).then(() => toast('Текст скопирован — отправь его друзьям'), manual); }
     catch (e) { manual(); }
   }
+}
+function shareToStory() {
+  try { tg.shareToStory(STORY_IMG, { text: (shareText() + ' @alchemia_universumbot').slice(0, 200) }); }
+  catch (e) { shareToChat(); }
+}
+function shareResult() {
+  if (!canStory()) { shareToChat(); return; }
+  modal({
+    icon: `<img class="share-ico" src="img/share-small.jpg" alt="">`, title: 'Поделиться',
+    text: 'Отправь друзьям в чат — с картинкой и ссылкой на игру, или выложи в историю.',
+    buttons: [{ text: 'В историю', onClick: shareToStory }, { text: 'В чат', primary: true, onClick: shareToChat }],
+  });
 }
 
 document.getElementById('winIcon').innerHTML = iconHtml('universe', '🌌', 'win-ico');
