@@ -29,7 +29,7 @@ Object.assign(ICONS, {
     ${halo('__h', 32, 34, 28, '#3ddc84', .3)}
     ${linG('__t', ['#a6ff8a', '#1fae5a'])}
     <g fill="none" stroke="url(#__t)" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M32 55V41" stroke-width="4"/>
+      <path d="M32 55V41" stroke="#3ddc84" stroke-width="4"/>
       <path d="M32 42C32 34 22 32 18 24M32 42C32 34 44 33 46 24" stroke-width="3.2"/>
       <path d="M19 26C15 22 10 21 9 15M19 26C20 20 25 17 26 11M45 26C43 20 39 17 38 11M45 26C49 22 54 21 55 15" stroke-width="2.4"/>
     </g>

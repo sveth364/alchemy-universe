@@ -380,22 +380,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=39"></script>
-<script src="icons.js?v=39"></script>
-<script src="icons-micro.js?v=39"></script>
-<script src="icons-stars.js?v=39"></script>
-<script src="icons-planet.js?v=39"></script>
-<script src="icons-weather.js?v=39"></script>
-<script src="icons-life.js?v=39"></script>
-<script src="icons-animals.js?v=39"></script>
-<script src="icons-human.js?v=39"></script>
-<script src="icons-civ.js?v=39"></script>
-<script src="icons-tech.js?v=39"></script>
-<script src="icons-cosmos.js?v=39"></script>
-<script src="icons-ui.js?v=39"></script>
-<script src="info.js?v=39"></script>
-<script src="modes.js?v=39"></script>
-<script src="sound.js?v=39"></script>
+<script src="elements.js?v=40"></script>
+<script src="icons.js?v=40"></script>
+<script src="icons-micro.js?v=40"></script>
+<script src="icons-stars.js?v=40"></script>
+<script src="icons-planet.js?v=40"></script>
+<script src="icons-weather.js?v=40"></script>
+<script src="icons-life.js?v=40"></script>
+<script src="icons-animals.js?v=40"></script>
+<script src="icons-human.js?v=40"></script>
+<script src="icons-civ.js?v=40"></script>
+<script src="icons-tech.js?v=40"></script>
+<script src="icons-cosmos.js?v=40"></script>
+<script src="icons-ui.js?v=40"></script>
+<script src="info.js?v=40"></script>
+<script src="modes.js?v=40"></script>
+<script src="sound.js?v=40"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -1163,7 +1163,7 @@ function shareResult() {
   if (!canStory()) { shareToChat(); return; }
   modal({
     icon: `<img class="share-ico" src="img/share-small.jpg" alt="">`, title: 'Поделиться',
-    text: 'Отправь друзьям в чат — с картинкой и ссылкой на игру, или выложи в историю.',
+    text: 'Поделись своими результатами с друзьями или в истории.',
     buttons: [{ text: 'В историю', onClick: shareToStory }, { text: 'В чат', primary: true, onClick: shareToChat }],
   });
 }
