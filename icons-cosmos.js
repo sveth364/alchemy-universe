@@ -206,4 +206,108 @@ Object.assign(ICONS, {
     <path d="M22 15c6-3 14-3 20 0-5 3-15 3-20 0z" fill="#fff" opacity=".9"/>
     <g fill="#b8452a" opacity=".75"><circle cx="40" cy="36" r="4"/><circle cx="26" cy="42" r="3"/><circle cx="44" cy="25" r="2"/><ellipse cx="30" cy="30" rx="7" ry="2.4" transform="rotate(-15 30 30)"/></g>
     ${spark(56, 8, 3.5)}${spark(8, 54, 2.5, '#ffe08a')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // метеорит — оплавленный железный камень с вмятинами на земле
+  meteorite: { color: '#ffb347', svg: `
+    ${halo('__h', 32, 36, 24, '#ff9f43', .45)}
+    ${linG('__r', ['#8a83b8', '#3d3866', '#1e1a33'], 1, 1)}
+    <path d="M10 50C6 40 12 26 24 20C34 14 50 18 54 30C58 40 52 52 40 54C28 56 14 56 10 50Z" fill="url(#__r)" stroke="#ffcf9a" stroke-width="2.2"/>
+    <g fill="#2a2650" stroke="#9a93c0" stroke-width="1"><ellipse cx="24" cy="32" rx="5" ry="3.5"/><ellipse cx="40" cy="28" rx="4" ry="3"/><ellipse cx="36" cy="44" rx="6" ry="3.5"/><ellipse cx="18" cy="45" rx="3" ry="2"/></g>
+    <path d="M22 22c6-3 14-3 20 0" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".5"/>
+    <path d="M14 52c2 1 4 1 6 0" fill="none" stroke="#ff9f43" stroke-width="2" stroke-linecap="round"/>
+    ${spark(54, 10, 3.4)}${spark(10, 14, 2.4, '#ffe08a')}` },
+
+  // гравитационные волны — две чёрные дыры кружат и пускают рябь
+  gravwave: { color: '#9d7bff', svg: `
+    <g fill="none" stroke-linecap="round">
+      <circle cx="32" cy="32" r="28" stroke="#9d7bff" stroke-width="1.6" opacity=".3"/>
+      <circle cx="32" cy="32" r="22" stroke="#9d7bff" stroke-width="2" opacity=".5"/>
+      <circle cx="32" cy="32" r="16" stroke="#c9b6ff" stroke-width="2.2" opacity=".75"/>
+      <path d="M22 32C22 22 42 20 42 32" stroke="#6ee7ff" stroke-width="2"/><path d="M42 32C42 42 22 44 22 32" stroke="#ff8fd1" stroke-width="2"/></g>
+    ${halo('__a', 23, 32, 9, '#ffb347', .8)}${halo('__b', 41, 32, 9, '#6ee7ff', .8)}
+    <circle cx="23" cy="32" r="5" fill="#0b0820" stroke="#ffcf5a" stroke-width="1.8"/>
+    <circle cx="41" cy="32" r="5" fill="#0b0820" stroke="#bff6ff" stroke-width="1.8"/>
+    ${spark(56, 8, 3.2)}${spark(8, 56, 2.4, '#ffd6ff')}` },
+
+  // лунная база — купола на сером грунте, в небе Земля
+  moonbase: { color: '#c9c3ec', svg: `
+    ${ball('__e', 50, 13, 7, ['#c8f1ff', '#4cc9ff', '#1d4ed8'], '#c8f1ff', 1.4)}
+    ${linG('__g', ROCK)}${linG('__d', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}
+    <path d="M2 48C16 44 30 46 40 45S56 44 62 46V62H2Z" fill="url(#__g)" stroke="#e6e3f5" stroke-width="1.6"/>
+    <g fill="#6d6890"><ellipse cx="50" cy="55" rx="5" ry="1.8"/><ellipse cx="12" cy="57" rx="3" ry="1.2"/></g>
+    <path d="M10 48a10 10 0 0 1 20 0Z" fill="url(#__d)" stroke="#fff" stroke-width="1.8"/>
+    <path d="M30 47a7 7 0 0 1 14 0Z" fill="url(#__d)" stroke="#fff" stroke-width="1.6"/>
+    <path d="M28 44h4" stroke="#c9cde6" stroke-width="3"/>
+    <g fill="#ffcf5a"><circle cx="16" cy="44" r="1.6"/><circle cx="22" cy="43" r="1.6"/><circle cx="37" cy="44" r="1.4"/></g>
+    <path d="M46 46V32" stroke="#c9cde6" stroke-width="1.8"/><path d="M42 30a5 5 0 0 0 8 0" fill="#e6e9ff" stroke="#fff" stroke-width="1.2"/>
+    ${spark(22, 12, 3)}${spark(8, 26, 2.2, '#9ff')}` },
+
+  // колония на Марсе — стеклянные купола с зеленью на красном грунте
+  colony: { color: '#ff7a59', svg: `
+    ${linG('__g', ['#ff9a6b', '#a63c1f'])}
+    <path d="M2 48C14 45 26 47 36 46S54 44 62 46V62H2Z" fill="url(#__g)" stroke="#ffc2a8" stroke-width="1.6"/>
+    <g fill="#3ddc84" stroke="#d9ffc4" stroke-width="1"><path d="M14 47c0-5 2-8 4-9 2 1 4 4 4 9z"/><path d="M22 47c0-4 2-6 3-7 2 1 3 3 3 7z"/><path d="M42 46c0-4 1-6 3-7 2 1 3 3 3 7z"/></g>
+    <path d="M8 48a13 13 0 0 1 26 0Z" fill="#bfefff" fill-opacity=".22" stroke="#e0fbff" stroke-width="2"/>
+    <path d="M36 47a10 10 0 0 1 20 0Z" fill="#bfefff" fill-opacity=".22" stroke="#e0fbff" stroke-width="2"/>
+    <path d="M13 40c2-4 5-6 9-6" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+    <path d="M34 45h2" stroke="#e0fbff" stroke-width="3"/>
+    ${ball('__m', 50, 14, 6, ['#ffc9a8', '#ff7a59', '#9c2f17'], '#ffd6c4', 1.2)}
+    ${spark(14, 12, 3.2)}${spark(30, 22, 2.2, '#ffd6ff')}` },
+
+  // терраформирование — планета, наполовину красная, наполовину зелёно-голубая
+  terraforming: { color: '#3ddc84', svg: `
+    ${halo('__h', 32, 32, 30, '#3ddc84', .35)}
+    <defs><clipPath id="__c"><circle cx="32" cy="32" r="22"/></clipPath></defs>
+    ${radG('__r', ['#ffc9a8', '#ff7a59', '#9c2f17'])}${radG('__b', ['#c8f1ff', '#4cc9ff', '#1d4ed8'])}
+    <g clip-path="url(#__c)">
+      <rect x="0" y="0" width="64" height="64" fill="url(#__r)"/>
+      <path d="M38 0C26 14 42 26 30 40S34 56 28 64H64V0Z" fill="url(#__b)"/>
+      <path d="M44 20c4-2 8 0 9 4-3 2-6 1-9-1zM40 40c4-1 7 2 7 5-4 1-6-1-7-5z" fill="#3ddc84"/>
+      <g fill="#b8452a" opacity=".7"><circle cx="16" cy="24" r="3"/><circle cx="20" cy="40" r="2.2"/></g>
+    </g>
+    <circle cx="32" cy="32" r="22" fill="none" stroke="#e6ffd0" stroke-width="2.2"/>
+    <path d="M40 8C26 20 44 28 32 40" fill="none" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 3" opacity=".6"/>
+    ${shine(22, 20, 5, 2.6, .45)}${spark(56, 8, 3.4)}${spark(8, 56, 2.4, '#ffe08a')}` },
+
+  // межпланетный зонд — большая антенна-тарелка, корпус и длинная штанга
+  probe: { color: '#ffcf5a', svg: `
+    ${linG('__d', ['#ffffff', '#e6e9ff', '#9a93c0'], 1, 1)}
+    <path d="M30 34L60 52" stroke="#c9cde6" stroke-width="1.8"/><circle cx="60" cy="52" r="2" fill="#6ee7ff"/>
+    <path d="M24 38L8 56" stroke="#c9cde6" stroke-width="1.8"/><rect x="4" y="53" width="7" height="7" rx="1.5" fill="#ffcf5a" stroke="#fff" stroke-width="1"/>
+    <rect x="22" y="30" width="14" height="10" rx="2" fill="#ffcf5a" stroke="#fff3c4" stroke-width="1.6"/>
+    <path d="M10 22C14 8 36 2 46 12C38 24 20 30 10 22Z" fill="url(#__d)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M28 17L29 31" stroke="#c9cde6" stroke-width="1.6"/><circle cx="28" cy="16" r="2.2" fill="#9d7bff" stroke="#fff" stroke-width="1"/>
+    ${spark(54, 10, 3.4)}${spark(50, 30, 2, '#9ff')}${spark(10, 40, 2.4, '#ffd6ff')}` },
+
+  // радиотелескоп — тарелка на опоре, ловящая радиоволны
+  radiotelescope: { color: '#c9cde6', svg: `
+    ${linG('__d', ['#ffffff', '#e6e9ff', '#9a93c0'], 1, 1)}${linG('__s', ['#c9cde6', '#6a6f99'])}
+    <path d="M24 46L18 60H44L38 46Z" fill="url(#__s)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M31 44V36" stroke="#c9cde6" stroke-width="4"/>
+    <path d="M8 22C12 40 38 46 52 34C40 34 20 28 8 22Z" fill="url(#__d)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M14 28L30 22M44 36L30 22" stroke="#c9cde6" stroke-width="1.4"/><circle cx="30" cy="21" r="2.6" fill="#ffcf5a" stroke="#fff" stroke-width="1"/>
+    <g fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round"><path d="M38 12a8 8 0 0 1 8-6"/><path d="M42 16a14 14 0 0 1 14-10" opacity=".75"/><path d="M47 20a20 20 0 0 1 14-12" opacity=".5"/></g>
+    ${spark(10, 8, 3.2)}${spark(56, 46, 2.4, '#ffd6ff')}` },
+
+  // контакт — сигнал между двумя мирами
+  contact: { color: '#7dff7a', svg: `
+    ${ball('__e', 12, 46, 9, ['#c8f1ff', '#4cc9ff', '#1d4ed8'], '#c8f1ff', 1.6)}
+    ${ball('__a', 52, 16, 9, ['#e6ffd0', '#5fe35a', '#1f7a3a'], '#e6ffd0', 1.6)}
+    <path d="M20 40C26 26 28 40 34 28S40 26 44 22" fill="none" stroke="#fff59d" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 4.5"/>
+    <g fill="none" stroke-width="2" stroke-linecap="round"><path d="M22 34a6 6 0 0 1 5-5" stroke="#6ee7ff"/><path d="M42 28a6 6 0 0 1-5 5" stroke="#7dff7a"/></g>
+    <path d="M46 12c3-2 6-1 7 1-2 2-5 2-7-1zM50 20c3 0 5 1 5 3-3 1-5 0-5-3z" fill="#1f7a3a" opacity=".8"/>
+    <path d="M7 43c2-3 6-3 7-1-1 3-5 4-7 1zM12 50c2-1 5 0 5 2-2 1-4 0-5-2z" fill="#3ddc84" opacity=".9"/>
+    ${spark(32, 32, 3.6, '#fff59d')}${spark(54, 54, 2.6)}${spark(10, 10, 2.4, '#ffd6ff')}` },
+
+  // пояс астероидов — кольцо камней вокруг Солнца (задняя половина бледнее)
+  asteroidbelt: { color: '#c9c3ec', svg: `
+    <g transform="translate(32 34) scale(1.3) translate(-32 -35)">
+    <g fill="#8a83b8" opacity=".55"><path d="M8 30l3-2 3 2-2 3z"/><path d="M18 24l3-1 2 2-3 2z"/><path d="M30 21l3-1 2 3-3 1z"/><path d="M42 22l3 0 1 3-3 1z"/><path d="M53 26l3 1-1 3-3-1z"/></g>
+    ${halo('__h', 32, 33, 14, '#ffd166', .8)}${ball('__s', 32, 33, 6, ['#ffffff', '#fff59d', '#ffb347'], '#fff3c4', 1.4)}
+    <g fill="#c9c3ec" stroke="#fff" stroke-width="1"><path d="M6 38l4-3 4 2-1 4-4 1z"/><path d="M16 45l5-2 3 3-2 4-5-1z"/><path d="M28 48l4-2 4 2-1 4-5 0z"/>
+      <path d="M41 47l5-1 2 4-3 3-4-2z"/><path d="M52 41l4-1 3 3-2 3-4-1z"/><path d="M58 33l3 1 0 3-3 0z"/></g>
+    <g fill="#9a93c0"><circle cx="23" cy="42" r="1.2"/><circle cx="36" cy="44" r="1"/><circle cx="48" cy="44" r="1.2"/><circle cx="12" cy="34" r="1"/></g>
+    </g>
+    ${spark(54, 10, 3.2)}${spark(10, 14, 2.4, '#9ff')}` },
 });

@@ -327,4 +327,40 @@ Object.assign(ICONS, {
     <g stroke="#fff" stroke-width="1.2"><circle cx="45" cy="9" r="3.4" fill="#6ee7ff"/><circle cx="47" cy="22" r="3.4" fill="#3ddc84"/>
       <circle cx="41" cy="34" r="3.4" fill="#ff8fd1"/><circle cx="37" cy="46" r="3.4" fill="#9d7bff"/><circle cx="39" cy="57" r="3.4" fill="#6ee7ff"/></g>
     ${spark(12, 18, 3.2)}${spark(10, 50, 2.4, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // бактерия — капсула со жгутиками
+  bacteria: { color: '#3ddc84', svg: `
+    <g fill="none" stroke="#d9ffc4" stroke-width="1.8" stroke-linecap="round" opacity=".85">
+      <path d="M47 18c4-4 6-2 9-6s5-2 6-4"/><path d="M50 24c5-1 6 2 10 0"/><path d="M15 44c-4 4-6 2-9 6s-4 3-5 5"/></g>
+    <g transform="rotate(-35 32 32)">
+      ${radG('__g', GREEN, .4, .3, .8)}
+      <rect x="10" y="22" width="44" height="20" rx="10" fill="url(#__g)" stroke="#d9ffc4" stroke-width="2.2"/>
+      <rect x="15" y="26" width="34" height="12" rx="6" fill="none" stroke="#fff" stroke-width="1" opacity=".45"/>
+      <g fill="#128a52"><circle cx="24" cy="32" r="2.4"/><circle cx="33" cy="30" r="1.8"/><circle cx="41" cy="34" r="2.2"/></g>
+      <ellipse cx="22" cy="27" rx="6" ry="2" fill="#fff" opacity=".5"/>
+    </g>
+    ${spark(12, 12, 3.2)}${spark(54, 52, 2.6, '#ffd6ff')}` },
+
+  // вирус — бактериофаг: гранёная головка, хвост и ножки
+  virus: { color: '#ff7fb5', svg: `
+    ${linG('__h', ['#ffd6ef', '#ff7fb5', '#9d2b6b'], 1, 1)}
+    <path d="M32 3L46 11V27L32 35L18 27V11Z" fill="url(#__h)" stroke="#ffd6ef" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 11L32 19L46 11M32 19V35" fill="none" stroke="#fff" stroke-width="1.2" opacity=".6"/>
+    <path d="M24 14c2-2 4-3 6-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+    <rect x="28" y="35" width="8" height="14" rx="2" fill="#c9b6ff" stroke="#fff" stroke-width="1.4"/>
+    <g stroke="#e6dcff" stroke-width="1" opacity=".8"><path d="M28 39h8M28 43h8"/></g>
+    <g fill="none" stroke="#c9b6ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28 49L18 54L14 62"/><path d="M36 49L46 54L50 62"/><path d="M30 50L26 58L24 62"/><path d="M34 50L38 58L40 62"/></g>
+    ${spark(54, 26, 3.2)}${spark(10, 30, 2.4, '#9ff')}` },
+
+  // водоросли — ленты, колышущиеся в воде, и пузырьки кислорода
+  algae: { color: '#3ddc84', svg: `
+    ${linG('__a', ['#d4ff9a', '#3ddc84', '#128a52'])}
+    <g fill="url(#__a)" stroke="#d9ffc4" stroke-width="1.4" stroke-linejoin="round">
+      <path d="M14 62C8 50 18 42 12 30C10 24 14 18 16 14C20 22 16 28 20 36C24 46 18 54 20 62Z"/>
+      <path d="M28 62C24 48 34 40 30 26C28 18 32 10 34 6C38 14 34 22 38 32C42 44 34 52 36 62Z"/>
+      <path d="M44 62C40 52 50 46 46 36C44 30 48 26 50 22C54 30 50 34 54 42C56 50 50 56 52 62Z"/></g>
+    <g fill="#bff6ff" fill-opacity=".25" stroke="#e0fbff" stroke-width="1.2"><circle cx="22" cy="12" r="3"/><circle cx="44" cy="14" r="2.4"/><circle cx="56" cy="10" r="3.4"/><circle cx="8" cy="20" r="2"/></g>
+    ${spark(56, 30, 2.8)}` },
 });

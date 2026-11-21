@@ -176,4 +176,25 @@ Object.assign(ICONS, {
     <g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"><path d="M26 42c1-3 4-4 6-3M34 30c1-3 4-4 7-3M24 20c1-3 4-4 6-3"/></g>
     ${radG('__e', ['#fff59d', '#ff9f43', '#d9480f'], .5, .5, .5)}<ellipse cx="28" cy="56" rx="8" ry="3.5" fill="url(#__e)"/>
     ${spark(52, 50, 3.2)}${spark(12, 12, 2.6, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // прилив — Луна тянет к себе горб океанской воды
+  tide: { color: '#4cc9ff', svg: `
+    ${ball('__m', 48, 13, 8, ['#ffffff', '#e6e1ff', '#9a93c0'], '#fff', 1.6)}
+    ${linG('__w', WATER)}
+    <path d="M2 46C12 46 18 30 30 30S48 46 62 46V62H2Z" fill="url(#__w)" stroke="#d0f4ff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M14 52c4-2 8-2 12 0M36 54c4-2 8-2 12 0" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+    <g fill="none" stroke="#ffe066" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M36 30L42 22"/><path d="M38 21l4 1 0 4"/></g>
+    ${spark(12, 12, 3.2)}${spark(26, 20, 2.2, '#9ff')}` },
+
+  // озоновый слой — светящийся щит над Землёй отражает жёсткие лучи
+  ozone: { color: '#6ee7ff', svg: `
+    ${linG('__e', ['#6ee7ff', '#3a4bff'])}
+    <path d="M2 64C2 50 16 42 32 42S62 50 62 64Z" fill="url(#__e)" stroke="#c8f1ff" stroke-width="2"/>
+    <path d="M14 56c4-3 9-4 12-2M38 52c4 0 8 2 10 5" fill="none" stroke="#3ddc84" stroke-width="3" stroke-linecap="round"/>
+    <path d="M2 40C10 26 22 22 32 22S54 26 62 40" fill="none" stroke="#9d7bff" stroke-width="7" stroke-linecap="round" opacity=".45"/>
+    <path d="M2 40C10 26 22 22 32 22S54 26 62 40" fill="none" stroke="#bff6ff" stroke-width="2.4" stroke-linecap="round"/>
+    <g fill="none" stroke="#ff8fd1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4L20 18L12 10"/><path d="M34 2L34 16L28 8"/><path d="M52 6L46 18L54 12"/></g>
+    ${spark(58, 22, 2.8)}${spark(6, 22, 2.4, '#9ff')}` },
 });

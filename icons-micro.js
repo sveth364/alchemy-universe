@@ -239,4 +239,16 @@ Object.assign(ICONS, {
     ${ball('__h3', 32, 54, 6, ['#ffffff', '#d9ccff', '#9d7bff'], '#fff', 1.5)}
     ${ball('__n', 32, 30, 12, BLUE, '#d0f4ff', 2)}${sym('N', 32, 30, 13)}
     ${spark(53, 12, 3.2)}${spark(11, 20, 2.4, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // термоядерный синтез — два ядра сливаются во вспышку внутри магнитного кольца (токамак)
+  fusion: { color: '#ffb347', svg: `
+    ${arcHalf(32, 34, 27, 10, 0, '#9d7bff', 5, false, .55)}
+    ${halo('__h', 32, 32, 22, '#ffb347', .8)}
+    <path d="${burst(32, 32, 8, 13, 5, .2)}" fill="#fff59d" stroke="#fff" stroke-width="1"/>
+    <circle cx="32" cy="32" r="4.5" fill="#fff"/>
+    <g stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"><path d="M3 22l6 2M3 28l5 1M61 22l-6 2M61 28l-5 1"/></g>
+    ${ball('__a', 13, 24, 5.5, BLUE, '#d0f4ff', 1.4)}${ball('__b', 51, 24, 5.5, RED, '#ffd1dc', 1.4)}
+    ${arcHalf(32, 34, 27, 10, 0, '#c9b6ff', 5, true)}
+    ${spark(54, 8, 3.2)}${spark(10, 54, 2.4, '#ffe08a')}` },
 });

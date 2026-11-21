@@ -208,4 +208,40 @@ Object.assign(ICONS, {
       <path d="M38 10c4 0 7 3 5 6s-6 1-5-6z"/></g>
     <g fill="#e07a45"><circle cx="20" cy="44" r="2"/><circle cx="50" cy="28" r="1.6"/><circle cx="26" cy="14" r="1.3"/></g>
     ${shine(24, 18, 3.5, 2, .5)}${spark(56, 8, 3.2)}${spark(8, 56, 2.4, '#ffe08a')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // кристалл — друза из шестигранных призм
+  crystal: { color: '#c9b6ff', svg: `
+    ${linG('__a', ['#ffffff', '#c9b6ff', '#7b5cff'], 1, 1)}${linG('__b', ['#e0fbff', '#6ee7ff', '#3a4bff'], 1, 1)}
+    <path d="M14 56L10 30L17 20L24 30L22 56Z" fill="url(#__b)" stroke="#e0fbff" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M42 56L42 26L50 16L57 26L52 56Z" fill="url(#__b)" stroke="#e0fbff" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M22 58L23 20L32 6L41 20L42 58Z" fill="url(#__a)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M32 6V58M23 20L32 28L41 20" fill="none" stroke="#fff" stroke-width="1.2" opacity=".6"/>
+    <path d="M26 24L30 30V48L26 44Z" fill="#fff" opacity=".35"/>
+    ${spark(52, 8, 3.5)}${spark(8, 14, 2.4, '#ffd6ff')}` },
+
+  // кратер — чаша в лунном грунте и падающий камень
+  crater: { color: '#c9c3ec', svg: `
+    ${linG('__g', ROCK)}${linG('__f', ['rgba(255,159,67,0)', '#ffb347'], 1, 1)}
+    <path d="M4 10L30 30L33 27Z" fill="url(#__f)"/>
+    ${ball('__m', 33, 27, 4, ['#fff3c4', '#ffb347', '#b8562a'], '#fff3c4', 1)}
+    <path d="M2 44C14 40 22 42 32 41S52 40 62 43V62H2Z" fill="url(#__g)" stroke="#e6e3f5" stroke-width="1.8"/>
+    <ellipse cx="34" cy="49" rx="17" ry="6" fill="#3a3560" stroke="#fff" stroke-width="1.8"/>
+    <path d="M18 49C22 54 46 54 50 49C46 52 22 52 18 49Z" fill="#9a93c0"/>
+    <g fill="#6d6890"><ellipse cx="10" cy="54" rx="4" ry="1.6"/><ellipse cx="56" cy="56" rx="3" ry="1.2"/></g>
+    ${spark(54, 12, 3.4)}${spark(44, 30, 2.2, '#ffe08a')}` },
+
+  // газовый гигант — полосатая планета с большим вихрем
+  gasgiant: { color: '#ffb347', svg: `
+    ${halo('__h', 32, 32, 31, '#ffb347', .35)}
+    <defs><clipPath id="__c"><circle cx="32" cy="32" r="24"/></clipPath></defs>
+    <g clip-path="url(#__c)">
+      <rect x="0" y="0" width="64" height="64" fill="#ffd9a8"/>
+      <path d="M0 14C20 18 40 10 64 15V22C40 18 20 26 0 21Z" fill="#c97a4a"/>
+      <path d="M0 28C22 32 42 25 64 30V36C42 31 22 38 0 34Z" fill="#e8a36b"/>
+      <path d="M0 42C20 46 44 40 64 44V50C44 46 20 52 0 48Z" fill="#b85f3a"/>
+      <ellipse cx="42" cy="39" rx="7" ry="4" fill="#d9480f" stroke="#ffe0b0" stroke-width="1.2"/>
+    </g>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="#fff3dc" stroke-width="2.2"/>
+    ${shine(22, 19, 6, 3, .45)}${spark(56, 8, 3.5)}${spark(8, 56, 2.5, '#ffd6ff')}` },
 });

@@ -111,4 +111,21 @@ Object.assign(ICONS, {
     </g>
     ${ball('__c', 32, 32, 6, ['#ffffff', '#fff59d', '#ffb347'], '#fff')}
     <g transform="rotate(-15 32 32)">${arcHalf(32, 32, 22, 6, 0, '#ffb347', 4, true)}</g>` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // уран — радиоактивный «атом» в зелёном свечении
+  uranium: { color: '#7dff7a', svg: `
+    ${halo('__g', 32, 32, 30, '#7dff7a', .45)}
+    ${token('U', ['#e6ffd0', '#5fe35a', '#1f7a3a'], '#e6ffd0', '#ffe066')}
+    ${spark(52, 50, 3)}${spark(10, 12, 2.6, '#e6ffd0')}` },
+
+  // пульсар — крошечная звезда с двумя лучами-прожекторами и линиями поля
+  pulsar: { color: '#6ee7ff', svg: `
+    ${linG('__b', ['rgba(110,231,255,0)', '#bff6ff'], 1, 1)}${linG('__c', ['#bff6ff', 'rgba(110,231,255,0)'], 1, 1)}
+    <path d="M6 4L29 29L35 27Z" fill="url(#__b)"/><path d="M58 60L35 35L29 37Z" fill="url(#__c)"/>
+    <g fill="none" stroke="#9d7bff" stroke-width="1.8" opacity=".75">
+      <path d="M32 32C14 26 14 46 32 32C50 18 50 38 32 32"/><path d="M32 32C20 22 8 38 32 32C56 26 44 42 32 32" opacity=".6"/></g>
+    ${halo('__h', 32, 32, 14, '#6ee7ff', .9)}
+    ${ball('__s', 32, 32, 5.5, ['#ffffff', '#bff6ff', '#4cc9ff'], '#fff', 1.4)}
+    ${spark(54, 12, 3.2)}${spark(10, 50, 2.4, '#ffd6ff')}` },
 });

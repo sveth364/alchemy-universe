@@ -337,4 +337,28 @@ Object.assign(ICONS, {
       <circle cx="44" cy="16" r="9"/><circle cx="26" cy="18" r="6"/><circle cx="54" cy="34" r="5"/><circle cx="14" cy="28" r="3.5"/></g>
     ${shine(41, 13, 3, 1.6, .8)}${shine(24, 16, 2, 1.1, .8)}${shine(53, 32, 1.6, .9, .8)}
     ${spark(56, 54, 3)}${spark(32, 4, 2.4, '#9ff')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // антибиотик — чашка Петри: плесень и чистый круг вокруг неё (открытие Флеминга)
+  antibiotic: { color: '#6ee7ff', svg: `
+    ${linG('__d', ['#e0fbff', '#9ad7ff'])}
+    <ellipse cx="32" cy="38" rx="27" ry="17" fill="#bfefff" fill-opacity=".18" stroke="#e0fbff" stroke-width="2.4"/>
+    <ellipse cx="32" cy="36" rx="23" ry="13" fill="#ffe8a8" fill-opacity=".85" stroke="#fff3c4" stroke-width="1.2"/>
+    <g fill="#ff9f43"><circle cx="14" cy="34" r="1.8"/><circle cx="18" cy="42" r="2"/><circle cx="48" cy="30" r="1.8"/><circle cx="50" cy="40" r="2.2"/><circle cx="22" cy="28" r="1.4"/><circle cx="44" cy="45" r="1.6"/></g>
+    <ellipse cx="32" cy="36" rx="12" ry="7" fill="#fffbe8" stroke="#fff" stroke-width="1" opacity=".95"/>
+    ${radG('__m', GREEN, .4, .35, .7)}
+    <path d="M26 36c0-4 3-6 6-5 2-3 7-2 7 2 3 0 4 4 1 5-1 3-5 3-7 2-3 2-7 0-7-4z" fill="url(#__m)" stroke="#d9ffc4" stroke-width="1.2"/>
+    <path d="M7 34C9 26 20 20 32 20S55 26 57 34" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+    ${spark(54, 10, 3.4)}${spark(10, 12, 2.4, '#ffd6ff')}` },
+
+  // обсерватория — купол со щелью на горе, из щели смотрит телескоп
+  observatory: { color: '#c9b6ff', svg: `
+    ${linG('__g', ['#9d7bff', '#3b2a8f'])}${linG('__d', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}
+    <path d="M2 62L20 40L30 46L42 34L62 62Z" fill="url(#__g)" stroke="#c9b6ff" stroke-width="1.6" stroke-linejoin="round"/>
+    <rect x="22" y="38" width="22" height="10" fill="url(#__d)" stroke="#fff" stroke-width="1.6"/>
+    <path d="M20 38a13 13 0 0 1 26 0Z" fill="url(#__d)" stroke="#fff" stroke-width="2"/>
+    <path d="M33 26h4v12h-4z" fill="#1a1240"/>
+    <path d="M34 30L46 14" stroke="#ffcf5a" stroke-width="4.5" stroke-linecap="round"/><path d="M45.5 14.5L47.5 12" stroke="#fff3c4" stroke-width="5" stroke-linecap="round"/>
+    <rect x="30" y="42" width="6" height="6" rx="1" fill="#6ee7ff"/>
+    ${spark(54, 8, 3.6)}${spark(12, 14, 2.6, '#9ff')}${spark(26, 8, 2, '#ffd6ff')}` },
 });

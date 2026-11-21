@@ -346,4 +346,60 @@ Object.assign(ICONS, {
       ${tyre(14, 48, 5.5)}${tyre(32, 48, 5.5)}${tyre(50, 48, 5.5)}
     </g>
     ${spark(58, 10, 3.2)}${spark(20, 6, 2.4, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 2 ──
+  // лазер — излучатель и узкий яркий луч
+  laser: { color: '#ff5f8a', svg: `
+    ${linG('__b', ['#ff5f8a', '#fff'], 1, -.6)}${linG('__m', ['#ffffff', '#c9cde6', '#6a6f99'])}
+    <path d="M28 38L58 8L60 10L30 40Z" fill="#ff5f8a" opacity=".45"/>
+    <path d="M28 38L59 9" stroke="url(#__b)" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M${burst(58, 9, 6, 6, 2.2)}" fill="#fff" stroke="#ffd6ef" stroke-width=".8"/>
+    <g transform="rotate(-45 22 44)"><rect x="6" y="37" width="26" height="14" rx="3" fill="url(#__m)" stroke="#fff" stroke-width="2"/>
+      <rect x="32" y="40" width="5" height="8" rx="1.5" fill="#ff5f8a" stroke="#ffd6ef" stroke-width="1.2"/>
+      <g fill="#6a6f99"><rect x="10" y="40" width="2.5" height="8" rx="1"/><rect x="15" y="40" width="2.5" height="8" rx="1"/></g></g>
+    ${spark(12, 12, 3.2)}${spark(52, 50, 2.6, '#ffd6ff')}` },
+
+  // ядерный реактор — градирня с паром и значок атома
+  reactor: { color: '#7dff7a', svg: `
+    ${linG('__t', ['#ffffff', '#c9cde6', '#6a6f99'], 1, 0)}
+    <g fill="#f2efff" stroke="#e6e1ff" stroke-width="1.4" opacity=".9"><circle cx="26" cy="12" r="6"/><circle cx="34" cy="8" r="7"/><circle cx="42" cy="13" r="5.5"/></g>
+    <path d="M18 20H46C42 30 42 44 50 60H14C22 44 22 30 18 20Z" fill="url(#__t)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 24h24" stroke="#9a93c0" stroke-width="1.4"/>
+    ${arcHalf(32, 42, 9, 3.5, 30, '#3ddc84', 1.8, false, .9)}${arcHalf(32, 42, 9, 3.5, -30, '#3ddc84', 1.8, false, .9)}
+    <circle cx="32" cy="42" r="3" fill="#7dff7a" stroke="#fff" stroke-width="1"/>
+    ${arcHalf(32, 42, 9, 3.5, 30, '#3ddc84', 1.8, true)}${arcHalf(32, 42, 9, 3.5, -30, '#3ddc84', 1.8, true)}
+    ${spark(56, 30, 3.2)}${spark(8, 30, 2.4, '#e6ffd0')}` },
+
+  // солнечная батарея — панель из ячеек под солнцем
+  solarpanel: { color: '#4cc9ff', svg: `
+    ${halo('__h', 14, 13, 13, '#ffd166', .7)}${ball('__s', 14, 13, 6, ['#ffffff', '#fff59d', '#ffb347'], '#fff3c4', 1.4)}
+    ${linG('__p', ['#9ad7ff', '#3a4bff', '#1d2a8f'], 1, 1)}
+    <path d="M30 50V58M22 58h16" stroke="#c9cde6" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M14 50L26 22H60L48 50Z" fill="url(#__p)" stroke="#e0fbff" stroke-width="2" stroke-linejoin="round"/>
+    <g stroke="#c8f1ff" stroke-width="1" opacity=".75"><path d="M18 41h34M22 31.5h34M35.5 22L23.5 50M48 22L36 50"/></g>
+    <path d="M28 25L22 39" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+    ${spark(56, 8, 3.2)}${spark(58, 56, 2.4, '#ffd6ff')}` },
+
+  // квантовый компьютер — кубит (сфера Блоха) над чипом
+  quantum: { color: '#9d7bff', svg: `
+    ${linG('__c', ['#4b3a99', '#1e1a33'], 1, 1)}
+    <g stroke="#ffcf5a" stroke-width="2" stroke-linecap="round"><path d="M18 46v6M26 46v6M34 46v6M42 46v6M50 46v6"/></g>
+    <path d="M12 40L20 34H52L60 40L52 46H20Z" fill="url(#__c)" stroke="#c9b6ff" stroke-width="1.8" stroke-linejoin="round"/>
+    ${arcHalf(34, 20, 16, 5, 0, '#6ee7ff', 1.6, false, .6)}
+    ${ball('__q', 34, 20, 13, ['#e6dcff', '#9d7bff', '#4b2bb0'], '#d9ccff', 1.8)}
+    ${arcHalf(34, 20, 16, 5, 0, '#6ee7ff', 1.8, true)}
+    <path d="M34 20L42 9" stroke="#fff59d" stroke-width="2.4" stroke-linecap="round"/><circle cx="42.5" cy="8.5" r="2.6" fill="#fff59d"/>
+    <circle cx="34" cy="20" r="2" fill="#fff"/>
+    ${spark(8, 12, 3.2)}${spark(58, 26, 2.4, '#ffd6ff')}` },
+
+  // коллайдер — кольцо ускорителя и вспышка столкновения
+  collider: { color: '#6ee7ff', svg: `
+    ${linG('__r', ['#6ee7ff', '#9d7bff', '#ff7fb5'], 1, 1)}
+    <circle cx="32" cy="30" r="22" fill="none" stroke="#2a2650" stroke-width="9"/>
+    <circle cx="32" cy="30" r="22" fill="none" stroke="url(#__r)" stroke-width="4"/>
+    <g fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 39A22 22 0 0 0 28 52" stroke="#fff"/><path d="M52 39A22 22 0 0 1 36 52" stroke="#fff"/></g>
+    ${halo('__h', 32, 52, 12, '#fff59d', .9)}
+    <path d="${burst(32, 52, 8, 9, 3)}" fill="#fff59d" stroke="#fff" stroke-width=".8"/>
+    <g stroke="#ffb347" stroke-width="1.6" stroke-linecap="round"><path d="M32 52l-10 9M32 52l9 10M32 52l14 2"/></g>
+    ${spark(32, 30, 3.4)}${spark(56, 8, 2.6, '#9ff')}` },
 });

@@ -32,7 +32,9 @@ const MODES = {
       'oxygen', 'nitrogen', 'silicon',
       // расширение «Космоса»
       'methane', 'ammonia', 'aminoacid', 'protein', 'rna', 'engine', 'rocketfuel', 'orbit', 'spacetelescope',
-      'spacestation', 'smoke', 'coal', 'soap', 'rust', 'mars', 'rover'],
+      'spacestation', 'smoke', 'coal', 'soap', 'rust', 'mars', 'rover',
+      'laser', 'uranium', 'reactor', 'solarpanel', 'crystal', 'meteorite', 'crater', 'tide', 'pulsar', 'gravwave', 'virus', 'bacteria', 'antibiotic', 'algae',
+      'observatory', 'moonbase', 'colony', 'terraforming', 'probe', 'radiotelescope', 'contact', 'quantum', 'fusion', 'ozone', 'collider', 'asteroidbelt', 'gasgiant'],
   },
   cosmos: {
     name: 'Космос',
