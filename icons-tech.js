@@ -402,4 +402,70 @@ Object.assign(ICONS, {
     <path d="${burst(32, 52, 8, 9, 3)}" fill="#fff59d" stroke="#fff" stroke-width=".8"/>
     <g stroke="#ffb347" stroke-width="1.6" stroke-linecap="round"><path d="M32 52l-10 9M32 52l9 10M32 52l14 2"/></g>
     ${spark(32, 30, 3.4)}${spark(56, 8, 2.6, '#9ff')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // космодром — ракета у ажурной стартовой башни
+  cosmodrome: { color: '#ffcf5a', svg: `
+    ${linG('__g', ['#ffcf9a', '#a8703a'])}${linG('__r', ['#ffffff', '#e6e9ff', '#a9b0d8'], 1, 0)}
+    <path d="M2 54C16 52 48 52 62 54V62H2Z" fill="url(#__g)" stroke="#ffe0b0" stroke-width="1.4"/>
+    <path d="M10 54V12H20V54" fill="none" stroke="#ff9f43" stroke-width="2.2"/>
+    <path d="M10 18L20 26M20 18L10 26M10 30L20 38M20 30L10 38M10 42L20 50M20 42L10 50" stroke="#ffcf5a" stroke-width="1.2"/>
+    <path d="M20 22h10" stroke="#ff9f43" stroke-width="2.2"/>
+    <path d="M38 6c6 5 8 13 8 24v18H30V30c0-11 2-19 8-24z" fill="url(#__r)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M38 6c3 2 5 5 6 9H32c1-4 3-7 6-9z" fill="#ff5f8a"/>
+    <path d="M30 40l-5 8v4h5zM46 40l5 8v4h-5z" fill="#ff5f8a" stroke="#ffd6ef" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="38" cy="22" r="3.2" fill="#6ee7ff" stroke="#fff" stroke-width="1.4"/>
+    <path d="M26 54h24" stroke="#c9cde6" stroke-width="3"/>
+    ${spark(56, 10, 3.4)}${spark(26, 6, 2.2, '#9ff')}` },
+
+  // суперкомпьютер — ряд серверных стоек с огоньками
+  supercomputer: { color: '#6ee7ff', svg: `
+    ${linG('__k', ['#4b3a99', '#1e1a33'], 1, 0)}
+    ${[6, 24, 42].map((x, i) => `<rect x="${x}" y="${12 - i * 2}" width="16" height="${44 + i * 2}" rx="2.5" fill="url(#__k)" stroke="#c9b6ff" stroke-width="1.8"/>` +
+      [0, 1, 2, 3, 4, 5].map(j => `<rect x="${x + 3}" y="${16 - i * 2 + j * 6.5}" width="10" height="3" rx="1" fill="#2a2650" stroke="#6a6f99" stroke-width=".6"/>` +
+        `<circle cx="${x + 11}" cy="${17.5 - i * 2 + j * 6.5}" r="1" fill="${['#3ddc84', '#6ee7ff', '#ffcf5a', '#ff8fd1'][(i + j) % 4]}"/>`).join('')).join('')}
+    <path d="M2 58H62" stroke="#9d7bff" stroke-width="2"/>
+    ${spark(58, 6, 3)}${spark(4, 6, 2.2, '#9ff')}` },
+
+  // скафандр — шлем с золотым забралом, в котором отражаются звёзды
+  // скафандр — пустой скафандр в полный рост: шлем с забралом, ранец, перчатки, ботинки
+  spacesuit: { color: '#ffcf5a', svg: `
+    ${linG('__b', ['#ffffff', '#e6e9ff', '#a9b0d8'], 1, 0)}${linG('__v', ['#fff1b8', '#ffcf5a', '#b8860b'], 1, 1)}
+    <rect x="18" y="20" width="28" height="22" rx="5" fill="#c9cde6" stroke="#fff" stroke-width="1.4"/>
+    <path d="M22 22H42V44H22Z" fill="url(#__b)" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M22 24L12 38L14 42L24 32M42 24L52 38L50 42L40 32" fill="url(#__b)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+    <circle cx="12" cy="42" r="3.4" fill="#ff9f43" stroke="#fff" stroke-width="1.2"/><circle cx="52" cy="42" r="3.4" fill="#ff9f43" stroke="#fff" stroke-width="1.2"/>
+    <path d="M23 44H31V56H23ZM33 44H41V56H33Z" fill="url(#__b)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M21 56H31V61H20ZM33 56H43L44 61H33Z" fill="#9a93c0" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>
+    <rect x="27" y="30" width="10" height="6" rx="1.5" fill="#c9cde6" stroke="#fff" stroke-width="1"/><circle cx="30" cy="33" r="1.2" fill="#ff5f8a"/><circle cx="34" cy="33" r="1.2" fill="#6ee7ff"/>
+    <path d="M22 44h20" stroke="#ff9f43" stroke-width="2"/>
+    <circle cx="32" cy="13" r="10" fill="url(#__b)" stroke="#fff" stroke-width="2"/>
+    <path d="M25 13C25 8 28 6 32 6S39 8 39 13C39 17 36 19 32 19S25 17 25 13Z" fill="url(#__v)" stroke="#fff3c4" stroke-width="1.2"/>
+    <path d="M27 11c1-2 3-3 5-3" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+    ${spark(56, 10, 3.4)}${spark(8, 12, 2.4, '#9ff')}` },
+
+  // космический челнок — крылатый орбитер на большом баке с ускорителями
+  shuttle: { color: '#ff9f43', svg: `
+    ${linG('__t', ['#ffcf9a', '#e07a45', '#a8501f'], 1, 0)}${linG('__w', ['#ffffff', '#e6e9ff', '#a9b0d8'], 1, 0)}
+    ${linG('__f', ['#fff59d', '#ff9f43', 'rgba(255,61,90,0)'])}
+    <path d="M22 54l4 9 4-9zM36 54l4 9 4-9z" fill="url(#__f)"/>
+    <rect x="27" y="10" width="12" height="44" rx="6" fill="url(#__t)" stroke="#ffe0b0" stroke-width="1.6"/>
+    <rect x="21" y="18" width="5" height="36" rx="2.5" fill="url(#__w)" stroke="#fff" stroke-width="1.2"/>
+    <rect x="40" y="18" width="5" height="36" rx="2.5" fill="url(#__w)" stroke="#fff" stroke-width="1.2"/>
+    <path d="M14 50L22 38V22C22 18 26 16 30 18C33 20 33 24 33 26V50Z" fill="url(#__w)" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" transform="translate(-6 0)"/>
+    <path d="M16 18c2-3 6-3 8 0v4h-8z" fill="#2a2650" transform="translate(0 0)"/>
+    <path d="M8 50L16 40V50Z" fill="#2a2650"/>
+    ${spark(54, 8, 3.4)}${spark(56, 34, 2.4, '#9ff')}` },
+
+  // голограмма — проектор и светящийся каркас планеты в луче
+  hologram: { color: '#6ee7ff', svg: `
+    ${linG('__c', ['rgba(110,231,255,0)', 'rgba(110,231,255,.45)'])}
+    <path d="M10 14H54L38 52H26Z" fill="url(#__c)"/>
+    <g fill="none" stroke="#bff6ff" stroke-width="1.6">
+      <circle cx="32" cy="24" r="13"/><ellipse cx="32" cy="24" rx="5.5" ry="13"/><ellipse cx="32" cy="24" rx="13" ry="4.5"/></g>
+    <g stroke="#bff6ff" stroke-width="1" opacity=".5"><path d="M14 38h36M16 44h32"/></g>
+    ${linG('__b', ['#ffffff', '#c9cde6', '#6a6f99'])}
+    <ellipse cx="32" cy="55" rx="16" ry="5" fill="url(#__b)" stroke="#fff" stroke-width="1.8"/>
+    <ellipse cx="32" cy="53" rx="6" ry="2" fill="#6ee7ff"/>
+    ${spark(54, 8, 3.2)}${spark(10, 30, 2.4, '#ffd6ff')}` },
 });

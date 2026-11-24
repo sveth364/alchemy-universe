@@ -375,6 +375,33 @@ const ELEMENTS = [
   ['collider', 'Коллайдер', '⭕', 'tech'],
   ['asteroidbelt', 'Пояс астероидов', '🪨', 'cosmos'],
   ['gasgiant', 'Газовый гигант', '🪐', 'planet'],
+  // расширение «Космоса», этап 3
+  ['cosmodrome', 'Космодром', '🚀', 'tech'],
+  ['gravlens', 'Гравитационная линза', '🔍', 'cosmos'],
+  ['supercomputer', 'Суперкомпьютер', '🖥️', 'tech'],
+  ['simulation', 'Симуляция Вселенной', '🌐', 'cosmos'],
+  ['supercluster', 'Сверхскопление', '🎇', 'cosmos'],
+  ['cmb', 'Реликтовое излучение', '📻', 'cosmos'],
+  ['inflation', 'Инфляция', '💥', 'micro'],
+  ['magnetar', 'Магнетар', '🧲', 'stars'],
+  ['protodisk', 'Протопланетный диск', '💿', 'stars'],
+  ['icegiant', 'Ледяной гигант', '🧊', 'planet'],
+  ['greenhouse', 'Парниковый эффект', '🌡️', 'weather'],
+  ['venus', 'Венера', '🟡', 'cosmos'],
+  ['saturn', 'Сатурн', '🪐', 'cosmos'],
+  ['icemoon', 'Ледяная луна', '🌕', 'planet'],
+  ['kuiperbelt', 'Пояс Койпера', '☄️', 'cosmos'],
+  ['dwarfplanet', 'Карликовая планета', '⚪', 'cosmos'],
+  ['sunspot', 'Солнечное пятно', '🌞', 'stars'],
+  ['solarflare', 'Солнечная вспышка', '🔥', 'stars'],
+  ['spacesuit', 'Скафандр', '🧑‍🚀', 'tech'],
+  ['shuttle', 'Космический челнок', '🚀', 'tech'],
+  ['debris', 'Космический мусор', '🗑️', 'cosmos'],
+  ['starship', 'Звездолёт', '🛸', 'cosmos'],
+  ['dysonsphere', 'Сфера Дайсона', '🔆', 'cosmos'],
+  ['bigcrunch', 'Большое сжатие', '⏺️', 'cosmos'],
+  ['heatdeath', 'Тепловая смерть', '🌑', 'cosmos'],
+  ['hologram', 'Голограмма', '💠', 'tech'],
 ];
 
 const RECIPES = [
@@ -575,7 +602,6 @@ const RECIPES = [
   'star+blackhole=galaxy', 'constellation+gravity=galaxy',
   'galaxy+galaxy=cluster',
   'space+energy=darkenergy', 'energy+darkmatter=darkenergy',
-  'cluster+darkmatter=web',
   'blackhole+spacetime=wormhole',
   'bigbang+darkenergy=expansion', 'bigbang+time=expansion',
   'expansion+web=universe',
@@ -592,11 +618,10 @@ const RECIPES = [
   'petrol+steel=engine', 'petrol+gear=engine',
   'hydrogen+fire=rocketfuel', 'petrol+oxygen=rocketfuel',
   'engine+rocketfuel=rocket',
-  'rocket+gravity=orbit', 'rocket+planet=orbit',
+  'cosmodrome+gravity=orbit', 'cosmodrome+planet=orbit',
   'orbit+radio=satellite',
-  'satellite+telescope=spacetelescope', 'orbit+telescope=spacetelescope',
-  'galaxy+spacetelescope=darkmatter',   // тёмную материю выдаёт движение галактик
-  'gravity+spacetelescope=darkmatter',  // и гравитационное линзирование
+  'satellite+telescope=spacetelescope',
+  'gravlens+gravity=darkmatter', 'gravlens+mass=darkmatter',  // тёмную материю выдаёт гравитационное линзирование
   'orbit+house=spacestation', 'satellite+astronaut=spacestation',
   // побочные элементы
   'fire+air=smoke', 'campfire+air=smoke',
@@ -634,6 +659,36 @@ const RECIPES = [
   'proton+science=collider', 'electron+science=collider', 'collider+proton=higgs',
   'asteroid+asteroid=asteroidbelt', 'asteroid+system=asteroidbelt',
   'planet+hydrogen=gasgiant', 'planet+helium=gasgiant',
+  // ── расширение «Космоса», этап 3 ──
+  // путь к цели: космодром → орбита; линза → тёмная материя; суперкомпьютер → симуляция → паутина
+  'rocket+desert=cosmodrome', 'rocket+road=cosmodrome',
+  'galaxy+spacetelescope=gravlens', 'cluster+spacetelescope=gravlens',
+  'computer+factory=supercomputer', 'computer+quantum=supercomputer',
+  'darkmatter+supercomputer=simulation', 'darkmatter+computer=simulation',
+  'simulation+cluster=web', 'simulation+supercluster=web',
+  // побочные элементы
+  'cluster+cluster=supercluster', 'cluster+gravity=supercluster',
+  'radiotelescope+bigbang=cmb', 'radio+bigbang=cmb',
+  'bigbang+space=inflation', 'bigbang+vacuum=inflation',
+  'nstar+magnetism=magnetar', 'pulsar+magnetism=magnetar',
+  'star+dust=protodisk', 'sun+dust=protodisk',
+  'gasgiant+ice=icegiant', 'gasgiant+cold=icegiant',
+  'atmosphere+heat=greenhouse', 'atmosphere+smoke=greenhouse',
+  'planet+greenhouse=venus', 'volcano+greenhouse=venus',
+  'gasgiant+rings=saturn', 'gasgiant+moon=saturn',
+  'moon+ice=icemoon', 'moon+glacier=icemoon',
+  'comet+comet=kuiperbelt', 'asteroidbelt+ice=kuiperbelt',
+  'kuiperbelt+gravity=dwarfplanet', 'asteroid+gravity=dwarfplanet',
+  'sun+magnetism=sunspot', 'star+magnetism=sunspot',
+  'sunspot+energy=solarflare', 'sunspot+plasma=solarflare',
+  'clothes+space=spacesuit', 'astronaut+clothes=spacesuit',
+  'rocket+plane=shuttle', 'plane+orbit=shuttle',
+  'satellite+time=debris', 'satellite+satellite=debris',
+  'rocket+fusion=starship', 'spacestation+fusion=starship',
+  'sun+solarpanel=dysonsphere', 'star+solarpanel=dysonsphere',
+  'universe+gravity=bigcrunch', 'universe+darkmatter=bigcrunch',
+  'universe+time=heatdeath', 'universe+eternity=heatdeath',
+  'laser+photo=hologram', 'laser+light=hologram',
 ];
 
 const GOAL = 'universe';

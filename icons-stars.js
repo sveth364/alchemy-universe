@@ -128,4 +128,45 @@ Object.assign(ICONS, {
     ${halo('__h', 32, 32, 14, '#6ee7ff', .9)}
     ${ball('__s', 32, 32, 5.5, ['#ffffff', '#bff6ff', '#4cc9ff'], '#fff', 1.4)}
     ${spark(54, 12, 3.2)}${spark(10, 50, 2.4, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // магнетар — крошечная звезда в тугих петлях магнитного поля
+  magnetar: { color: '#ff7fb5', svg: `
+    <g fill="none" stroke-width="2" stroke-linecap="round">
+      <ellipse cx="32" cy="32" rx="12" ry="27" stroke="#ff7fb5" opacity=".9"/>
+      <ellipse cx="32" cy="32" rx="20" ry="27" stroke="#c9b6ff" opacity=".7"/>
+      <ellipse cx="32" cy="32" rx="28" ry="26" stroke="#9d7bff" opacity=".45"/></g>
+    <path d="M44 12l-4 7h5l-5 8" fill="none" stroke="#fff59d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${halo('__h', 32, 32, 14, '#ff7fb5', .9)}
+    ${ball('__s', 32, 32, 6, ['#ffffff', '#ffd6ef', '#ff7fb5'], '#fff', 1.4)}
+    ${spark(56, 56, 3)}${spark(8, 8, 2.4, '#9ff')}` },
+
+  // протопланетный диск — молодая звезда в кольцах газа и пыли с прорехами
+  protodisk: { color: '#ffb347', svg: `
+    ${arcHalf(32, 34, 29, 9, -12, '#c4572e', 5, false, .7)}${arcHalf(32, 34, 20, 6, -12, '#ffb347', 4, false, .8)}
+    ${halo('__h', 32, 32, 14, '#fff59d', .9)}${ball('__s', 32, 32, 6.5, ['#ffffff', '#fff59d', '#ffb347'], '#fff3c4', 1.4)}
+    ${arcHalf(32, 34, 20, 6, -12, '#ffcf5a', 4, true)}${arcHalf(32, 34, 29, 9, -12, '#e07a45', 5, true)}
+    <circle cx="53" cy="42" r="2.4" fill="#ffe0b0" stroke="#fff" stroke-width=".8"/>
+    ${spark(54, 10, 3.2)}${spark(10, 54, 2.4, '#ffd6ff')}` },
+
+  // солнечное пятно — кусок раскалённой поверхности с тёмным пятном
+  sunspot: { color: '#ffb347', svg: `
+    ${radG('__s', ['#fff59d', '#ffb347', '#e0502a'], .4, .35, .8)}
+    <circle cx="32" cy="32" r="25" fill="url(#__s)" stroke="#fff3c4" stroke-width="2.2"/>
+    <g fill="none" stroke="#ffe0b0" stroke-width="1" opacity=".55"><path d="M12 24c4 2 8 0 12 2M40 46c4-2 8 0 12-2M14 42c3 1 6 0 9 1M38 16c3 1 6-1 9 0"/></g>
+    <ellipse cx="34" cy="33" rx="10" ry="8" fill="#c4572e" stroke="#ffcf9a" stroke-width="1"/>
+    <ellipse cx="34" cy="33" rx="5" ry="4" fill="#3a1a10"/>
+    <ellipse cx="18" cy="20" rx="3" ry="2.2" fill="#c4572e"/><circle cx="18" cy="20" r="1.2" fill="#3a1a10"/>
+    ${shine(22, 16, 5, 2.4, .5)}${spark(56, 8, 3.2)}` },
+
+  // солнечная вспышка — петля плазмы, выброшенная над краем Солнца
+  solarflare: { color: '#ff9f43', svg: `
+    ${radG('__s', ['#fff59d', '#ffb347', '#e0502a'], .5, .2, .9)}
+    <path d="M2 64C2 46 16 38 32 38S62 46 62 64Z" fill="url(#__s)" stroke="#fff3c4" stroke-width="2"/>
+    ${linG('__f', ['#ffffff', '#fff59d', '#ff5f8a'])}
+    <path d="M16 42C10 20 30 6 42 14S50 34 46 42" fill="none" stroke="#ff5f8a" stroke-width="8" stroke-linecap="round" opacity=".5"/>
+    <path d="M16 42C10 20 30 6 42 14S50 34 46 42" fill="none" stroke="url(#__f)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M${burst(40, 13, 6, 6, 2.4)}" fill="#fff" />
+    <g stroke="#fff59d" stroke-width="1.8" stroke-linecap="round"><path d="M50 8l5-4M54 18l7-1M44 4l1-4"/></g>
+    ${spark(8, 12, 3)}${spark(58, 32, 2.4, '#ffe08a')}` },
 });

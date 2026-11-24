@@ -7,6 +7,10 @@ const miniGalaxy = (x, y, s, c1, c2) => `<g transform="translate(${x} ${y}) scal
   <circle r="3.6" fill="#fff8d0"/></g>`;
 const stars = (list) => list.map(([x, y, r, c = '#fff']) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`).join('');
 
+// эллиптическая галактика-«чечевица»: x, y, размер, поворот, цвет
+const ellGal = (x, y, r, rot, c) => `<g transform="rotate(${rot} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * .38}" fill="${c}" opacity=".55"/>` +
+  `<ellipse cx="${x}" cy="${y}" rx="${r * .55}" ry="${r * .22}" fill="${c}"/><circle cx="${x}" cy="${y}" r="${r * .2}" fill="#fff"/></g>`;
+
 Object.assign(ICONS, {
   system: { color: '#ffd166', svg: `
     <g fill="none" stroke="#c9b6ff" stroke-width="1.2" opacity=".7"><circle cx="32" cy="32" r="13"/><circle cx="32" cy="32" r="21"/><circle cx="32" cy="32" r="29"/></g>
@@ -310,4 +314,143 @@ Object.assign(ICONS, {
     <g fill="#9a93c0"><circle cx="23" cy="42" r="1.2"/><circle cx="36" cy="44" r="1"/><circle cx="48" cy="44" r="1.2"/><circle cx="12" cy="34" r="1"/></g>
     </g>
     ${spark(54, 10, 3.2)}${spark(10, 14, 2.4, '#9ff')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // гравитационная линза — скопление в центре изгибает свет далёкой галактики в дуги
+  gravlens: { color: '#6ee7ff', svg: `
+    ${halo('__h', 32, 32, 16, '#ffd166', .8)}
+    <g fill="#fff3c4" stroke="#fff" stroke-width=".8"><circle cx="32" cy="32" r="4"/><circle cx="26" cy="28" r="2"/><circle cx="38" cy="35" r="2.4"/><circle cx="35" cy="26" r="1.6"/></g>
+    <g fill="none" stroke-linecap="round">
+      <path d="M12 24A22 22 0 0 1 30 10" stroke="#6ee7ff" stroke-width="3.6"/>
+      <path d="M52 40A22 22 0 0 1 36 54" stroke="#6ee7ff" stroke-width="3.6"/>
+      <path d="M44 12A22 22 0 0 1 54 26" stroke="#9d7bff" stroke-width="2.6"/>
+      <path d="M10 38A22 22 0 0 0 20 50" stroke="#9d7bff" stroke-width="2.6"/></g>
+    <circle cx="32" cy="32" r="22" fill="none" stroke="#bff6ff" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>
+    ${spark(56, 56, 3.2)}${spark(8, 8, 2.4, '#ffd6ff')}` },
+
+  // симуляция Вселенной — экран, на котором растёт паутина из нитей и узлов
+  simulation: { color: '#9d7bff', svg: `
+    ${linG('__s', ['#1e1a33', '#3b2a8f'], 1, 1)}${linG('__f', ['#ffffff', '#c9cde6', '#6a6f99'])}
+    <rect x="4" y="8" width="56" height="40" rx="5" fill="url(#__s)" stroke="#d9ccff" stroke-width="2.2"/>
+    <g fill="none" stroke="#c9b6ff" stroke-width="1.4" opacity=".85">
+      <path d="M12 18L24 24L34 16L50 20M24 24L22 38L36 34L50 40M34 16L36 34M12 40L22 38M50 20L50 40"/></g>
+    <g fill="#fff59d" stroke="#fff" stroke-width=".6"><circle cx="24" cy="24" r="2.6"/><circle cx="36" cy="34" r="3"/><circle cx="34" cy="16" r="1.8"/><circle cx="50" cy="20" r="2"/>
+      <circle cx="22" cy="38" r="1.8"/><circle cx="50" cy="40" r="2.2"/><circle cx="12" cy="18" r="1.4"/><circle cx="12" cy="40" r="1.4"/></g>
+    <path d="M26 48l-3 8h18l-3-8z" fill="url(#__f)" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+    ${spark(58, 4, 3)}${spark(4, 58, 2.4, '#9ff')}` },
+
+  // сверхскопление — группы галактик, связанные нитями
+  supercluster: { color: '#c9b6ff', svg: `
+    ${halo('__h', 32, 32, 30, '#9d7bff', .35)}
+    <g fill="none" stroke="#c9b6ff" stroke-width="1.6" opacity=".7"><path d="M14 16L32 32L50 14M32 32L20 50M32 32L50 48"/></g>
+    ${ellGal(14, 16, 6, -20, '#ffd6ff')}${ellGal(20, 11, 3.5, 30, '#c9b6ff')}${ellGal(50, 14, 6, 25, '#9ff')}${ellGal(55, 20, 3.4, -10, '#ffd6ff')}
+    ${ellGal(32, 32, 8, -15, '#ffe08a')}${ellGal(25, 37, 3.4, 20, '#9ff')}${ellGal(40, 27, 3, -40, '#ffd6ff')}
+    ${ellGal(20, 50, 5.5, 30, '#9ff')}${ellGal(50, 48, 6, -25, '#ffd6ff')}${ellGal(56, 54, 3, 10, '#c9b6ff')}
+    ${spark(58, 32, 2.6)}${spark(6, 34, 2.2, '#9ff')}` },
+
+  // реликтовое излучение — пятнистая «карта неба», как у спутника «Планк»
+  cmb: { color: '#ff9f43', svg: `
+    <defs><clipPath id="__c"><ellipse cx="32" cy="32" rx="28" ry="17"/></clipPath></defs>
+    <g clip-path="url(#__c)">
+      <rect x="0" y="0" width="64" height="64" fill="#3a6fd8"/>
+      <g fill="#ffb347"><circle cx="14" cy="26" r="6"/><circle cx="30" cy="38" r="7"/><circle cx="46" cy="22" r="6"/><circle cx="52" cy="40" r="5"/><circle cx="24" cy="18" r="3.5"/></g>
+      <g fill="#e0502a"><circle cx="31" cy="38" r="3"/><circle cx="46" cy="23" r="2.6"/><circle cx="12" cy="27" r="2.4"/></g>
+      <g fill="#6ee7ff"><circle cx="38" cy="30" r="4"/><circle cx="20" cy="42" r="4"/><circle cx="58" cy="28" r="3"/><circle cx="36" cy="14" r="3"/></g>
+      <g fill="#fff59d"><circle cx="28" cy="27" r="2"/><circle cx="44" cy="44" r="2"/></g>
+    </g>
+    <ellipse cx="32" cy="32" rx="28" ry="17" fill="none" stroke="#fff3c4" stroke-width="2.2"/>
+    ${spark(56, 8, 3.2)}${spark(8, 56, 2.4, '#9ff')}` },
+
+  // Венера — раскалённая планета в жёлтых облаках-завитках
+  venus: { color: '#ffcf5a', svg: `
+    ${halo('__h', 32, 32, 30, '#ffcf5a', .45)}
+    ${ball('__v', 32, 32, 21, ['#fff3c4', '#ffcf5a', '#c47a1f'], '#fff3c4', 2.2)}
+    <g fill="none" stroke="#fff3c4" stroke-width="2.2" stroke-linecap="round" opacity=".6">
+      <path d="M14 30c6-4 14 4 22-2s12 0 14 2"/><path d="M16 40c6 4 14-2 20 2s10 0 12-2"/><path d="M22 20c4 2 10 0 16 2"/></g>
+    <g fill="none" stroke="#e0502a" stroke-width="1.4" opacity=".5"><path d="M20 35c5-2 10 2 14 0"/></g>
+    ${spark(56, 8, 3.4)}${spark(8, 54, 2.4, '#ffe08a')}` },
+
+  // Сатурн — планета с широкими кольцами и щелью Кассини
+  saturn: { color: '#ffcf5a', svg: `
+    ${arcHalf(32, 34, 30, 9, -18, '#e8c08a', 5, false, .6)}${arcHalf(32, 34, 22, 6.5, -18, '#fff1b8', 3, false, .6)}
+    ${ball('__p', 32, 32, 15, ['#fff3dc', '#ffd9a8', '#b8862b'], '#fff3dc', 2)}
+    <g fill="none" stroke="#d9a35a" stroke-width="1.8" opacity=".6"><path d="M19 28c8 2 18 2 26 0M18 35c8 2 20 2 28 0"/></g>
+    ${arcHalf(32, 34, 22, 6.5, -18, '#fff1b8', 3, true)}${arcHalf(32, 34, 30, 9, -18, '#e8c08a', 5, true)}
+    ${spark(56, 8, 3.4)}${spark(8, 56, 2.4, '#ffd6ff')}` },
+
+  // пояс Койпера — далёкое Солнце, кольцо ледяных тел и комета
+  kuiperbelt: { color: '#bff6ff', svg: `
+    ${halo('__h', 32, 34, 8, '#ffd166', .9)}<circle cx="32" cy="34" r="2.4" fill="#fff"/>
+    ${arcHalf(32, 34, 26, 9, -10, '#6ee7ff', 1.2, false, .5)}${arcHalf(32, 34, 26, 9, -10, '#6ee7ff', 1.2, true, .5)}
+    <g fill="#e0fbff" stroke="#6ee7ff" stroke-width=".8">
+      ${[[7, 37, 2.4], [14, 42, 2], [24, 45, 2.6], [37, 45, 2.2], [48, 41, 2.6], [56, 34, 2], [52, 27, 1.6], [12, 30, 1.6], [40, 24, 1.4], [22, 25, 1.4]]
+        .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('')}</g>
+    ${linG('__t', ['rgba(110,231,255,0)', '#bff6ff'], 1, 1)}<path d="M28 4L50 12L48 16Z" fill="url(#__t)"/>
+    ${ball('__c', 50, 14, 3.4, ['#ffffff', '#bff6ff', '#4cc9ff'], '#fff', 1)}
+    ${spark(10, 10, 2.6)}${spark(58, 56, 2.4, '#ffd6ff')}` },
+
+  // карликовая планета — бежевый шарик со светлым «сердцем», как у Плутона
+  dwarfplanet: { color: '#ffe0b0', svg: `
+    ${halo('__h', 32, 32, 26, '#ffe0b0', .35)}
+    ${ball('__p', 32, 32, 18, ['#fff3dc', '#d9b48a', '#7a4f33'], '#fff3dc', 2)}
+    <path d="M32 46C24 40 20 34 22 30S30 27 32 31C34 27 40 26 42 30S40 40 32 46Z" fill="#fffbe8" opacity=".85"/>
+    <g fill="#7a4f33" opacity=".5"><circle cx="20" cy="24" r="2"/><circle cx="44" cy="40" r="1.6"/></g>
+    ${ball('__m', 54, 12, 4, ['#ffffff', '#c9c3ec', '#6d6890'], '#fff', 1)}
+    ${spark(10, 10, 3)}${spark(8, 54, 2.4, '#ffd6ff')}` },
+
+  // космический мусор — обломки спутника на орбите над Землёй
+  debris: { color: '#c9cde6', svg: `
+    ${linG('__e', ['#6ee7ff', '#1d4ed8'])}
+    <path d="M2 64C4 54 16 48 32 48S60 54 62 64Z" fill="url(#__e)" stroke="#c8f1ff" stroke-width="1.8"/>
+    <path d="M4 40C16 30 48 30 60 40" fill="none" stroke="#c9b6ff" stroke-width="1.2" stroke-dasharray="3 3" opacity=".6"/>
+    <g transform="rotate(25 18 22)"><rect x="10" y="18" width="14" height="8" rx="1" fill="#3a4bff" stroke="#c8f1ff" stroke-width="1.2"/><path d="M15 18v8M20 18v8" stroke="#c8f1ff" stroke-width=".8"/></g>
+    <path d="M34 14l8-4 4 6-6 6-7-2z" fill="#c9cde6" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M44 30l5-2 2 4-4 3z" fill="#ffcf5a" stroke="#fff" stroke-width="1"/>
+    <g fill="#e6e9ff"><circle cx="28" cy="30" r="1.4"/><circle cx="54" cy="22" r="1.2"/><circle cx="12" cy="36" r="1"/></g>
+    <g stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".5"><path d="M30 12l-6 3M42 30l-6 2"/></g>
+    ${spark(56, 8, 3)}` },
+
+  // звездолёт — длинный корабль с вращающимся кольцом и термоядерным выхлопом
+  starship: { color: '#9d7bff', svg: `
+    <g stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".5"><path d="M50 30l12-6M54 40l10-4M44 20l10-6"/></g>
+    <g transform="rotate(-30 32 32)">
+      ${linG('__b', ['#ffffff', '#c9cde6', '#6a6f99'])}${linG('__f', ['#ffffff', '#c9b6ff', 'rgba(157,123,255,0)'], 1, 0)}
+      <path d="M4 32L14 27V37Z" fill="url(#__f)" transform="rotate(180 9 32) translate(-8 0)"/>
+      <path d="M-6 28H10V36H-6Z" fill="url(#__f)" opacity=".8"/>
+      <rect x="10" y="28" width="40" height="8" rx="4" fill="url(#__b)" stroke="#fff" stroke-width="1.6"/>
+      <path d="M50 28L60 32L50 36Z" fill="#c9b6ff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+      <ellipse cx="26" cy="32" rx="5" ry="14" fill="none" stroke="#6ee7ff" stroke-width="3"/>
+      <rect x="10" y="27" width="5" height="10" rx="1.5" fill="#9d7bff" stroke="#fff" stroke-width="1"/>
+      <circle cx="44" cy="32" r="1.8" fill="#6ee7ff"/>
+    </g>
+    ${spark(10, 10, 3)}${spark(56, 56, 2.4, '#ffd6ff')}` },
+
+  // сфера Дайсона — решётчатая оболочка из панелей вокруг звезды
+  dysonsphere: { color: '#ffcf5a', svg: `
+    ${halo('__h', 32, 32, 30, '#ffd166', .6)}
+    ${ball('__s', 32, 32, 10, ['#ffffff', '#fff59d', '#ffb347'], '#fff3c4', 1.4)}
+    <g fill="none" stroke="#c9cde6" stroke-width="1.6">
+      <circle cx="32" cy="32" r="24"/><ellipse cx="32" cy="32" rx="10" ry="24"/><ellipse cx="32" cy="32" rx="24" ry="9"/>
+      <ellipse cx="32" cy="32" rx="20" ry="24"/></g>
+    <g fill="#3a4bff" fill-opacity=".85" stroke="#c8f1ff" stroke-width="1">
+      <path d="M12 23L22 17L22 25L12 30Z"/><path d="M42 39L52 34L50 42L42 47Z"/><path d="M36 9L44 12L42 18L36 16Z"/><path d="M20 46L26 50L26 55L19 52Z"/><path d="M46 20L54 26L54 30L46 26Z"/></g>
+    ${spark(58, 6, 3.4)}${spark(6, 58, 2.4, '#9ff')}` },
+
+  // большое сжатие — галактики стягиваются обратно в одну точку
+  bigcrunch: { color: '#ff5f8a', svg: `
+    ${halo('__h', 32, 32, 14, '#ff5f8a', .9)}
+    <path d="${burst(32, 32, 8, 8, 3)}" fill="#fff" />
+    <g fill="none" stroke="#ff8fd1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      ${[0, 60, 120, 180, 240, 300].map(a => `<g transform="rotate(${a} 32 32)"><path d="M32 6V16"/><path d="M28 12L32 17L36 12"/></g>`).join('')}</g>
+    ${ellGal(12, 14, 5, 30, '#c9b6ff')}${ellGal(54, 20, 4.5, -30, '#9ff')}${ellGal(16, 52, 4.5, -20, '#ffd6ff')}${ellGal(52, 50, 5, 20, '#c9b6ff')}
+    ${spark(58, 34, 2.4)}` },
+
+  // тепловая смерть — остывшая, угасающая галактика и последний тлеющий красный карлик
+  heatdeath: { color: '#8a83b8', svg: `
+    <g opacity=".6">${ellGal(28, 30, 20, -25, '#8a83b8')}</g>
+    ${halo('__h', 44, 44, 8, '#c4572e', .6)}
+    ${ball('__r', 44, 44, 3.6, ['#ffb39a', '#c4572e', '#5a2010'], '#e07a45', 1)}
+    <g fill="#8a83b8" opacity=".6"><circle cx="10" cy="14" r="1"/><circle cx="54" cy="12" r="1.2"/><circle cx="14" cy="50" r="1"/><circle cx="56" cy="56" r=".9"/><circle cx="22" cy="8" r=".8"/></g>
+    <circle cx="32" cy="32" r="29" fill="none" stroke="#5b5680" stroke-width="1.4" stroke-dasharray="2 5"/>
+    ${spark(52, 22, 2.4, '#bff6ff')}${spark(12, 34, 1.8, '#bff6ff')}` },
 });

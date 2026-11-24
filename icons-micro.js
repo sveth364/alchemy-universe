@@ -251,4 +251,14 @@ Object.assign(ICONS, {
     ${ball('__a', 13, 24, 5.5, BLUE, '#d0f4ff', 1.4)}${ball('__b', 51, 24, 5.5, RED, '#ffd1dc', 1.4)}
     ${arcHalf(32, 34, 27, 10, 0, '#c9b6ff', 5, true)}
     ${spark(54, 8, 3.2)}${spark(10, 54, 2.4, '#ffe08a')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // инфляция — из крошечной точки пространство раздувается раструбом
+  inflation: { color: '#ff8fd1', svg: `
+    ${linG('__c', ['#ffd6ef', '#9d7bff', '#3b2a8f'], 1, 0)}
+    <path d="M6 32L58 4V60Z" fill="url(#__c)" fill-opacity=".35" stroke="#ffd6ef" stroke-width="2" stroke-linejoin="round"/>
+    <g fill="none" stroke="#e6dcff" stroke-width="1.1" opacity=".75">
+      <path d="M20 24.5V39.5M34 17V47M46 10.5V53.5"/><path d="M6 32L58 18M6 32L58 46M6 32H58"/></g>
+    ${halo('__h', 7, 32, 8, '#fff59d', 1)}<circle cx="7" cy="32" r="2.6" fill="#fff"/>
+    ${spark(50, 32, 3)}${spark(40, 24, 2, '#9ff')}${spark(42, 42, 2, '#ffe08a')}${spark(14, 10, 2.6)}` },
 });

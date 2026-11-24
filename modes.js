@@ -25,7 +25,7 @@ const MODES = {
       'sand+electricity=chip', 'campfire+time=carbon', 'mud+energy=life', 'cell+evolution=dna',
       // простые рецепты, которые в «Космосе» заменены длинными цепочками
       'ocean+carbon=life', 'ocean+lightning=life', 'plane+space=rocket', 'rocket+radio=satellite',
-      'galaxy+science=darkmatter',
+      'galaxy+science=darkmatter', 'cluster+darkmatter=web',
     ],
     exclude: ['quark', 'photon', 'gluon', 'higgs', 'antimatter', 'electron', 'proton', 'neutron', 'nucleus', 'atom',
       'ion', 'hydrogen', 'helium', 'molecule', 'matter', 'mass', 'radiation', 'neutrino', 'annihilation',
@@ -34,7 +34,9 @@ const MODES = {
       'methane', 'ammonia', 'aminoacid', 'protein', 'rna', 'engine', 'rocketfuel', 'orbit', 'spacetelescope',
       'spacestation', 'smoke', 'coal', 'soap', 'rust', 'mars', 'rover',
       'laser', 'uranium', 'reactor', 'solarpanel', 'crystal', 'meteorite', 'crater', 'tide', 'pulsar', 'gravwave', 'virus', 'bacteria', 'antibiotic', 'algae',
-      'observatory', 'moonbase', 'colony', 'terraforming', 'probe', 'radiotelescope', 'contact', 'quantum', 'fusion', 'ozone', 'collider', 'asteroidbelt', 'gasgiant'],
+      'observatory', 'moonbase', 'colony', 'terraforming', 'probe', 'radiotelescope', 'contact', 'quantum', 'fusion', 'ozone', 'collider', 'asteroidbelt', 'gasgiant',
+      'cosmodrome', 'gravlens', 'supercomputer', 'simulation', 'supercluster', 'cmb', 'inflation', 'magnetar', 'protodisk', 'icegiant', 'greenhouse', 'venus', 'saturn',
+      'icemoon', 'kuiperbelt', 'dwarfplanet', 'sunspot', 'solarflare', 'spacesuit', 'shuttle', 'debris', 'starship', 'dysonsphere', 'bigcrunch', 'heatdeath', 'hologram'],
   },
   cosmos: {
     name: 'Космос',

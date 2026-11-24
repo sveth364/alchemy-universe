@@ -197,4 +197,16 @@ Object.assign(ICONS, {
     <g fill="none" stroke="#ff8fd1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M14 4L20 18L12 10"/><path d="M34 2L34 16L28 8"/><path d="M52 6L46 18L54 12"/></g>
     ${spark(58, 22, 2.8)}${spark(6, 22, 2.4, '#9ff')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // парниковый эффект — свет проходит под купол атмосферы, а тепло остаётся внутри
+  greenhouse: { color: '#ff7a59', svg: `
+    ${linG('__e', ['#3ddc84', '#128a52'])}
+    <path d="M6 60C6 52 18 48 32 48S58 52 58 60Z" fill="url(#__e)" stroke="#d9ffc4" stroke-width="1.6"/>
+    <path d="M4 58C4 30 16 16 32 16S60 30 60 58" fill="#bfefff" fill-opacity=".14" stroke="#bff6ff" stroke-width="2.4"/>
+    <path d="M14 28c4-5 9-7 14-8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+    <g fill="none" stroke="#ffe066" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M38 2L30 44"/><path d="M27 39l3 5 4-4"/></g>
+    <g fill="none" stroke="#ff5f8a" stroke-width="2.2" stroke-linecap="round">
+      <path d="M18 46c-2-4 2-6 0-10s2-6 4-8"/><path d="M46 46c2-4-2-6 0-10s-2-6-4-8"/><path d="M22 27c4-3 8-3 10-1"/></g>
+    ${spark(54, 8, 3.4)}${spark(8, 10, 2.4, '#ffe08a')}` },
 });

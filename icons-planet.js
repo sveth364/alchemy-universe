@@ -244,4 +244,23 @@ Object.assign(ICONS, {
     </g>
     <circle cx="32" cy="32" r="24" fill="none" stroke="#fff3dc" stroke-width="2.2"/>
     ${shine(22, 19, 6, 3, .45)}${spark(56, 8, 3.5)}${spark(8, 56, 2.5, '#ffd6ff')}` },
+
+  // ── расширение «Космоса», этап 3 ──
+  // ледяной гигант — голубая планета с почти вертикальным тонким кольцом
+  icegiant: { color: '#6ee7ff', svg: `
+    ${arcHalf(32, 32, 9, 28, -15, '#bff6ff', 1.8, false, .5)}
+    ${ball('__p', 32, 32, 19, ['#e0fbff', '#6ee7ff', '#2a5bd8'], '#e0fbff', 2)}
+    <g fill="none" stroke="#bff6ff" stroke-width="2" opacity=".4"><path d="M15 26c10 3 24 3 34 0M14 36c10 3 26 3 36 0"/></g>
+    <ellipse cx="40" cy="40" rx="4" ry="2" fill="#2a5bd8" opacity=".7"/>
+    <path d="M32.3 5A9 28 0 0 1 32.3 59" fill="none" stroke="#e0fbff" stroke-width="2.2" stroke-linecap="round" transform="rotate(-15 32 32)"/>
+    ${spark(56, 10, 3.4)}${spark(8, 54, 2.4, '#ffd6ff')}` },
+
+  // ледяная луна — белая луна с трещинами и фонтаном воды из-подо льда
+  icemoon: { color: '#bff6ff', svg: `
+    <path d="M40 18C38 10 44 4 42 0M44 18C46 12 52 10 52 4" fill="none" stroke="#bff6ff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    <g fill="#e0fbff"><circle cx="42" cy="6" r="1.4"/><circle cx="50" cy="8" r="1.2"/><circle cx="46" cy="2" r="1"/></g>
+    ${ball('__m', 32, 38, 21, ['#ffffff', '#dff4ff', '#8fb3d9'], '#fff', 2.2)}
+    <g fill="none" stroke="#c4572e" stroke-width="1.6" stroke-linecap="round" opacity=".7">
+      <path d="M14 34c8 2 12 8 22 6s12 4 16 8"/><path d="M20 50c6-4 12-2 16-8"/><path d="M26 22c4 4 4 10 12 12"/></g>
+    ${spark(10, 10, 3.2)}${spark(58, 30, 2.4, '#9ff')}` },
 });
