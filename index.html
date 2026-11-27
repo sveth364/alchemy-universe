@@ -235,6 +235,15 @@
     display: grid; place-items: center; padding: 0; cursor: pointer;
   }
   #btnSound .svg-ico.ui { width: 18px; height: 18px; filter: none; }
+  #btnSort {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--tile-border); background: var(--panel);
+    display: grid; place-items: center; padding: 0; cursor: pointer;
+  }
+  #btnSort .svg-ico.ui { width: 17px; height: 17px; filter: none; }
+  @media (max-width: 360px) { .hdr-right { gap: 6px; } }
+  @media (max-width: 340px) { header { padding-left: 10px; padding-right: 10px; } #counter { padding: 0 7px 0 5px; font-size: 12px; } .hdr-right { gap: 4px; } }
+  /* плавное перестроение при «Упорядочить» */
+  .el.sorting { transition: left .35s ease, top .35s ease, transform .12s; }
   #btnInfo.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(139,123,255,.8); }
   body.info-mode #board .el .ico, body.info-mode .cell:not(.locked) .ico { border-color: var(--accent); }
   .modal .card.info { max-height: 82vh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
@@ -333,7 +342,7 @@
 <div id="app">
   <header>
     <button class="title" id="btnMode"><span id="logo"></span><span><span class="brand">Алхимия · </span><span id="modeName"></span></span><span class="caret">▾</span></button>
-    <div class="hdr-right"><button id="counter" aria-label="Статистика"><span data-ui="ui_stats"></span><span id="counterText">0 / 0</span></button><button id="btnSound" aria-label="Звук"></button><button id="btnInfo" aria-label="Справка">?</button></div>
+    <div class="hdr-right"><button id="btnSort" aria-label="Упорядочить поле"><span data-ui="ui_sort"></span></button><button id="counter" aria-label="Статистика"><span data-ui="ui_stats"></span><span id="counterText">0 / 0</span></button><button id="btnSound" aria-label="Звук"></button><button id="btnInfo" aria-label="Справка">?</button></div>
   </header>
   <div id="progress"><div></div></div>
   <div id="board"><div id="hint">Перетащи один элемент на другой, чтобы соединить их.<br>Двойной тап по пустому месту — стартовые элементы.<br>«?» вверху — справка об элементе</div></div>
@@ -380,22 +389,22 @@
   </div>
 </div>
 
-<script src="elements.js?v=44"></script>
-<script src="icons.js?v=44"></script>
-<script src="icons-micro.js?v=44"></script>
-<script src="icons-stars.js?v=44"></script>
-<script src="icons-planet.js?v=44"></script>
-<script src="icons-weather.js?v=44"></script>
-<script src="icons-life.js?v=44"></script>
-<script src="icons-animals.js?v=44"></script>
-<script src="icons-human.js?v=44"></script>
-<script src="icons-civ.js?v=44"></script>
-<script src="icons-tech.js?v=44"></script>
-<script src="icons-cosmos.js?v=44"></script>
-<script src="icons-ui.js?v=44"></script>
-<script src="info.js?v=44"></script>
-<script src="modes.js?v=44"></script>
-<script src="sound.js?v=44"></script>
+<script src="elements.js?v=45"></script>
+<script src="icons.js?v=45"></script>
+<script src="icons-micro.js?v=45"></script>
+<script src="icons-stars.js?v=45"></script>
+<script src="icons-planet.js?v=45"></script>
+<script src="icons-weather.js?v=45"></script>
+<script src="icons-life.js?v=45"></script>
+<script src="icons-animals.js?v=45"></script>
+<script src="icons-human.js?v=45"></script>
+<script src="icons-civ.js?v=45"></script>
+<script src="icons-tech.js?v=45"></script>
+<script src="icons-cosmos.js?v=45"></script>
+<script src="icons-ui.js?v=45"></script>
+<script src="info.js?v=45"></script>
+<script src="modes.js?v=45"></script>
+<script src="sound.js?v=45"></script>
 <script>
 /* ============ ДАННЫЕ ============ */
 const HINT_COOLDOWN = 5 * 60 * 1000;   // подсказка раз в 5 минут
@@ -708,6 +717,28 @@ function placeStarters() {
   [[-off, -off], [off, -off], [-off, off], [off, off]].forEach(([dx, dy], i) => STARTERS[i] && spawn(STARTERS[i], cx + dx, cy + dy, true));
 }
 
+/* ============ УПОРЯДОЧИТЬ ПОЛЕ ============ */
+// элементы на поле выстраиваются сеткой: по эпохам, внутри эпохи — в порядке списка
+const ERA_ORDER = Object.fromEntries(ERAS.map(([id], i) => [id, i]));
+function sortBoard() {
+  const els = [...board.querySelectorAll('.el')];
+  if (els.length < 2) { toast('На поле пока нечего упорядочивать'); return; }
+  const rank = (el) => { const d = byId[el.dataset.id]; return ERA_ORDER[d.era] * 1000 + d.order; };
+  els.sort((a, b) => rank(a) - rank(b));
+  const { r, cols, rows } = boardGrid(), cap = cols * rows;
+  const x0 = (r.width - cols * CW) / 2 + (CW - 76) / 2, y0 = Math.max(4, (r.height - rows * CH) / 2);
+  els.forEach((el, i) => {
+    const k = Math.min(i, cap - 1), extra = Math.max(0, i - cap + 1) * 8;   // если не влезли — стопкой в последней клетке
+    el.classList.add('sorting');
+    el.style.left = Math.min(r.width - 76, x0 + (k % cols) * CW + extra) + 'px';
+    el.style.top = Math.min(r.height - 84, y0 + Math.floor(k / cols) * CH + extra) + 'px';
+  });
+  setTimeout(() => els.forEach(el => el.classList.remove('sorting')), 400);
+  haptic('light');
+  if (els.length > cap) toast(`Всё не поместилось: ${els.length - cap} лежат стопкой в углу`);
+}
+document.getElementById('btnSort').onclick = sortBoard;
+
 /* ============ СПИСОК ============ */
 const sheet = document.getElementById('sheet');
 const grid = document.getElementById('grid');
@@ -993,7 +1024,7 @@ function tutorial(step) {
     { icon: iconHtml(res, '', 'modal-ico'), title: 'Соединяй элементы',
       text: `Перетащи один элемент на другой. Например: <b>${label(a)}</b> + <b>${label(b)}</b> = <b>${label(res)}</b>.` },
     { icon: iconHtml('ui_list', '', 'modal-ico'), title: 'Полезные жесты',
-      text: '<b>Двойной тап</b> по элементу — его копия.<br><b>Двойной тап по пустому месту</b> — снова стартовые элементы.<br>Перетащи элемент на <b>Корзину</b>, чтобы убрать его.' },
+      text: '<b>Двойной тап</b> по элементу — его копия.<br><b>Двойной тап по пустому месту</b> — снова стартовые элементы.<br>Перетащи элемент на <b>Корзину</b>, чтобы убрать его.<br><b>Плитки</b> вверху — разложить поле по порядку.' },
     { icon: iconHtml('ui_hint', '', 'modal-ico'), title: 'Если застрял',
       text: '<b>Список</b> — все элементы по эпохам.<br><b>Подсказка</b> — раз в 5 минут.<br><b>?</b> вверху — справка об элементе.<br>Потускневший элемент уже отдал все свои рецепты.' },
   ];

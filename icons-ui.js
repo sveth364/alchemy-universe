@@ -82,6 +82,14 @@ Object.assign(ICONS, {
     <circle cx="26" cy="26" r="16" fill="#bfefff" fill-opacity=".2" stroke="#6ee7ff" stroke-width="4"/>
     <path d="M17 21a10 10 0 0 1 6-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>` },
 
+  // упорядочить поле — четыре плитки сеткой
+  ui_sort: { color: '#9d7bff', svg: `
+    ${linG('__a', ['#e6dcff', '#9d7bff'], 1, 1)}${linG('__b', ['#d0f4ff', '#4cc9ff'], 1, 1)}${linG('__c', ['#ffd6ef', '#ff7fb5'], 1, 1)}${linG('__d', ['#fff3c4', '#ffb347'], 1, 1)}
+    <rect x="8" y="8" width="21" height="21" rx="6" fill="url(#__a)" stroke="#fff" stroke-width="2.4"/>
+    <rect x="35" y="8" width="21" height="21" rx="6" fill="url(#__b)" stroke="#fff" stroke-width="2.4"/>
+    <rect x="8" y="35" width="21" height="21" rx="6" fill="url(#__c)" stroke="#fff" stroke-width="2.4"/>
+    <rect x="35" y="35" width="21" height="21" rx="6" fill="url(#__d)" stroke="#fff" stroke-width="2.4"/>` },
+
   ui_close: { color: '#e6dcff', svg: `
     <path d="M18 18l28 28M46 18 18 46" stroke="#e6dcff" stroke-width="6" stroke-linecap="round"/>` },
 
